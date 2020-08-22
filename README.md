@@ -1,4 +1,4 @@
-# Configureable React + TS Form
+# Configurable React + TS Form
 
 ### Motivation
 
