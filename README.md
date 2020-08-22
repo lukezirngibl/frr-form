@@ -18,7 +18,7 @@ It seems like 90% of a frontend developer's life is implementing forms. Forms, f
 
 ### Example
 
-```
+```ts
 
 type Person = {
   name: string;
