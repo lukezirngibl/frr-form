@@ -20,69 +20,78 @@ It seems like 90% of a frontend developer's life is implementing forms. Forms, f
 
 ```ts
 
+import * as React from 'react'
+import { Lens } from 'monocle-ts'
+import { getTheme, configureTheme } from '../src/theme/theme'
+
+import { FormField, Form } from '../src/components/Form'
+import { FormFieldType } from '../src/components/types'
+
 type Person = {
-  name: string;
+  name: string
   hairColor: string
   age: number
   height: number
   description: string
-  email: string;
+  email: string
   website: string
 }
+
+const mkLens = Lens.fromPath<Person>()
 
 export const personFormFields: Array<FormField<Person, any>> = [
   {
     type: FormFieldType.FormSection,
-    title: 'personInformation',
+    title: 'Information',
     fields: [
       [
         {
-          label: 'companyName',
+          label: 'Name',
           type: FormFieldType.TextInput,
-          lens: mkCompanyFormLens(['name']),
+          lens: mkLens(['name']),
           required: true,
         },
 
         {
-          label: 'hairColor',
+          label: 'Hair color',
           type: FormFieldType.TextInput,
-          lens: mkCompanyFormLens(['hairColor']),
+          lens: mkLens(['hairColor']),
           required: true,
         },
       ],
       [
         {
-          label: 'age',
+          label: 'Age',
           type: FormFieldType.TextNumber,
-          lens: mkCompanyFormLens(['age']),
+          lens: mkLens(['age']),
           required: true,
         },
         {
-          label: 'height',
+          label: 'Height',
           type: FormFieldType.TextNumber,
-          lens: mkCompanyFormLens(['height']),
+          lens: mkLens(['height']),
           required: true,
         },
       ],
       [
         {
-          label: 'description',
+          label: 'Description',
           type: FormFieldType.TextInput,
-          lens: mkCompanyFormLens(['description']),
+          lens: mkLens(['description']),
           required: true,
         },
       ],
       [
         {
-          label: 'email',
+          label: 'Email',
           type: FormFieldType.TextInput,
-          lens: mkCompanyFormLens(['email']),
+          lens: mkLens(['email']),
           required: true,
         },
         {
-          label: 'website',
+          label: 'Website',
           type: FormFieldType.TextInput,
-          lens: mkCompanyFormLens(['url']),
+          lens: mkLens(['website']),
           required: true,
         },
       ],
@@ -90,14 +99,32 @@ export const personFormFields: Array<FormField<Person, any>> = [
   },
 ]
 
-const PersonForm: (props: { person: Person }) => (
-   <Form<Person, any>
-      formFields={personFormFields}
-      data={props.person}
-      onChange={(p) => {
-       // add update function
+const PersonForm = (props: { person: Person }) => (
+  <Form<Person, any>
+    formFields={personFormFields}
+    data={props.person}
+    onChange={p => {
+      // add update function
+    }}
+  />
+)
+
+export const FormThemeContext = configureTheme({})
+
+export const App = () => (
+  <FormThemeContext.Provider value={getTheme()}>
+    <PersonForm
+      person={{
+        name: 'Luke',
+        hairColor: 'brown',
+        age: 23,
+        height: 194,
+        description: 'very cool',
+        email: 'luke@google.com',
+        website: 'www.foronered.com',
       }}
     />
+  </FormThemeContext.Provider>
 )
 
 ```
