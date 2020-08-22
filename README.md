@@ -74,30 +74,6 @@ export const personFormFields: Array<FormField<Person, any>> = [
       ],
       [
         {
-          label: 'legalForm',
-          type: FormFieldType.Dropdown,
-          options: [
-            {
-              label: 'ag',
-              value: 'AG',
-            },
-            {
-              label: 'gmbh',
-              value: 'GMBH',
-            },
-          ],
-          lens: mkCompanyFormLens(['legalForm']),
-          required: true,
-        },
-        {
-          label: 'headquarters',
-          type: FormFieldType.TextInput,
-          lens: mkCompanyFormLens(['headquarters']),
-          required: true,
-        },
-      ],
-      [
-        {
           label: 'email',
           type: FormFieldType.TextInput,
           lens: mkCompanyFormLens(['email']),
