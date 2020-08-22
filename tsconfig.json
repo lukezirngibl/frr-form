@@ -16,10 +16,14 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "target": "es5",
-    "module": "commonjs",
+    "module": "esnext",
     "declaration": true,
     "outDir": "./lib",
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types"],
+    "strict": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
   },
   "include": ["src"]
 }
