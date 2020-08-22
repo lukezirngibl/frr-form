@@ -33,7 +33,7 @@ type Person = {
 export const personFormFields: Array<FormField<Person, any>> = [
   {
     type: FormFieldType.FormSection,
-    title: 'companyInformation',
+    title: 'personInformation',
     fields: [
       [
         {
