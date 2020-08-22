@@ -1,28 +1,31 @@
 {
-  "name": "frr-web",
+  "name": "frr-form",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "author": "Luke Zirngibl",
-  "version": "1.0.30",
+  "version": "1.0.0",
   "keywords": [],
   "scripts": {
     "build": "tsc",
     "patch": "yarn run build && git add -A && git commit -m 'patch' && npm version patch",
     "prepare": "install-peers"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lukezirngibl/frr-form"
+  },
   "files": [
     "lib/**/*"
   ],
   "peerDependencies": {
+    "frr-util": "^1.0.3",
     "frr-web": "^1.0.31",
     "monocle-ts": "2.0.0",
     "react": "^16.12.0",
     "styled-components": "4.3.2"
   },
-  "dependencies": {
-    "frr-util": "^1.0.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/react-dom": "16.9.3",
     "@types/react-redux": "7.1.4",

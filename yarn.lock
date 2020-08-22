@@ -239,11 +239,6 @@ fast-diff@^1.1.1:
   resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.2.0.tgz#73ee11982d86caaf7959828d519cfe927fac5f03"
   integrity sha512-xJuoT5+L99XlZ8twedaRf6Ax2TgQVxvgZOYoPKqZufmJib0tL2tegPBOZb1pVNgIhlqDlA0eO0c3wBvQcmzx4w==
 
-frr-util@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/frr-util/-/frr-util-1.0.3.tgz#5ae8420edd100b444e2febff476d09d5ef047b2a"
-  integrity sha512-CEc8VSEm1RKJUkxQp++iEtSz10390syYGifrQfZ+7mLuE+cCIvzHUCwxynZpLJhWGfzKJIjH1iM8KBjSzg7MeA==
-
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
