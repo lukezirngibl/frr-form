@@ -682,6 +682,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
   const { formFields } = props
 
+  console.log('form!')
   console.log('theme: ', theme)
   console.log('style: ', getStyle('group'))
   return (
