@@ -640,13 +640,13 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     <FormFieldGroupWrapper
       key={key}
       style={{
-        ...getStyle('section')['wrapper'],
+        ...getStyle('group')['wrapper'],
         ...(formGroup.style ? formGroup.style.wrapper || {} : {}),
       }}
     >
       <FormFieldGroupTitle
         style={{
-          ...getStyle('section')['title'],
+          ...getStyle('group')['title'],
           ...(formGroup.style ? formGroup.style.title || {} : {}),
         }}
       >
