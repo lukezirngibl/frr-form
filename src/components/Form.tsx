@@ -353,6 +353,7 @@ export type Props<FormData, TM> = {
   onChange: (formState: FormData) => void
   buttonProps?: Omit<ButtonProps<TM>, 'onClick'>
   renderTopChildren?: (f: FormData) => ReactNode
+  renderBottomChildren?: (f: FormData) => ReactNode
 }
 
 export const Form = <FormData extends {}, TM extends TranslationGeneric>(
@@ -680,6 +681,9 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   )
 
   const { formFields } = props
+
+  console.log('theme: ', theme)
+  console.log('style: ', getStyle('group'))
   return (
     <FormWrapper style={getStyle('form')['wrapper']}>
       {props.renderTopChildren && props.renderTopChildren(props.data)}
@@ -696,6 +700,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           }
         })}
       </FormContent>
+      {props.renderBottomChildren && props.renderBottomChildren(props.data)}
       {props.buttonProps && (
         <ButtonContainer>
           <Button<TM>
