@@ -412,7 +412,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     const hasError = showValidation && isFieldInvalid(field)
 
     if (field.type === FormFieldType.TextArea) {
-      const { type, lens, ...fieldProps } = field
+      const { type, lens, validate, ...fieldProps } = field
       return (
         <TextArea
           {...fieldProps}
@@ -424,7 +424,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.TextInput) {
-      const { type, lens, ...fieldProps } = field
+      const { type, lens, validate, ...fieldProps } = field
       return (
         <TextInput
           {...fieldProps}
@@ -436,7 +436,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.DatePicker) {
-      const { type, lens, ...fieldProps } = field
+      const { type, lens, validate, ...fieldProps } = field
       return (
         <DatePicker
           {...fieldProps}
@@ -448,7 +448,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.CheckboxGroup) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <CheckboxGroup
           {...fieldProps}
@@ -460,7 +460,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.SingleCheckbox) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <SingleCheckbox
           {...fieldProps}
@@ -472,7 +472,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.Switch) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <Switch
           {...fieldProps}
@@ -484,7 +484,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.NumberInput) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <NumberInput
           {...fieldProps}
@@ -496,7 +496,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.TextNumber) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <TextNumberInput
           {...fieldProps}
@@ -508,7 +508,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.MultiSelect) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <MultiSelect
           {...fieldProps}
@@ -520,7 +520,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.InputWithDropdown) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <InputWithDropdown
           {...fieldProps}
@@ -532,7 +532,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.CountryDropdown) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <CountryDropdown
           {...fieldProps}
@@ -544,7 +544,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.CurrencyInput) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <CurrencyInput
           {...fieldProps}
@@ -556,7 +556,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.Dropdown) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <Dropdown
           {...fieldProps}
@@ -568,7 +568,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.DropdownNumber) {
-      const { lens, ...fieldProps } = field
+      const { lens, validate, ...fieldProps } = field
       return (
         <DropdownNumber
           {...fieldProps}
