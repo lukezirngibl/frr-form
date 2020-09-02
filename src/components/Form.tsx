@@ -378,7 +378,8 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       return f.validate(props.data)
     }
     if ('required' in f && f.required) {
-      const val = f.lens.get(props.data)
+      let val = f.lens.get(props.data)
+      val = typeof val === 'string' ? val.trim() : val
       let isInvalid = val === '' || val === null || val === undefined
 
       if (
@@ -682,9 +683,6 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
   const { formFields } = props
 
-  console.log('form!')
-  console.log('theme: ', theme)
-  console.log('style: ', getStyle('group'))
   return (
     <FormWrapper style={getStyle('form')['wrapper']}>
       {props.renderTopChildren && props.renderTopChildren(props.data)}

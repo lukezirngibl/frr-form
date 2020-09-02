@@ -21,7 +21,7 @@
   ],
   "peerDependencies": {
     "frr-util": "^1.0.3",
-    "frr-web": "^1.0.33"
+    "frr-web": "^1.0.38"
   },
   "dependencies": {
     "monocle-ts": "2.0.0",
