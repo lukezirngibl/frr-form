@@ -31,7 +31,7 @@ import { DatePickerProps, DatePicker } from 'frr-web/lib/components/DatePicker'
 import { someFormFields } from './some.form'
 import { TranslationGeneric } from 'frr-web/lib/util'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
-import { getThemeContext, Theme } from '../theme/theme'
+import { getThemeContext, FormTheme as Theme } from '../theme/theme'
 import { createGetStyle } from '../theme/util'
 import { Button, Props as ButtonProps } from 'frr-web/lib/components/Button'
 import {

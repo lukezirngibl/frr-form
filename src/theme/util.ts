@@ -1,11 +1,11 @@
-import { Theme } from './theme'
+import { FormTheme } from './theme'
 
-export const createGetStyle = <C extends keyof Theme>(
-  theme: Theme,
+export const createGetStyle = <C extends keyof FormTheme>(
+  theme: FormTheme,
   componentKey: C,
-) => (override?: Partial<Theme[C]>) => <K extends keyof Theme[C]>(
+) => (override?: Partial<FormTheme[C]>) => <K extends keyof FormTheme[C]>(
   elementKey: K,
-): Theme[C][K] => {
+): FormTheme[C][K] => {
   return {
     ...theme[componentKey][elementKey],
     ...(override && override[elementKey] ? override[elementKey] : {}),

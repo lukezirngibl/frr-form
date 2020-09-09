@@ -2,7 +2,7 @@ import * as React from 'react'
 import { CSSProperties } from 'styled-components'
 import { keys } from 'frr-util/lib/util'
 
-export type Theme = {
+export type FormTheme = {
   form: {
     row: {
       wrapper: CSSProperties
@@ -22,7 +22,7 @@ export type Theme = {
   }
 }
 
-const defaultTheme: Theme = {
+const defaultTheme: FormTheme = {
   form: {
     section: {
       title: {},
@@ -42,12 +42,12 @@ const defaultTheme: Theme = {
   },
 }
 
-export type FormTheme = { [k in keyof Theme]?: Partial<Theme[k]> }
+export type FormThemeConfig = { [k in keyof FormTheme]?: Partial<FormTheme[k]> }
 
 let ThemeVal = defaultTheme
 let ThemeContext = React.createContext(defaultTheme)
 
-export const configureTheme = (userTheme: FormTheme) => {
+export const configureTheme = (userTheme: FormThemeConfig) => {
   ThemeVal = keys(defaultTheme).reduce(
     (acc1, k1) => ({
       ...acc1,
@@ -65,7 +65,7 @@ export const configureTheme = (userTheme: FormTheme) => {
       ),
     }),
     {},
-  ) as Theme
+  ) as FormTheme
 
   ThemeContext = React.createContext(ThemeVal)
 
