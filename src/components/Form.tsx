@@ -350,6 +350,7 @@ export type Props<FormData, TM> = {
   display?: DisplayType
   formFields: Array<FormField<FormData, TM>>
   onSubmit?: () => void
+  onInvalidSubmit?: () => void
   onChange: (formState: FormData) => void
   buttonProps?: Omit<ButtonProps<TM>, 'onClick'>
   renderTopChildren?: (f: FormData) => ReactNode
@@ -401,6 +402,9 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
     if (isNotValid) {
       setShowValidation(true)
+      if (props.onInvalidSubmit) {
+        props.onInvalidSubmit()
+      }
     } else if (typeof props.onSubmit === 'function') {
       props.onSubmit()
     }
