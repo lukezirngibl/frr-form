@@ -355,6 +355,7 @@ export type Props<FormData, TM> = {
   buttonProps?: Omit<ButtonProps<TM>, 'onClick'>
   renderTopChildren?: (f: FormData) => ReactNode
   renderBottomChildren?: (f: FormData) => ReactNode
+  readOnly?: boolean
 }
 
 export const Form = <FormData extends {}, TM extends TranslationGeneric>(
@@ -688,7 +689,10 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   const { formFields } = props
 
   return (
-    <FormWrapper style={getStyle('form')['wrapper']}>
+    <FormWrapper
+      style={getStyle('form')['wrapper']}
+      className={props.readOnly ? 'read-only' : ''}
+    >
       {props.renderTopChildren && props.renderTopChildren(props.data)}
       <FormContent style={getStyle('form')['content']}>
         {formFields.map((f: FormField<FormData, TM>, key: number) => {
