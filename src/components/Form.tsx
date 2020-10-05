@@ -412,7 +412,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   }
 
   const renderFormFieldInput = (field: SingleFormField<FormData, TM>) => {
-    const { data, onChange } = props
+    const { data, onChange, readOnly } = props
 
     const hasError = showValidation && isFieldInvalid(field)
 
@@ -436,6 +436,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data) || ''}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          readOnly={readOnly}
         />
       )
     }
@@ -496,6 +497,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          readOnly={readOnly}
         />
       )
     }
@@ -508,6 +510,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          readOnly={readOnly}
         />
       )
     }
@@ -532,6 +535,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          readOnly={readOnly}
         />
       )
     }
@@ -568,6 +572,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          readOnly={readOnly}
         />
       )
     }
@@ -580,6 +585,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          readOnly={readOnly}
         />
       )
     }
