@@ -510,7 +510,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
-          readOnly={readOnly}
+          readOnly={readOnly || field.readOnly}
         />
       )
     }
@@ -535,7 +535,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
-          readOnly={readOnly}
+          readOnly={readOnly || field.readOnly}
         />
       )
     }
@@ -572,7 +572,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
-          readOnly={readOnly}
+          readOnly={readOnly || field.readOnly}
         />
       )
     }
@@ -585,7 +585,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
-          readOnly={readOnly}
+          readOnly={readOnly || field.readOnly}
         />
       )
     }
