@@ -9,7 +9,8 @@
   "scripts": {
     "start:example": "react-scripts start ./example/index.ts",
     "build": "tsc",
-    "patch": "yarn run build && git add -A && git commit -m 'patch' && npm version patch"
+    "patch": "yarn run build && git add -A && git commit -m 'patch' && npm version patch",
+    "prepare": "install-peers"
   },
   "repository": {
     "type": "git",
@@ -18,13 +19,14 @@
   "files": [
     "lib/**/*"
   ],
-  "dependencies": {
+  "peerDependencies": {
     "frr-util": "^1.0.3",
     "frr-web": "^1.0.43",
     "monocle-ts": "2.0.0",
     "react": "^16.12.0",
     "styled-components": "4.3.2"
   },
+  "dependencies": {},
   "devDependencies": {
     "@types/react-dom": "16.9.3",
     "@types/react-redux": "7.1.4",
