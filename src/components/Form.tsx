@@ -18,6 +18,10 @@ import {
   Props as SingleCheckboxProps,
 } from 'frr-web/lib/components/SingleCheckbox'
 import {
+  YesNoToggle,
+  Props as YesNoToggleProps,
+} from 'frr-web/lib/components/YesNoToggle'
+import {
   TextInput,
   Props as TextInputProps,
 } from 'frr-web/lib/components/TextInput'
@@ -115,6 +119,12 @@ export type TextInputField<FormData, TM> = FormInput<
   FormFieldType.TextInput
 >
 
+export type YesNoToggleField<FormData, TM> = FormInput<
+  YesNoToggleProps<TM>,
+  Lens<FormData, boolean>,
+  FormFieldType.YesNoToggle
+>
+
 export type DatePickerField<FormData> = FormInput<
   DatePickerProps,
   Lens<FormData, string>,
@@ -174,6 +184,7 @@ export type SingleFormField<FormData, TM> = (
   | MultiSelectField<FormData, TM>
   | CountryDropdownField<FormData, TM>
   | CurrencyInputField<FormData, TM>
+  | YesNoToggleField<FormData, TM>
 ) &
   CommonFieldProps<FormData, TM>
 
@@ -461,6 +472,17 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.YesNoToggle) {
+      const { lens, validate, ...fieldProps } = field
+      return (
+        <YesNoToggle
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
         />
       )
     }
