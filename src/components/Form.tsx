@@ -618,18 +618,19 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   const renderFormFieldItem = (width: number = 100) => (
     field: SingleFormField<FormData, TM>,
     key: number,
-  ) => (
-    <FormFieldWrapper
-      key={key}
-      width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
-      maxwidth={field.maxwidth}
-      className="form-field"
-      style={field.style}
-    >
-      {renderFormFieldInput(field)}
-    </FormFieldWrapper>
-  )
-
+  ) => {
+    return (
+      <FormFieldWrapper
+        key={key}
+        width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
+        maxwidth={field.maxwidth}
+        className="form-field"
+        style={{ ...getStyle('row')['item'], ...field.style }}
+      >
+        {renderFormFieldInput(field)}
+      </FormFieldWrapper>
+    )
+  }
   const renderFormFieldRow = (
     formFieldRow: FormFieldRow<FormData, TM>,
     key: number,

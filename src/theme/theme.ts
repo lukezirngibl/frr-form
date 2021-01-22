@@ -6,6 +6,7 @@ export type FormTheme = {
   form: {
     row: {
       wrapper: CSSProperties
+      item: CSSProperties
     }
     group: {
       title: CSSProperties
@@ -30,6 +31,7 @@ const defaultTheme: FormTheme = {
     },
     row: {
       wrapper: {},
+      item: {},
     },
     group: {
       title: {},
