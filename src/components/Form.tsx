@@ -80,7 +80,7 @@ export type MultiSelectField<FormData, TM> = FormInput<
 
 export type SelectField<FormData, TM> = FormInput<
   SelectProps<TM>,
-  Lens<FormData, string | null>,
+  Lens<FormData, (string | null) | string>,
   FormFieldType.Select
 >
 
