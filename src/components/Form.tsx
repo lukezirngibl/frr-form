@@ -59,6 +59,7 @@ import {
   MultiSelect,
   Props as MultiSelectProps,
 } from 'frr-web/lib/components/MultiSelect'
+import { Select, Props as SelectProps } from 'frr-web/lib/components/Select'
 
 type FormInput<P extends {}, L, T> = Omit<P, 'onChange' | 'value' | 'error'> & {
   lens: L
@@ -75,6 +76,12 @@ export type MultiSelectField<FormData, TM> = FormInput<
   MultiSelectProps<TM>,
   Lens<FormData, Array<string>>,
   FormFieldType.MultiSelect
+>
+
+export type SelectField<FormData, TM> = FormInput<
+  SelectProps<TM>,
+  Lens<FormData, string>,
+  FormFieldType.Select
 >
 
 export type SwitchField<FormData, TM> = FormInput<
@@ -185,6 +192,7 @@ export type SingleFormField<FormData, TM> = (
   | CountryDropdownField<FormData, TM>
   | CurrencyInputField<FormData, TM>
   | YesNoToggleField<FormData, TM>
+  | SelectField<FormData, TM>
 ) &
   CommonFieldProps<FormData, TM>
 
@@ -301,32 +309,6 @@ export const FormFieldWrapper = styled.div<{
   .ui.checkbox.error {
     label {
       color: red !important;
-    }
-  }
-
-  .input {
-    width: 100%;
-
-    &.input.error {
-      .label {
-        background-color: red !important;
-        color: white !important;
-      }
-    }
-
-    .label {
-      transition: all 0.7s ease;
-      flex: none !important;
-      width: 96px;
-      font-size: 13px !important;
-      line-height: 16px !important;
-    }
-    input {
-      transition: all 0.7s ease;
-      flex: none !important;
-      max-width: ${props =>
-        props.maxwidth !== undefined ? `${props.maxwidth}px` : 'none'};
-      width: 100%;
     }
   }
 `
@@ -446,7 +428,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data) || ''}
           onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
+          // error={hasError}
           readOnly={readOnly || field.readOnly}
         />
       )
@@ -531,8 +513,20 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
+          // error={hasError}
           readOnly={readOnly || field.readOnly}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.Select) {
+      const { lens, validate, ...fieldProps } = field
+      return (
+        <Select
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
+          // error={hasError}
         />
       )
     }

@@ -18,6 +18,7 @@ export enum FormFieldType {
   Switch = 'Switch',
   MultiSelect = 'MultiSelect',
   YesNoToggle = 'YesNoToggle',
+  Select = 'Select',
 }
 
 export enum Orientation {
