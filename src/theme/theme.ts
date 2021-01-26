@@ -19,6 +19,7 @@ export type FormTheme = {
     form: {
       wrapper: CSSProperties
       content: CSSProperties
+      buttonContainer: CSSProperties
     }
   }
 }
@@ -40,6 +41,7 @@ const defaultTheme: FormTheme = {
     form: {
       wrapper: {},
       content: {},
+      buttonContainer: {},
     },
   },
 }

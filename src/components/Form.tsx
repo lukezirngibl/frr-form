@@ -256,8 +256,6 @@ const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px 0;
-  margin-bottom: 144px;
 `
 
 const FormWrapper = styled.div`
@@ -754,7 +752,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       </FormContent>
       {props.renderBottomChildren && props.renderBottomChildren(props.data)}
       {props.buttonProps && (
-        <ButtonContainer>
+        <ButtonContainer style={getStyle('form')['buttonContainer']}>
           <Button<TM>
             {...props.buttonProps}
             onClick={() => {
