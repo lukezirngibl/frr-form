@@ -19,6 +19,7 @@ export enum FormFieldType {
   MultiSelect = 'MultiSelect',
   YesNoToggle = 'YesNoToggle',
   Select = 'Select',
+  CodeInput = 'CodeInput',
 }
 
 export enum Orientation {

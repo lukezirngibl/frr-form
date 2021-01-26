@@ -60,11 +60,21 @@ import {
   Props as MultiSelectProps,
 } from 'frr-web/lib/components/MultiSelect'
 import { Select, Props as SelectProps } from 'frr-web/lib/components/Select'
+import {
+  CodeInput,
+  Props as CodeInputProps,
+} from 'frr-web/lib/components/CodeInput'
 
 type FormInput<P extends {}, L, T> = Omit<P, 'onChange' | 'value' | 'error'> & {
   lens: L
   type: T
 }
+
+export type CodeInputField<FormData, TM> = FormInput<
+  CodeInputProps<TM>,
+  Lens<FormData, string>,
+  FormFieldType.CodeInput
+>
 
 export type CurrencyInputField<FormData, TM> = FormInput<
   CurrencyInputProps<TM>,
@@ -80,7 +90,7 @@ export type MultiSelectField<FormData, TM> = FormInput<
 
 export type SelectField<FormData, TM> = FormInput<
   SelectProps<TM>,
-  Lens<FormData, (string | null) | string>,
+  Lens<FormData, string> | Lens<FormData, string | null>,
   FormFieldType.Select
 >
 
@@ -193,6 +203,7 @@ export type SingleFormField<FormData, TM> = (
   | CurrencyInputField<FormData, TM>
   | YesNoToggleField<FormData, TM>
   | SelectField<FormData, TM>
+  | CodeInputField<FormData, TM>
 ) &
   CommonFieldProps<FormData, TM>
 
@@ -477,6 +488,17 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.CodeInput) {
+      const { lens, validate, ...fieldProps } = field
+      return (
+        <CodeInput
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
         />
       )
     }
