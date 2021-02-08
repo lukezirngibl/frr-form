@@ -183,7 +183,7 @@ type CommonFieldProps<FormData, TM> = {
   isDisabled?: boolean
   validate?: (formData: FormData) => boolean
   maxwidth?: number
-  style?: CSSProperties
+  itemStyle?: CSSProperties
 }
 
 export type SingleFormField<FormData, TM> = (
@@ -639,7 +639,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
         maxwidth={field.maxwidth}
         className="form-field"
-        style={{ ...getStyle('row')['item'], ...field.style }}
+        style={{ ...getStyle('row')['item'], ...(field.itemStyle || {}) }}
       >
         {renderFormFieldInput(field)}
       </FormFieldWrapper>
