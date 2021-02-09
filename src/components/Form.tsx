@@ -228,7 +228,7 @@ export type FormFieldGroup<FormData, TM> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-export type FormFieldGroupNumberList<FormData, TM> = {
+export type FormFieldNumberList<FormData, TM> = {
   title?: keyof TM
   description?: keyof TM
   style?: Partial<FormTheme['form']['group']>
@@ -236,6 +236,7 @@ export type FormFieldGroupNumberList<FormData, TM> = {
   field: Omit<TextNumberInputField<FormData, TM>, 'lens' | 'type'>
   lens: Lens<FormData, Array<number>>
   isVisible?: (formData: FormData) => boolean
+  length: Lens<FormData, number>
 }
 
 export type FormField<FormData, TM> =
@@ -243,12 +244,13 @@ export type FormField<FormData, TM> =
   | FormFieldRow<FormData, TM>
   | FormFieldGroup<FormData, TM>
   | FormSection<FormData, TM>
+  | FormFieldNumberList<FormData, TM>
 
 export type SectionField<FormData, TM> =
   | SingleFormField<FormData, TM>
   | FormFieldRow<FormData, TM>
   | FormFieldGroup<FormData, TM>
-  | FormFieldGroupNumberList<FormData, TM>
+  | FormFieldNumberList<FormData, TM>
 
 export type SectionFields<FormData, TM> = Array<SectionField<FormData, TM>>
 
@@ -689,6 +691,25 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
   }
 
+  const renderNumberList = (
+    formField: FormFieldNumberList<FormData, TM>,
+    key: number,
+  ) => {
+    const length = formField.length.get(props.data)
+    console.log('length: ', length)
+    const fields: Array<FormFieldRow<FormData, TM>> = Array.from({
+      length,
+    }).map((_, i) => [
+      {
+        ...formField.field,
+        type: FormFieldType.TextNumber,
+        lens: formField.lens.compose(Lens.fromPath<Array<number>>()([i])),
+      },
+    ])
+    console.log('fields: ', fields)
+    return fields.map(f => renderFormField(f, key))
+  }
+
   const renderFormSectionItem = (
     formField: SectionField<FormData, TM>,
     key: number,
@@ -699,15 +720,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     ) {
       return renderFormGroup(formField, key)
     } else if ('field' in formField) {
-      const length = formField.lens.get(props.data).length
-      const fields: Array<SingleFormField<FormData, TM>> = Array.from({
-        length,
-      }).map((_, i) => ({
-        ...formField.field,
-        type: FormFieldType.TextNumber,
-        lens: formField.lens.compose(Lens.fromPath<Array<number>>()([i])),
-      }))
-      return renderFormField(fields, key)
+      return renderNumberList(formField, key)
     } else {
       return renderFormField(formField, key)
     }
@@ -805,6 +818,8 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
             return renderFormGroup(f, key)
           } else if (f.type === FormFieldType.FormSection) {
             return renderFormSection(f, key)
+          } else if (f.type === FormFieldType.NumberList) {
+            return renderNumberList(f, key)
           } else {
             return renderFormField(f, key)
           }

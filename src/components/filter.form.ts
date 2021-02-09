@@ -74,6 +74,8 @@ export const filterFormFields = <T, E>(
       return [...groups, processFormFieldGroup(f, fn)]
     } else if (f.type === FormFieldType.FormSection) {
       return [...groups, processFormSection(f, fn)]
+    } else if (f.type === FormFieldType.NumberList) {
+      return groups
     } else {
       return [...groups, ...(fn(f) ? [f] : [])]
     }

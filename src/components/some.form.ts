@@ -52,6 +52,8 @@ export const someFormFields = <T, E>(
       return processFormFieldGroup(f, fn)
     } else if (f.type === FormFieldType.FormSection) {
       return processFormSectionFields(f.fields, fn)
+    } else if (f.type === FormFieldType.NumberList) {
+      return false
     } else {
       return fn(f)
     }
