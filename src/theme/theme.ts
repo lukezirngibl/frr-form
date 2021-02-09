@@ -11,10 +11,12 @@ export type FormTheme = {
     group: {
       title: CSSProperties
       wrapper: CSSProperties
+      description: CSSProperties
     }
     section: {
       title: CSSProperties
       wrapper: CSSProperties
+      description: CSSProperties
     }
     form: {
       wrapper: CSSProperties
@@ -29,6 +31,7 @@ const defaultTheme: FormTheme = {
     section: {
       title: {},
       wrapper: {},
+      description: {},
     },
     row: {
       wrapper: {},
@@ -37,6 +40,7 @@ const defaultTheme: FormTheme = {
     group: {
       title: {},
       wrapper: {},
+      description: {},
     },
     form: {
       wrapper: {},

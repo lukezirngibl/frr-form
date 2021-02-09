@@ -34,6 +34,8 @@ const processFormSectionFields = <T, E>(
       return processFormFieldRow(f, fn)
     } else if (f.type === FormFieldType.FormFieldGroup) {
       return processFormFieldGroup(f, fn)
+    } else if (f.type === FormFieldType.NumberList) {
+      return false
     } else {
       return fn(f)
     }

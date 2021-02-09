@@ -35,7 +35,7 @@ import { DatePickerProps, DatePicker } from 'frr-web/lib/components/DatePicker'
 import { someFormFields } from './some.form'
 import { TranslationGeneric } from 'frr-web/lib/util'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
-import { getThemeContext, FormTheme as Theme } from '../theme/theme'
+import { getThemeContext, FormTheme as Theme, FormTheme } from '../theme/theme'
 import { createGetStyle } from '../theme/util'
 import { Button, Props as ButtonProps } from 'frr-web/lib/components/Button'
 import {
@@ -220,13 +220,22 @@ export type SingleFieldOrRow<FormData, TM> =
 export type GroupFields<FormData, TM> = Array<SingleFieldOrRow<FormData, TM>>
 
 export type FormFieldGroup<FormData, TM> = {
-  title: keyof TM
-  style?: {
-    title: CSSProperties
-    wrapper: CSSProperties
-  }
+  title?: keyof TM
+  description?: keyof TM
+  style?: Partial<FormTheme['form']['group']>
   type: FormFieldType.FormFieldGroup
   fields: GroupFields<FormData, TM>
+  isVisible?: (formData: FormData) => boolean
+}
+
+export type FormFieldGroupNumberList<FormData, TM> = {
+  title?: keyof TM
+  description?: keyof TM
+  style?: Partial<FormTheme['form']['group']>
+  type: FormFieldType.NumberList
+  field: Omit<TextNumberInputField<FormData, TM>, 'lens' | 'type'>
+  lens: Lens<FormData, Array<number>>
+  isVisible?: (formData: FormData) => boolean
 }
 
 export type FormField<FormData, TM> =
@@ -239,17 +248,17 @@ export type SectionField<FormData, TM> =
   | SingleFormField<FormData, TM>
   | FormFieldRow<FormData, TM>
   | FormFieldGroup<FormData, TM>
+  | FormFieldGroupNumberList<FormData, TM>
 
 export type SectionFields<FormData, TM> = Array<SectionField<FormData, TM>>
 
 export type FormSection<FormData, TM> = {
   title?: keyof TM
-  style?: {
-    title: CSSProperties
-    wrapper: CSSProperties
-  }
+  description?: keyof TM
+  style?: Partial<FormTheme['form']['section']>
   type: FormFieldType.FormSection
   fields: SectionFields<FormData, TM>
+  isVisible?: (formData: FormData) => boolean
 }
 
 const ButtonContainer = styled.div`
@@ -345,9 +354,13 @@ export const FormSectionTitle = styled.h3`
   font-size: 18px;
 `
 
+export const FormFieldGroupDescription = styled.p``
+
+export const FormSectionDescription = styled.p``
+
 export type Props<FormData, TM> = {
   children?: ReactNode
-  style?: Partial<Theme['form']>
+  style?: Partial<FormTheme['form']>
   data: FormData
   display?: DisplayType
   formFields: Array<FormField<FormData, TM>>
@@ -358,6 +371,7 @@ export type Props<FormData, TM> = {
   renderTopChildren?: (f: FormData) => ReactNode
   renderBottomChildren?: (f: FormData) => ReactNode
   readOnly?: boolean
+  isVisible?: (formData: FormData) => boolean
 }
 
 export const Form = <FormData extends {}, TM extends TranslationGeneric>(
@@ -633,7 +647,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     field: SingleFormField<FormData, TM>,
     key: number,
   ) => {
-    return (
+    return !field.isVisible || field.isVisible(props.data) ? (
       <FormFieldWrapper
         key={key}
         width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
@@ -643,16 +657,22 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       >
         {renderFormFieldInput(field)}
       </FormFieldWrapper>
+    ) : (
+      <></>
     )
   }
+
   const renderFormFieldRow = (
     formFieldRow: FormFieldRow<FormData, TM>,
     key: number,
-  ) => (
-    <FormFieldRowWrapper key={key} style={getStyle('row')['wrapper']}>
-      {formFieldRow.map(renderFormFieldItem((1 / formFieldRow.length) * 100))}
-    </FormFieldRowWrapper>
-  )
+  ) =>
+    formFieldRow.some(r => !r.isVisible || r.isVisible(props.data)) ? (
+      <FormFieldRowWrapper key={key} style={getStyle('row')['wrapper']}>
+        {formFieldRow.map(renderFormFieldItem((1 / formFieldRow.length) * 100))}
+      </FormFieldRowWrapper>
+    ) : (
+      <></>
+    )
 
   const renderFormField = (
     formField: FormFieldRow<FormData, TM> | SingleFormField<FormData, TM>,
@@ -678,6 +698,16 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       formField.type === FormFieldType.FormFieldGroup
     ) {
       return renderFormGroup(formField, key)
+    } else if ('field' in formField) {
+      const length = formField.lens.get(props.data).length
+      const fields: Array<SingleFormField<FormData, TM>> = Array.from({
+        length,
+      }).map((_, i) => ({
+        ...formField.field,
+        type: FormFieldType.TextNumber,
+        lens: formField.lens.compose(Lens.fromPath<Array<number>>()([i])),
+      }))
+      return renderFormField(fields, key)
     } else {
       return renderFormField(formField, key)
     }
@@ -686,52 +716,82 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   const renderFormGroup = (
     formGroup: FormFieldGroup<FormData, TM>,
     key: number,
-  ) => (
-    <FormFieldGroupWrapper
-      key={key}
-      style={{
-        ...getStyle('group')['wrapper'],
-        ...(formGroup.style ? formGroup.style.wrapper || {} : {}),
-      }}
-    >
-      <FormFieldGroupTitle
+  ) =>
+    !formGroup.isVisible || formGroup.isVisible(props.data) ? (
+      <FormFieldGroupWrapper
+        key={key}
         style={{
-          ...getStyle('group')['title'],
-          ...(formGroup.style ? formGroup.style.title || {} : {}),
+          ...getStyle('group')['wrapper'],
+          ...(formGroup.style ? formGroup.style.wrapper || {} : {}),
         }}
       >
-        {translate(formGroup.title)}
-      </FormFieldGroupTitle>
-      {formGroup.fields.map(renderFormField)}
-    </FormFieldGroupWrapper>
-  )
+        {formGroup.title && (
+          <FormFieldGroupTitle
+            style={{
+              ...getStyle('group')['title'],
+              ...(formGroup.style ? formGroup.style.title || {} : {}),
+            }}
+          >
+            {translate(formGroup.title)}
+          </FormFieldGroupTitle>
+        )}
+        {formGroup.description && (
+          <FormFieldGroupDescription
+            style={{
+              ...getStyle('group')['description'],
+              ...(formGroup.style ? formGroup.style.description || {} : {}),
+            }}
+          >
+            {translate(formGroup.description)}
+          </FormFieldGroupDescription>
+        )}
+        {formGroup.fields.map(renderFormField)}
+      </FormFieldGroupWrapper>
+    ) : (
+      <></>
+    )
 
   const renderFormSection = (
     formSection: FormSection<FormData, TM>,
     key: number,
-  ) => (
-    <FormSectionWrapper
-      key={key}
-      style={{
-        ...getStyle('section')['wrapper'],
-        ...(formSection.style ? formSection.style.wrapper || {} : {}),
-      }}
-    >
-      <FormSectionTitle
+  ) =>
+    !formSection.isVisible || formSection.isVisible(props.data) ? (
+      <FormSectionWrapper
+        key={key}
         style={{
-          ...getStyle('section')['title'],
-          ...(formSection.style ? formSection.style.title || {} : {}),
+          ...getStyle('section')['wrapper'],
+          ...(formSection.style ? formSection.style.wrapper || {} : {}),
         }}
       >
-        {translate(formSection.title)}
-      </FormSectionTitle>
-      {formSection.fields.map(renderFormSectionItem)}
-    </FormSectionWrapper>
-  )
+        {formSection.title && (
+          <FormSectionTitle
+            style={{
+              ...getStyle('section')['title'],
+              ...(formSection.style ? formSection.style.title || {} : {}),
+            }}
+          >
+            {translate(formSection.title)}
+          </FormSectionTitle>
+        )}
+        {formSection.description && (
+          <FormSectionDescription
+            style={{
+              ...getStyle('group')['description'],
+              ...(formSection.style ? formSection.style.description || {} : {}),
+            }}
+          >
+            {translate(formSection.description)}
+          </FormSectionDescription>
+        )}
+        {formSection.fields.map(renderFormSectionItem)}
+      </FormSectionWrapper>
+    ) : (
+      <></>
+    )
 
   const { formFields } = props
 
-  return (
+  return !props.isVisible || props.isVisible(props.data) ? (
     <FormWrapper
       style={getStyle('form')['wrapper']}
       className={props.readOnly ? 'read-only' : ''}
@@ -762,5 +822,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         </ButtonContainer>
       )}
     </FormWrapper>
+  ) : (
+    <></>
   )
 }

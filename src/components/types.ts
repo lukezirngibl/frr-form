@@ -20,6 +20,7 @@ export enum FormFieldType {
   YesNoToggle = 'YesNoToggle',
   Select = 'Select',
   CodeInput = 'CodeInput',
+  NumberList = 'NumberList',
 }
 
 export enum Orientation {
