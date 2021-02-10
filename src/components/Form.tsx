@@ -222,7 +222,7 @@ export type GroupFields<FormData, TM> = Array<SingleFieldOrRow<FormData, TM>>
 export type FormFieldGroup<FormData, TM> = {
   title?: keyof TM
   description?: keyof TM
-  style?: Partial<FormTheme['form']['group']>
+  style?: Partial<FormTheme['group']>
   type: FormFieldType.FormFieldGroup
   fields: GroupFields<FormData, TM>
   isVisible?: (formData: FormData) => boolean
@@ -231,7 +231,7 @@ export type FormFieldGroup<FormData, TM> = {
 export type FormFieldNumberList<FormData, TM> = {
   title?: keyof TM
   description?: keyof TM
-  style?: Partial<FormTheme['form']['group']>
+  style?: Partial<FormTheme['group']>
   type: FormFieldType.NumberList
   field: Omit<TextNumberInputField<FormData, TM>, 'lens' | 'type'>
   lens: Lens<FormData, Array<number>>
@@ -257,7 +257,7 @@ export type SectionFields<FormData, TM> = Array<SectionField<FormData, TM>>
 export type FormSection<FormData, TM> = {
   title?: keyof TM
   description?: keyof TM
-  style?: Partial<FormTheme['form']['section']>
+  style?: Partial<FormTheme['section']>
   type: FormFieldType.FormSection
   fields: SectionFields<FormData, TM>
   isVisible?: (formData: FormData) => boolean
@@ -362,7 +362,7 @@ export const FormSectionDescription = styled.p``
 
 export type Props<FormData, TM> = {
   children?: ReactNode
-  style?: Partial<FormTheme['form']>
+  style?: Partial<FormTheme>
   data: FormData
   display?: DisplayType
   formFields: Array<FormField<FormData, TM>>
@@ -382,7 +382,14 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   // const formRef = React.createRef<HTMLFormElement>()
 
   const theme = React.useContext(getThemeContext())
-  const getStyle = createGetStyle(theme, 'form')(props.style)
+
+  const getRowStyle = createGetStyle(theme, 'row')(props.style?.row || {})
+  const getSectionStyle = createGetStyle(
+    theme,
+    'section',
+  )(props.style?.section || {})
+  const getGroupStyle = createGetStyle(theme, 'group')(props.style?.group || {})
+  const getFormStyle = createGetStyle(theme, 'form')(props.style?.form || {})
 
   const language = React.useContext(getLanguageContext())
   const translate = getTranslation(language)
@@ -655,7 +662,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
         maxwidth={field.maxwidth}
         className="form-field"
-        style={{ ...getStyle('row')['item'], ...(field.itemStyle || {}) }}
+        style={{ ...getRowStyle('item'), ...(field.itemStyle || {}) }}
       >
         {renderFormFieldInput(field)}
       </FormFieldWrapper>
@@ -669,7 +676,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     key: number,
   ) =>
     formFieldRow.some(r => !r.isVisible || r.isVisible(props.data)) ? (
-      <FormFieldRowWrapper key={key} style={getStyle('row')['wrapper']}>
+      <FormFieldRowWrapper key={key} style={getRowStyle('wrapper')}>
         {formFieldRow.map(renderFormFieldItem((1 / formFieldRow.length) * 100))}
       </FormFieldRowWrapper>
     ) : (
@@ -684,7 +691,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       return renderFormFieldRow(formField, key)
     } else {
       return (
-        <FormFieldRowWrapper style={getStyle('row')['wrapper']}>
+        <FormFieldRowWrapper style={getRowStyle('wrapper')}>
           {renderFormFieldItem()(formField, key)}
         </FormFieldRowWrapper>
       )
@@ -696,7 +703,6 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     key: number,
   ) => {
     const length = formField.length.get(props.data)
-    console.log('length: ', length)
     const fields: Array<FormFieldRow<FormData, TM>> = Array.from({
       length,
     }).map((_, i) => [
@@ -706,7 +712,6 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         lens: formField.lens.compose(Lens.fromPath<Array<number>>()([i])),
       },
     ])
-    console.log('fields: ', fields)
     return fields.map(f => renderFormField(f, key))
   }
 
@@ -734,14 +739,14 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       <FormFieldGroupWrapper
         key={key}
         style={{
-          ...getStyle('group')['wrapper'],
+          ...getGroupStyle('wrapper'),
           ...(formGroup.style ? formGroup.style.wrapper || {} : {}),
         }}
       >
         {formGroup.title && (
           <FormFieldGroupTitle
             style={{
-              ...getStyle('group')['title'],
+              ...getGroupStyle('title'),
               ...(formGroup.style ? formGroup.style.title || {} : {}),
             }}
           >
@@ -751,7 +756,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         {formGroup.description && (
           <FormFieldGroupDescription
             style={{
-              ...getStyle('group')['description'],
+              ...getGroupStyle('description'),
               ...(formGroup.style ? formGroup.style.description || {} : {}),
             }}
           >
@@ -772,14 +777,14 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       <FormSectionWrapper
         key={key}
         style={{
-          ...getStyle('section')['wrapper'],
+          ...getSectionStyle('wrapper'),
           ...(formSection.style ? formSection.style.wrapper || {} : {}),
         }}
       >
         {formSection.title && (
           <FormSectionTitle
             style={{
-              ...getStyle('section')['title'],
+              ...getSectionStyle('title'),
               ...(formSection.style ? formSection.style.title || {} : {}),
             }}
           >
@@ -789,7 +794,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         {formSection.description && (
           <FormSectionDescription
             style={{
-              ...getStyle('group')['description'],
+              ...getSectionStyle('description'),
               ...(formSection.style ? formSection.style.description || {} : {}),
             }}
           >
@@ -806,11 +811,11 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
   return !props.isVisible || props.isVisible(props.data) ? (
     <FormWrapper
-      style={getStyle('form')['wrapper']}
+      style={getFormStyle('wrapper')}
       className={props.readOnly ? 'read-only' : ''}
     >
       {props.renderTopChildren && props.renderTopChildren(props.data)}
-      <FormContent style={getStyle('form')['content']}>
+      <FormContent style={getFormStyle('content')}>
         {formFields.map((f: FormField<FormData, TM>, key: number) => {
           if (Array.isArray(f)) {
             return renderFormFieldRow(f, key)
@@ -827,7 +832,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       </FormContent>
       {props.renderBottomChildren && props.renderBottomChildren(props.data)}
       {props.buttonProps && (
-        <ButtonContainer style={getStyle('form')['buttonContainer']}>
+        <ButtonContainer style={getFormStyle('buttonContainer')}>
           <Button<TM>
             {...props.buttonProps}
             onClick={() => {

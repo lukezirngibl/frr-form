@@ -3,50 +3,46 @@ import { CSSProperties } from 'styled-components'
 import { keys } from 'frr-util/lib/util'
 
 export type FormTheme = {
+  row: {
+    wrapper: CSSProperties
+    item: CSSProperties
+  }
+  group: {
+    title: CSSProperties
+    wrapper: CSSProperties
+    description: CSSProperties
+  }
+  section: {
+    title: CSSProperties
+    wrapper: CSSProperties
+    description: CSSProperties
+  }
   form: {
-    row: {
-      wrapper: CSSProperties
-      item: CSSProperties
-    }
-    group: {
-      title: CSSProperties
-      wrapper: CSSProperties
-      description: CSSProperties
-    }
-    section: {
-      title: CSSProperties
-      wrapper: CSSProperties
-      description: CSSProperties
-    }
-    form: {
-      wrapper: CSSProperties
-      content: CSSProperties
-      buttonContainer: CSSProperties
-    }
+    wrapper: CSSProperties
+    content: CSSProperties
+    buttonContainer: CSSProperties
   }
 }
 
 const defaultTheme: FormTheme = {
+  section: {
+    title: {},
+    wrapper: {},
+    description: {},
+  },
+  row: {
+    wrapper: {},
+    item: {},
+  },
+  group: {
+    title: {},
+    wrapper: {},
+    description: {},
+  },
   form: {
-    section: {
-      title: {},
-      wrapper: {},
-      description: {},
-    },
-    row: {
-      wrapper: {},
-      item: {},
-    },
-    group: {
-      title: {},
-      wrapper: {},
-      description: {},
-    },
-    form: {
-      wrapper: {},
-      content: {},
-      buttonContainer: {},
-    },
+    wrapper: {},
+    content: {},
+    buttonContainer: {},
   },
 }
 
