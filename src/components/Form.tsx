@@ -64,11 +64,21 @@ import {
   CodeInput,
   Props as CodeInputProps,
 } from 'frr-web/lib/components/CodeInput'
+import {
+  RadioGroup,
+  Props as RadioGroupProps,
+} from 'frr-web/lib/components/RadioGroup'
 
 type FormInput<P extends {}, L, T> = Omit<P, 'onChange' | 'value' | 'error'> & {
   lens: L
   type: T
 }
+
+export type RadioGroupField<FormData, TM> = FormInput<
+  RadioGroupProps<TM>,
+  Lens<FormData, string>,
+  FormFieldType.RadioGroup
+>
 
 export type CodeInputField<FormData, TM> = FormInput<
   CodeInputProps<TM>,
@@ -204,6 +214,7 @@ export type SingleFormField<FormData, TM> = (
   | YesNoToggleField<FormData, TM>
   | SelectField<FormData, TM>
   | CodeInputField<FormData, TM>
+  | RadioGroupField<FormData, TM>
 ) &
   CommonFieldProps<FormData, TM>
 
@@ -494,6 +505,17 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       const { lens, validate, ...fieldProps } = field
       return (
         <YesNoToggle
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.RadioGroup) {
+      const { lens, validate, ...fieldProps } = field
+      return (
+        <RadioGroup
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
