@@ -68,11 +68,18 @@ import {
   RadioGroup,
   Props as RadioGroupProps,
 } from 'frr-web/lib/components/RadioGroup'
+import { Toggle, Props as ToggleProps } from 'frr-web/lib/components/Toggle'
 
 type FormInput<P extends {}, L, T> = Omit<P, 'onChange' | 'value' | 'error'> & {
   lens: L
   type: T
 }
+
+export type ToggleField<FormData, TM> = FormInput<
+  ToggleProps<TM>,
+  Lens<FormData, boolean>,
+  FormFieldType.Toggle
+>
 
 export type RadioGroupField<FormData, TM> = FormInput<
   RadioGroupProps<TM>,
@@ -164,12 +171,6 @@ export type DropdownField<FormData, TM> = FormInput<
   FormFieldType.Dropdown
 >
 
-// export type RadioGroupField<FormData> = FormInput<
-//   RadioGroupProps,
-//   Lens<FormData, string>,
-//   FormFieldType.RadioGroup
-// >
-
 export type CheckboxGroupField<FormData, TM> = FormInput<
   CheckboxGroupProps<TM>,
   Lens<FormData, Array<string>>,
@@ -215,6 +216,7 @@ export type SingleFormField<FormData, TM> = (
   | SelectField<FormData, TM>
   | CodeInputField<FormData, TM>
   | RadioGroupField<FormData, TM>
+  | ToggleField<FormData, TM>
 ) &
   CommonFieldProps<FormData, TM>
 
@@ -471,8 +473,19 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data) || ''}
           onChange={value => onChange(lens.set(value)(data))}
-          // error={hasError}
+          error={hasError}
           readOnly={readOnly || field.readOnly}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.Toggle) {
+      const { type, lens, validate, ...fieldProps } = field
+      return (
+        <Toggle
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
         />
       )
     }
