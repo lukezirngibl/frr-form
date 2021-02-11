@@ -75,7 +75,10 @@ import {
 } from 'frr-web/lib/components/OptionGroup'
 import { useDispatch } from 'react-redux'
 
-type FormInput<P extends {}, L, T> = Omit<P, 'onChange' | 'value' | 'error'> & {
+type FormInput<P extends {}, L, T> = Omit<
+  P,
+  'onChange' | 'value' | 'error' | 'required'
+> & {
   lens: L
   type: T
 }
@@ -206,6 +209,7 @@ type CommonFieldProps<FormData, TM> = {
   validate?: (formData: FormData) => boolean
   maxwidth?: number
   itemStyle?: CSSProperties
+  required?: boolean | ((formData: FormData) => boolean)
 }
 
 export type SingleFormField<FormData, TM> = (
@@ -434,7 +438,18 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     if ('validate' in f && f.validate !== undefined) {
       return f.validate(props.data)
     }
-    if ('required' in f && f.required) {
+    if ('isVisible' in f && !f.isVisible(props.data)) {
+      return false
+    }
+
+    const isRequired =
+      'required' in f
+        ? typeof f.required === 'function'
+          ? f.required(props.data)
+          : f.required
+        : false
+
+    if (isRequired) {
       let val = f.lens.get(props.data)
       val = typeof val === 'string' ? val.trim() : val
       let isInvalid = val === '' || val === null || val === undefined
@@ -456,6 +471,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   const submit = () => {
     const isNotValid = someFormFields(props.formFields, isFieldInvalid)
 
+    console.log(isNotValid, props)
     if (isNotValid) {
       setShowValidation(true)
       if (props.onInvalidSubmit) {
@@ -490,7 +506,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.TextInput) {
-      const { type, lens, validate, ...fieldProps } = field
+      const { type, lens, validate, required, ...fieldProps } = field
       return (
         <TextInput
           {...fieldProps}
@@ -504,7 +520,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.Toggle) {
-      const { type, lens, validate, ...fieldProps } = field
+      const { type, lens, validate, required, ...fieldProps } = field
       return (
         <Toggle
           {...fieldProps}
@@ -566,7 +582,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.RadioGroup) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <RadioGroup
           {...fieldProps}
@@ -579,7 +595,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.SingleCheckbox) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <SingleCheckbox
           {...fieldProps}
@@ -604,7 +620,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.Switch) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <Switch
           {...fieldProps}
@@ -617,7 +633,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.NumberInput) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <NumberInput
           {...fieldProps}
@@ -631,7 +647,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.TextNumber) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <TextNumberInput
           {...fieldProps}
@@ -645,7 +661,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.Select) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <Select
           {...fieldProps}
@@ -658,7 +674,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.MultiSelect) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <MultiSelect
           {...fieldProps}
@@ -671,7 +687,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.InputWithDropdown) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <InputWithDropdown
           {...fieldProps}
@@ -685,7 +701,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.CountryDropdown) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <CountryDropdown
           {...fieldProps}
@@ -698,7 +714,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.CurrencyInput) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <CurrencyInput
           {...fieldProps}
@@ -711,7 +727,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.Dropdown) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <Dropdown
           {...fieldProps}
@@ -725,7 +741,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
 
     if (field.type === FormFieldType.DropdownNumber) {
-      const { lens, validate, ...fieldProps } = field
+      const { lens, validate, required, ...fieldProps } = field
       return (
         <DropdownNumber
           {...fieldProps}
