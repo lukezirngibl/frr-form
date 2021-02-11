@@ -164,7 +164,7 @@ export type TextInputField<FormData, TM> = FormInput<
 >
 
 export type YesNoToggleField<FormData, TM> = FormInput<
-  YesNoToggleProps,
+  YesNoToggleProps<TM>,
   Lens<FormData, boolean>,
   FormFieldType.YesNoToggle
 >
