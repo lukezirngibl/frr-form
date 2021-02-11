@@ -69,11 +69,21 @@ import {
   Props as RadioGroupProps,
 } from 'frr-web/lib/components/RadioGroup'
 import { Toggle, Props as ToggleProps } from 'frr-web/lib/components/Toggle'
+import {
+  OptionGroup,
+  Props as OptionGroupProps,
+} from 'frr-web/lib/components/OptionGroup'
 
 type FormInput<P extends {}, L, T> = Omit<P, 'onChange' | 'value' | 'error'> & {
   lens: L
   type: T
 }
+
+export type OptionGroupField<FormData, TM> = FormInput<
+  OptionGroupProps<TM>,
+  Lens<FormData, string>,
+  FormFieldType.OptionGroup
+>
 
 export type ToggleField<FormData, TM> = FormInput<
   ToggleProps<TM>,
@@ -154,7 +164,7 @@ export type TextInputField<FormData, TM> = FormInput<
 >
 
 export type YesNoToggleField<FormData, TM> = FormInput<
-  YesNoToggleProps<TM>,
+  YesNoToggleProps,
   Lens<FormData, boolean>,
   FormFieldType.YesNoToggle
 >
@@ -217,6 +227,7 @@ export type SingleFormField<FormData, TM> = (
   | CodeInputField<FormData, TM>
   | RadioGroupField<FormData, TM>
   | ToggleField<FormData, TM>
+  | OptionGroupField<FormData, TM>
 ) &
   CommonFieldProps<FormData, TM>
 
@@ -518,6 +529,17 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       const { lens, validate, ...fieldProps } = field
       return (
         <YesNoToggle
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.OptionGroup) {
+      const { lens, validate, ...fieldProps } = field
+      return (
+        <OptionGroup
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
