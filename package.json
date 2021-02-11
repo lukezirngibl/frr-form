@@ -10,7 +10,8 @@
     "start:example": "react-scripts start ./example/index.ts",
     "build": "tsc",
     "patch": "yarn run build && git add -A && git commit -m 'patch' && npm version patch",
-    "prepare": "install-peers"
+    "prepare": "install-peers",
+    "sync-frr-web": "rm -rf ./node_modules/frr-web/lib  && cp -r ../frr-web/lib ./node_modules/frr-web/lib"
   },
   "repository": {
     "type": "git",

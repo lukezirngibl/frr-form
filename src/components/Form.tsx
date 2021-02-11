@@ -31,7 +31,7 @@ import {
   TextNumberInput,
   Props as TextNumberInputProps,
 } from 'frr-web/lib/components/TextNumberInput'
-import { DatePickerProps, DatePicker } from 'frr-web/lib/components/DatePicker'
+// import { DatePickerProps, DatePicker } from 'frr-web/lib/components/DatePicker'
 import { someFormFields } from './some.form'
 import { TranslationGeneric } from 'frr-web/lib/util'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
@@ -169,11 +169,11 @@ export type YesNoToggleField<FormData, TM> = FormInput<
   FormFieldType.YesNoToggle
 >
 
-export type DatePickerField<FormData> = FormInput<
-  DatePickerProps,
-  Lens<FormData, string>,
-  FormFieldType.DatePicker
->
+// export type DatePickerField<FormData> = FormInput<
+//   DatePickerProps,
+//   Lens<FormData, string>,
+//   FormFieldType.DatePicker
+// >
 
 export type DropdownField<FormData, TM> = FormInput<
   DropdownProps<TM>,
@@ -210,7 +210,7 @@ type CommonFieldProps<FormData, TM> = {
 export type SingleFormField<FormData, TM> = (
   | CheckboxGroupField<FormData, TM>
   | NumberInputField<FormData, TM>
-  | DatePickerField<FormData>
+  // | DatePickerField<FormData>
   | DropdownField<FormData, TM>
   | SingleCheckboxField<FormData, TM>
   | TextAreaField<FormData, TM>
@@ -303,7 +303,6 @@ export const FormContent = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 4px !important;
 `
 
 export const FormFieldRowWrapper = styled.div`
@@ -393,7 +392,11 @@ export type Props<FormData, TM> = {
   onSubmit?: () => void
   onInvalidSubmit?: () => void
   onChange: (formState: FormData) => void
-  buttonProps?: Omit<ButtonProps<TM>, 'onClick'>
+  buttons?: Array<
+    Omit<ButtonProps<TM>, 'onClick'> & {
+      onClick: (params: { submit: () => void }) => void
+    }
+  >
   renderTopChildren?: (f: FormData) => ReactNode
   renderBottomChildren?: (f: FormData) => ReactNode
   readOnly?: boolean
@@ -465,6 +468,11 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
     const hasError = showValidation && isFieldInvalid(field)
 
+    let { label } = field
+    if (label) {
+      label = { error: hasError, ...label }
+    }
+
     if (field.type === FormFieldType.TextArea) {
       const { type, lens, validate, ...fieldProps } = field
       return (
@@ -473,6 +481,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          label={label}
         />
       )
     }
@@ -486,6 +495,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
           readOnly={readOnly || field.readOnly}
+          label={label}
         />
       )
     }
@@ -497,21 +507,22 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
+          label={label}
         />
       )
     }
 
-    if (field.type === FormFieldType.DatePicker) {
-      const { type, lens, validate, ...fieldProps } = field
-      return (
-        <DatePicker
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-        />
-      )
-    }
+    // if (field.type === FormFieldType.DatePicker) {
+    //   const { type, lens, validate, ...fieldProps } = field
+    //   return (
+    //     <DatePicker
+    //       {...fieldProps}
+    //       value={lens.get(data)}
+    //       onChange={value => onChange(lens.set(value)(data))}
+    //       error={hasError}
+    //     />
+    //   )
+    // }
 
     if (field.type === FormFieldType.CheckboxGroup) {
       const { lens, validate, ...fieldProps } = field
@@ -521,6 +532,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          label={label}
         />
       )
     }
@@ -532,6 +544,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
+          label={label}
         />
       )
     }
@@ -543,6 +556,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
+          label={label}
         />
       )
     }
@@ -554,6 +568,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
+          label={label}
         />
       )
     }
@@ -566,6 +581,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          label={label}
         />
       )
     }
@@ -577,6 +593,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
+          label={label}
         />
       )
     }
@@ -589,6 +606,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          label={label}
         />
       )
     }
@@ -602,6 +620,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
           readOnly={readOnly}
+          label={label}
         />
       )
     }
@@ -615,6 +634,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           onChange={value => onChange(lens.set(value)(data))}
           // error={hasError}
           readOnly={readOnly || field.readOnly}
+          label={label}
         />
       )
     }
@@ -626,6 +646,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
+          label={label}
           // error={hasError}
         />
       )
@@ -639,6 +660,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          label={label}
         />
       )
     }
@@ -652,6 +674,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
           readOnly={readOnly || field.readOnly}
+          label={label}
         />
       )
     }
@@ -664,6 +687,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          label={label}
         />
       )
     }
@@ -676,6 +700,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          label={label}
         />
       )
     }
@@ -689,6 +714,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
           readOnly={readOnly || field.readOnly}
+          label={label}
         />
       )
     }
@@ -702,6 +728,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
           readOnly={readOnly || field.readOnly}
+          label={label}
         />
       )
     }
@@ -892,14 +919,11 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         })}
       </FormContent>
       {props.renderBottomChildren && props.renderBottomChildren(props.data)}
-      {props.buttonProps && (
+      {props.buttons && (
         <ButtonContainer style={getFormStyle('buttonContainer')}>
-          <Button<TM>
-            {...props.buttonProps}
-            onClick={() => {
-              submit()
-            }}
-          />
+          {props.buttons.map((b, k) => (
+            <Button<TM> {...b} onClick={() => b.onClick({ submit })} />
+          ))}
         </ButtonContainer>
       )}
     </FormWrapper>
