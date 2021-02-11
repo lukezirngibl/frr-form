@@ -73,6 +73,7 @@ import {
   OptionGroup,
   Props as OptionGroupProps,
 } from 'frr-web/lib/components/OptionGroup'
+import { useDispatch } from 'react-redux'
 
 type FormInput<P extends {}, L, T> = Omit<P, 'onChange' | 'value' | 'error'> & {
   lens: L
@@ -389,12 +390,13 @@ export type Props<FormData, TM> = {
   data: FormData
   display?: DisplayType
   formFields: Array<FormField<FormData, TM>>
-  onSubmit?: () => void
+  onSubmit?: (params: { dispatch: any }) => void
   onInvalidSubmit?: () => void
   onChange: (formState: FormData) => void
   buttons?: Array<
     Omit<ButtonProps<TM>, 'onClick'> & {
-      onClick: (params: { submit: () => void }) => void
+      onClick: (params: { submit: () => void; dispatch: any }) => void
+      isDisabled?: (d: FormData) => boolean
     }
   >
   renderTopChildren?: (f: FormData) => ReactNode
@@ -408,6 +410,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 ) => {
   // const formRef = React.createRef<HTMLFormElement>()
 
+  const dispatch = useDispatch()
   const theme = React.useContext(getThemeContext())
 
   const getRowStyle = createGetStyle(theme, 'row')(props.style?.row || {})
@@ -459,7 +462,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         props.onInvalidSubmit()
       }
     } else if (typeof props.onSubmit === 'function') {
-      props.onSubmit()
+      props.onSubmit({ dispatch })
     }
   }
 
@@ -557,6 +560,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           label={label}
+          error={hasError}
         />
       )
     }
@@ -569,6 +573,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           label={label}
+          error={hasError}
         />
       )
     }
@@ -647,7 +652,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           label={label}
-          // error={hasError}
+          error={hasError}
         />
       )
     }
@@ -922,7 +927,11 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       {props.buttons && (
         <ButtonContainer style={getFormStyle('buttonContainer')}>
           {props.buttons.map((b, k) => (
-            <Button<TM> {...b} onClick={() => b.onClick({ submit })} />
+            <Button<TM>
+              {...b}
+              disabled={b.isDisabled ? b.isDisabled(props.data) : false}
+              onClick={() => b.onClick({ submit, dispatch })}
+            />
           ))}
         </ButtonContainer>
       )}
