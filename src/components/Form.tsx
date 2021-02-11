@@ -780,6 +780,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       >
         {formGroup.title && (
           <FormFieldGroupTitle
+            itemID={formGroup.title as string}
             style={{
               ...getGroupStyle('title'),
               ...(formGroup.style ? formGroup.style.title || {} : {}),
@@ -790,6 +791,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         )}
         {formGroup.description && (
           <FormFieldGroupDescription
+            itemID={formGroup.description as string}
             style={{
               ...getGroupStyle('description'),
               ...(formGroup.style ? formGroup.style.description || {} : {}),
@@ -818,6 +820,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       >
         {formSection.title && (
           <FormSectionTitle
+            itemID={formSection.title as string}
             style={{
               ...getSectionStyle('title'),
               ...(formSection.style ? formSection.style.title || {} : {}),
@@ -828,6 +831,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         )}
         {formSection.description && (
           <FormSectionDescription
+            itemID={formSection.description as string}
             style={{
               ...getSectionStyle('description'),
               ...(formSection.style ? formSection.style.description || {} : {}),
