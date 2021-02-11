@@ -33,6 +33,7 @@ import {
 } from 'frr-web/lib/components/TextNumberInput'
 // import { DatePickerProps, DatePicker } from 'frr-web/lib/components/DatePicker'
 import { someFormFields } from './some.form'
+import { filterByVisibility } from './visible.form'
 import { TranslationGeneric } from 'frr-web/lib/util'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import { getThemeContext, FormTheme as Theme, FormTheme } from '../theme/theme'
@@ -438,9 +439,6 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     if ('validate' in f && f.validate !== undefined) {
       return f.validate(props.data)
     }
-    if ('isVisible' in f && !f.isVisible(props.data)) {
-      return false
-    }
 
     const isRequired =
       'required' in f
@@ -469,9 +467,9 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   }
 
   const submit = () => {
-    const isNotValid = someFormFields(props.formFields, isFieldInvalid)
+    const visibleFormFields = filterByVisibility(props.formFields, props.data)
+    const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
 
-    console.log(isNotValid, props)
     if (isNotValid) {
       setShowValidation(true)
       if (props.onInvalidSubmit) {
@@ -482,7 +480,11 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
   }
 
-  const renderFormFieldInput = (field: SingleFormField<FormData, TM>) => {
+  const renderFormFieldInput = (
+    fieldI: SingleFormField<FormData, TM>,
+    key: number = 1,
+  ) => {
+    const field = { ...fieldI, key }
     const { data, onChange, readOnly } = props
 
     const hasError = showValidation && isFieldInvalid(field)
@@ -759,7 +761,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
   const renderFormFieldItem = (width: number = 100) => (
     field: SingleFormField<FormData, TM>,
-    key: number,
+    key: number | string,
   ) => {
     return !field.isVisible || field.isVisible(props.data) ? (
       <FormFieldWrapper
@@ -778,19 +780,17 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
   const renderFormFieldRow = (
     formFieldRow: FormFieldRow<FormData, TM>,
-    key: number,
+    key: number | string,
   ) =>
     formFieldRow.some(r => !r.isVisible || r.isVisible(props.data)) ? (
       <FormFieldRowWrapper key={key} style={getRowStyle('wrapper')}>
         {formFieldRow.map(renderFormFieldItem((1 / formFieldRow.length) * 100))}
       </FormFieldRowWrapper>
-    ) : (
-      <></>
-    )
+    ) : null
 
   const renderFormField = (
     formField: FormFieldRow<FormData, TM> | SingleFormField<FormData, TM>,
-    key: number,
+    key: string | number,
   ) => {
     if (Array.isArray(formField)) {
       return renderFormFieldRow(formField, key)
@@ -805,7 +805,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
   const renderNumberList = (
     formField: FormFieldNumberList<FormData, TM>,
-    key: number,
+    key: number | string,
   ) => {
     const length = formField.length.get(props.data)
     const fields: Array<FormFieldRow<FormData, TM>> = Array.from({
@@ -817,12 +817,12 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         lens: formField.lens.compose(Lens.fromPath<Array<number>>()([i])),
       },
     ])
-    return fields.map(f => renderFormField(f, key))
+    return fields.map((f, i) => renderFormField(f, `${key}-${i}`))
   }
 
   const renderFormSectionItem = (
     formField: SectionField<FormData, TM>,
-    key: number,
+    key: number | string,
   ) => {
     if (
       !Array.isArray(formField) &&
@@ -838,7 +838,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
   const renderFormGroup = (
     formGroup: FormFieldGroup<FormData, TM>,
-    key: number,
+    key: number | string,
   ) =>
     !formGroup.isVisible || formGroup.isVisible(props.data) ? (
       <FormFieldGroupWrapper
@@ -872,9 +872,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         )}
         {formGroup.fields.map(renderFormField)}
       </FormFieldGroupWrapper>
-    ) : (
-      <></>
-    )
+    ) : null
 
   const renderFormSection = (
     formSection: FormSection<FormData, TM>,
@@ -912,9 +910,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         )}
         {formSection.fields.map(renderFormSectionItem)}
       </FormSectionWrapper>
-    ) : (
-      <></>
-    )
+    ) : null
 
   const { formFields } = props
 
@@ -945,6 +941,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {props.buttons.map((b, k) => (
             <Button<TM>
               {...b}
+              key={k}
               disabled={b.isDisabled ? b.isDisabled(props.data) : false}
               onClick={() => b.onClick({ submit, dispatch })}
             />
