@@ -216,7 +216,7 @@ export type SingleCheckboxField<FormData, TM> = FormInput<
 type CommonFieldProps<FormData, TM> = {
   isVisible?: (formData: FormData) => boolean
   isDisabled?: boolean
-  validate?: (formData: FormData) => boolean
+  validate?: (formData: FormData) => null | keyof TM
   maxwidth?: number
   itemStyle?: CSSProperties
   required?: boolean | ((formData: FormData) => boolean)
@@ -445,7 +445,9 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     setShowValidation(false)
   }, [props.formFields])
 
-  const isFieldInvalid = (f: SingleFormField<FormData, TM>): boolean => {
+  const computeFieldError = (
+    f: SingleFormField<FormData, TM>,
+  ): keyof TM | null => {
     if ('validate' in f && f.validate !== undefined) {
       return f.validate(props.data)
     }
@@ -462,19 +464,21 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       val = typeof val === 'string' ? val.trim() : val
       let isInvalid = val === '' || val === null || val === undefined
 
-      if (
-        f.type === FormFieldType.NumberInput &&
-        'min' in f &&
-        f.min !== undefined &&
-        f.min > 0
-      ) {
-        isInvalid = val < f.min
+      if (f.type === FormFieldType.NumberInput) {
+        if ('min' in f && val < f.min) {
+          isInvalid = val < f.min
+          return 'fieldErrorMin' as keyof TM
+        } else if ('max' in f && val > f.max) {
+          return 'fieldErrorMax' as keyof TM
+        }
       }
-
-      return isInvalid
     }
-    return false
+
+    return null
   }
+
+  const isFieldInvalid = (f: SingleFormField<FormData, TM>): boolean =>
+    computeFieldError(f) !== null
 
   const submit = () => {
     const visibleFormFields = filterByVisibility(props.formFields, props.data)
@@ -497,11 +501,13 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     const field = { ...fieldI, key }
     const { data, onChange, readOnly } = props
 
-    const hasError = showValidation && isFieldInvalid(field)
+    const errorLabel = showValidation ? computeFieldError(field) : null
+
+    const hasError = errorLabel !== null
 
     let { label } = field
     if (label) {
-      label = { error: hasError, ...label }
+      label = { error: errorLabel !== null, errorLabel, ...label }
     }
 
     if (field.type === FormFieldType.TextArea) {
