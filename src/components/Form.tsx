@@ -54,6 +54,10 @@ import {
   Props as CountryDropdownProps,
   CountryDropdown,
 } from 'frr-web/lib/components/CountryDropdown'
+import {
+  Props as CountrySelectProps,
+  CountrySelect,
+} from 'frr-web/lib/components/CountrySelect'
 import { Switch, Props as SwithProps } from 'frr-web/lib/components/Switch'
 import {
   CurrencyInput,
@@ -145,6 +149,12 @@ export type CountryDropdownField<FormData, TM> = FormInput<
   CountryDropdownProps<TM>,
   Lens<FormData, string>,
   FormFieldType.CountryDropdown
+>
+
+export type CountrySelectField<FormData, TM> = FormInput<
+  CountryDropdownProps<TM>,
+  Lens<FormData, string>,
+  FormFieldType.CountrySelect
 >
 
 export type InputWithDropdownField<FormData, TM> = FormInput<
@@ -244,6 +254,7 @@ export type SingleFormField<FormData, TM> = (
   | ToggleField<FormData, TM>
   | OptionGroupField<FormData, TM>
   | DatePickerField<FormData, TM>
+  | CountrySelectField<FormData, TM>
 ) &
   CommonFieldProps<FormData, TM>
 
@@ -364,12 +375,6 @@ export const FormFieldWrapper = styled.div<{
       margin-top: 0;
     }
   }
-
-  .ui.checkbox.error {
-    label {
-      color: red !important;
-    }
-  }
 `
 
 export const FormFieldGroupWrapper = styled.div`
@@ -448,10 +453,6 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   const computeFieldError = (
     f: SingleFormField<FormData, TM>,
   ): keyof TM | null => {
-    if ('validate' in f && f.validate !== undefined) {
-      return f.validate(props.data)
-    }
-
     const isRequired =
       'required' in f
         ? typeof f.required === 'function'
@@ -459,18 +460,27 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           : f.required
         : false
 
-    if (isRequired) {
-      let val = f.lens.get(props.data)
-      val = typeof val === 'string' ? val.trim() : val
-      let isInvalid = val === '' || val === null || val === undefined
+    let val = f.lens.get(props.data)
+    val = typeof val === 'string' ? val.trim() : val
 
-      if (f.type === FormFieldType.NumberInput) {
-        if ('min' in f && val < f.min) {
-          isInvalid = val < f.min
-          return 'fieldErrorMin' as keyof TM
-        } else if ('max' in f && val > f.max) {
-          return 'fieldErrorMax' as keyof TM
-        }
+    if (isRequired) {
+      if (val === '' || val === null || val === undefined) {
+        return 'fieldRequired' as keyof TM
+      }
+    }
+
+    if ('validate' in f && f.validate !== undefined) {
+      const l = f.validate(props.data)
+      if (l !== null) {
+        return l
+      }
+    }
+
+    if (f.type === FormFieldType.NumberInput) {
+      if ('min' in f && val < f.min) {
+        return 'fieldErrorMin' as keyof TM
+      } else if ('max' in f && val > f.max) {
+        return 'fieldErrorMax' as keyof TM
       }
     }
 
@@ -556,6 +566,19 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
+          error={hasError}
+          label={label}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.CountrySelect) {
+      const { type, lens, validate, required, ...fieldProps } = field
+      return (
+        <CountrySelect
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={(value: string) => onChange(lens.set(value)(data))}
           error={hasError}
           label={label}
         />

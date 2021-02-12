@@ -24,6 +24,7 @@ export enum FormFieldType {
   NumberList = 'NumberList',
   Toggle = 'Toggle',
   OptionGroup = 'OptionGroup',
+  CountrySelect = 'CountrySelect',
 }
 
 export enum Orientation {
