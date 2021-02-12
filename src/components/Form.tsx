@@ -123,10 +123,16 @@ export type MultiSelectField<FormData, TM> = FormInput<
   FormFieldType.MultiSelect
 >
 
-export type SelectField<FormData, TM> = FormInput<
+export type TextSelectField<FormData, TM> = FormInput<
   SelectProps<TM>,
   Lens<FormData, string> | Lens<FormData, string | null>,
-  FormFieldType.Select
+  FormFieldType.TextSelect
+>
+
+export type NumberSelectField<FormData, TM> = FormInput<
+  SelectProps<TM>,
+  Lens<FormData, number | null> | Lens<FormData, number>,
+  FormFieldType.NumberSelect
 >
 
 export type SwitchField<FormData, TM> = FormInput<
@@ -231,7 +237,8 @@ export type SingleFormField<FormData, TM> = (
   | CountryDropdownField<FormData, TM>
   | CurrencyInputField<FormData, TM>
   | YesNoToggleField<FormData, TM>
-  | SelectField<FormData, TM>
+  | TextSelectField<FormData, TM>
+  | NumberSelectField<FormData, TM>
   | CodeInputField<FormData, TM>
   | RadioGroupField<FormData, TM>
   | ToggleField<FormData, TM>
@@ -544,6 +551,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           error={hasError}
+          label={label}
         />
       )
     }
@@ -665,13 +673,26 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       )
     }
 
-    if (field.type === FormFieldType.Select) {
+    if (field.type === FormFieldType.TextSelect) {
       const { lens, validate, required, ...fieldProps } = field
       return (
         <Select
           {...fieldProps}
           value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
+          onChange={(value: string) => onChange(lens.set(value)(data))}
+          label={label}
+          error={hasError}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.NumberSelect) {
+      const { lens, validate, required, ...fieldProps } = field
+      return (
+        <Select
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={(value: number) => onChange(lens.set(value)(data))}
           label={label}
           error={hasError}
         />
