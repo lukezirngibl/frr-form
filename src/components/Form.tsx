@@ -219,7 +219,6 @@ type CommonFieldProps<FormData, TM> = {
 export type SingleFormField<FormData, TM> = (
   | CheckboxGroupField<FormData, TM>
   | NumberInputField<FormData, TM>
-  // | DatePickerField<FormData>
   | DropdownField<FormData, TM>
   | SingleCheckboxField<FormData, TM>
   | TextAreaField<FormData, TM>
