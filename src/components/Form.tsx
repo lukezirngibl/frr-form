@@ -31,7 +31,10 @@ import {
   TextNumberInput,
   Props as TextNumberInputProps,
 } from 'frr-web/lib/components/TextNumberInput'
-// import { DatePickerProps, DatePicker } from 'frr-web/lib/components/DatePicker'
+import {
+  DatePicker,
+  Props as DatePickerProps,
+} from 'frr-web/lib/components/DatePicker'
 import { someFormFields } from './some.form'
 import { filterByVisibility } from './visible.form'
 import { TranslationGeneric } from 'frr-web/lib/util'
@@ -174,11 +177,11 @@ export type YesNoToggleField<FormData, TM> = FormInput<
   FormFieldType.YesNoToggle
 >
 
-// export type DatePickerField<FormData> = FormInput<
-//   DatePickerProps,
-//   Lens<FormData, string>,
-//   FormFieldType.DatePicker
-// >
+export type DatePickerField<FormData, TM> = FormInput<
+  DatePickerProps<TM>,
+  Lens<FormData, Date>,
+  FormFieldType.DatePicker
+>
 
 export type DropdownField<FormData, TM> = FormInput<
   DropdownProps<TM>,
@@ -234,6 +237,7 @@ export type SingleFormField<FormData, TM> = (
   | RadioGroupField<FormData, TM>
   | ToggleField<FormData, TM>
   | OptionGroupField<FormData, TM>
+  | DatePickerField<FormData, TM>
 ) &
   CommonFieldProps<FormData, TM>
 
@@ -482,7 +486,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
   const renderFormFieldInput = (
     fieldI: SingleFormField<FormData, TM>,
-    key: number = 1,
+    key: number | string,
   ) => {
     const field = { ...fieldI, key }
     const { data, onChange, readOnly } = props
@@ -533,17 +537,17 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       )
     }
 
-    // if (field.type === FormFieldType.DatePicker) {
-    //   const { type, lens, validate, ...fieldProps } = field
-    //   return (
-    //     <DatePicker
-    //       {...fieldProps}
-    //       value={lens.get(data)}
-    //       onChange={value => onChange(lens.set(value)(data))}
-    //       error={hasError}
-    //     />
-    //   )
-    // }
+    if (field.type === FormFieldType.DatePicker) {
+      const { type, lens, validate, required, ...fieldProps } = field
+      return (
+        <DatePicker
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
+          error={hasError}
+        />
+      )
+    }
 
     if (field.type === FormFieldType.CheckboxGroup) {
       const { lens, validate, ...fieldProps } = field
@@ -771,7 +775,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         className="form-field"
         style={{ ...getRowStyle('item'), ...(field.itemStyle || {}) }}
       >
-        {renderFormFieldInput(field)}
+        {renderFormFieldInput(field, key)}
       </FormFieldWrapper>
     ) : (
       <></>
@@ -796,7 +800,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       return renderFormFieldRow(formField, key)
     } else {
       return (
-        <FormFieldRowWrapper style={getRowStyle('wrapper')}>
+        <FormFieldRowWrapper style={getRowStyle('wrapper')} key={key}>
           {renderFormFieldItem()(formField, key)}
         </FormFieldRowWrapper>
       )
