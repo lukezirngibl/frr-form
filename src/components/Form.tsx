@@ -37,7 +37,6 @@ import {
 } from 'frr-web/lib/components/DatePicker'
 import { someFormFields } from './some.form'
 import { filterByVisibility } from './visible.form'
-import { TranslationGeneric } from 'frr-web/lib/util'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import { getThemeContext, FormTheme as Theme, FormTheme } from '../theme/theme'
 import { createGetStyle } from '../theme/util'
@@ -82,6 +81,7 @@ import {
   Props as OptionGroupProps,
 } from 'frr-web/lib/components/OptionGroup'
 import { useDispatch } from 'react-redux'
+import { P } from 'frr-web/lib/html'
 
 type FormInput<P extends {}, L, T> = Omit<
   P,
@@ -91,226 +91,233 @@ type FormInput<P extends {}, L, T> = Omit<
   type: T
 }
 
-export type OptionGroupField<FormData, TM> = FormInput<
-  OptionGroupProps<TM>,
+export type OptionGroupField<FormData> = FormInput<
+  OptionGroupProps,
   Lens<FormData, string>,
   FormFieldType.OptionGroup
 >
 
-export type ToggleField<FormData, TM> = FormInput<
-  ToggleProps<TM>,
+export type ToggleField<FormData> = FormInput<
+  ToggleProps,
   Lens<FormData, boolean>,
   FormFieldType.Toggle
 >
 
-export type RadioGroupField<FormData, TM> = FormInput<
-  RadioGroupProps<TM>,
+export type RadioGroupField<FormData> = FormInput<
+  RadioGroupProps,
   Lens<FormData, string>,
   FormFieldType.RadioGroup
 >
 
-export type CodeInputField<FormData, TM> = FormInput<
-  CodeInputProps<TM>,
+export type CodeInputField<FormData> = FormInput<
+  CodeInputProps,
   Lens<FormData, string>,
   FormFieldType.CodeInput
 >
 
-export type CurrencyInputField<FormData, TM> = FormInput<
-  CurrencyInputProps<TM>,
+export type CurrencyInputField<FormData> = FormInput<
+  CurrencyInputProps,
   Lens<FormData, number>,
   FormFieldType.CurrencyInput
 >
 
-export type MultiSelectField<FormData, TM> = FormInput<
-  MultiSelectProps<TM>,
+export type MultiSelectField<FormData> = FormInput<
+  MultiSelectProps,
   Lens<FormData, Array<string>>,
   FormFieldType.MultiSelect
 >
 
-export type TextSelectField<FormData, TM> = FormInput<
-  SelectProps<TM>,
+export type TextSelectField<FormData> = FormInput<
+  SelectProps,
   Lens<FormData, string> | Lens<FormData, string | null>,
   FormFieldType.TextSelect
 >
 
-export type NumberSelectField<FormData, TM> = FormInput<
-  SelectProps<TM>,
+export type NumberSelectField<FormData> = FormInput<
+  SelectProps,
   Lens<FormData, number | null> | Lens<FormData, number>,
   FormFieldType.NumberSelect
 >
 
-export type SwitchField<FormData, TM> = FormInput<
-  SwithProps<TM>,
+export type SwitchField<FormData> = FormInput<
+  SwithProps,
   Lens<FormData, boolean>,
   FormFieldType.Switch
 >
 
-export type CountryDropdownField<FormData, TM> = FormInput<
-  CountryDropdownProps<TM>,
+export type CountryDropdownField<FormData> = FormInput<
+  CountryDropdownProps,
   Lens<FormData, string>,
   FormFieldType.CountryDropdown
 >
 
-export type CountrySelectField<FormData, TM> = FormInput<
-  CountryDropdownProps<TM>,
+export type CountrySelectField<FormData> = FormInput<
+  CountryDropdownProps,
   Lens<FormData, string>,
   FormFieldType.CountrySelect
 >
 
-export type InputWithDropdownField<FormData, TM> = FormInput<
-  InputWithDropdownProps<TM>,
+export type InputWithDropdownField<FormData> = FormInput<
+  InputWithDropdownProps,
   Lens<FormData, string>,
   FormFieldType.InputWithDropdown
 >
 
-export type DropdownNumberField<FormData, TM> = FormInput<
-  DropdownNumberProps<TM>,
+export type DropdownNumberField<FormData> = FormInput<
+  DropdownNumberProps,
   Lens<FormData, number>,
   FormFieldType.DropdownNumber
 >
 
-export type TextAreaField<FormData, TM> = FormInput<
-  TextAreaProps<TM>,
+export type TextAreaField<FormData> = FormInput<
+  TextAreaProps,
   Lens<FormData, string>,
   FormFieldType.TextArea
 >
 
-export type TextNumberInputField<FormData, TM> = FormInput<
-  TextNumberInputProps<TM>,
+export type TextNumberInputField<FormData> = FormInput<
+  TextNumberInputProps,
   Lens<FormData, number>,
   FormFieldType.TextNumber
 >
 
-export type TextInputField<FormData, TM> = FormInput<
-  TextInputProps<TM>,
+export type TextInputField<FormData> = FormInput<
+  TextInputProps,
   Lens<FormData, string>,
   FormFieldType.TextInput
 >
 
-export type YesNoToggleField<FormData, TM> = FormInput<
-  YesNoToggleProps<TM>,
+export type YesNoToggleField<FormData> = FormInput<
+  YesNoToggleProps,
   Lens<FormData, boolean>,
   FormFieldType.YesNoToggle
 >
 
-export type DatePickerField<FormData, TM> = FormInput<
-  DatePickerProps<TM>,
+export type DatePickerField<FormData> = FormInput<
+  DatePickerProps,
   Lens<FormData, Date>,
   FormFieldType.DatePicker
 >
 
-export type DropdownField<FormData, TM> = FormInput<
-  DropdownProps<TM>,
+export type DropdownField<FormData> = FormInput<
+  DropdownProps,
   Lens<FormData, string>,
   FormFieldType.Dropdown
 >
 
-export type CheckboxGroupField<FormData, TM> = FormInput<
-  CheckboxGroupProps<TM>,
+export type CheckboxGroupField<FormData> = FormInput<
+  CheckboxGroupProps,
   Lens<FormData, Array<string>>,
   FormFieldType.CheckboxGroup
 >
 
-export type NumberInputField<FormData, TM> = FormInput<
-  NumberInputProps<TM>,
+export type NumberInputField<FormData> = FormInput<
+  NumberInputProps,
   Lens<FormData, number>,
   FormFieldType.NumberInput
 >
 
-export type SingleCheckboxField<FormData, TM> = FormInput<
-  SingleCheckboxProps<TM>,
+export type SingleCheckboxField<FormData> = FormInput<
+  SingleCheckboxProps,
   Lens<FormData, boolean>,
   FormFieldType.SingleCheckbox
 >
 
-type CommonFieldProps<FormData, TM> = {
+type CommonFieldProps<FormData> = {
   isVisible?: (formData: FormData) => boolean
   isDisabled?: boolean
-  validate?: (formData: FormData) => null | keyof TM
+  validate?: (formData: FormData) => null | string
   maxwidth?: number
   itemStyle?: CSSProperties
   required?: boolean | ((formData: FormData) => boolean)
 }
 
-export type SingleFormField<FormData, TM> = (
-  | CheckboxGroupField<FormData, TM>
-  | NumberInputField<FormData, TM>
-  | DropdownField<FormData, TM>
-  | SingleCheckboxField<FormData, TM>
-  | TextAreaField<FormData, TM>
-  | TextNumberInputField<FormData, TM>
-  | TextInputField<FormData, TM>
-  | InputWithDropdownField<FormData, TM>
-  | DropdownNumberField<FormData, TM>
-  | SwitchField<FormData, TM>
-  | MultiSelectField<FormData, TM>
-  | CountryDropdownField<FormData, TM>
-  | CurrencyInputField<FormData, TM>
-  | YesNoToggleField<FormData, TM>
-  | TextSelectField<FormData, TM>
-  | NumberSelectField<FormData, TM>
-  | CodeInputField<FormData, TM>
-  | RadioGroupField<FormData, TM>
-  | ToggleField<FormData, TM>
-  | OptionGroupField<FormData, TM>
-  | DatePickerField<FormData, TM>
-  | CountrySelectField<FormData, TM>
+export type SingleFormField<FormData> = (
+  | CheckboxGroupField<FormData>
+  | NumberInputField<FormData>
+  | DropdownField<FormData>
+  | SingleCheckboxField<FormData>
+  | TextAreaField<FormData>
+  | TextNumberInputField<FormData>
+  | TextInputField<FormData>
+  | InputWithDropdownField<FormData>
+  | DropdownNumberField<FormData>
+  | SwitchField<FormData>
+  | MultiSelectField<FormData>
+  | CountryDropdownField<FormData>
+  | CurrencyInputField<FormData>
+  | YesNoToggleField<FormData>
+  | TextSelectField<FormData>
+  | NumberSelectField<FormData>
+  | CodeInputField<FormData>
+  | RadioGroupField<FormData>
+  | ToggleField<FormData>
+  | OptionGroupField<FormData>
+  | DatePickerField<FormData>
+  | CountrySelectField<FormData>
 ) &
-  CommonFieldProps<FormData, TM>
+  CommonFieldProps<FormData>
 
-export type FormFieldRow<FormData, TM> = Array<SingleFormField<FormData, TM>>
+export type FormFieldRow<FormData> = Array<SingleFormField<FormData>>
 
-export type Fields<FormData, TM> = Array<
-  SingleFormField<FormData, TM> | FormFieldRow<FormData, TM>
+export type Fields<FormData> = Array<
+  SingleFormField<FormData> | FormFieldRow<FormData>
 >
 
-export type SingleFieldOrRow<FormData, TM> =
-  | SingleFormField<FormData, TM>
-  | FormFieldRow<FormData, TM>
+export type SingleFieldOrRow<FormData> =
+  | SingleFormField<FormData>
+  | FormFieldRow<FormData>
 
-export type GroupFields<FormData, TM> = Array<SingleFieldOrRow<FormData, TM>>
+export type GroupFields<FormData> = Array<SingleFieldOrRow<FormData>>
 
-export type FormFieldGroup<FormData, TM> = {
-  title?: keyof TM
-  description?: keyof TM
+export type FormFieldGroup<FormData> = {
+  title?: string
+  description?: string
   style?: Partial<FormTheme['group']>
   type: FormFieldType.FormFieldGroup
-  fields: GroupFields<FormData, TM>
+  fields: GroupFields<FormData>
   isVisible?: (formData: FormData) => boolean
 }
 
-export type FormFieldNumberList<FormData, TM> = {
-  title?: keyof TM
-  description?: keyof TM
-  style?: Partial<FormTheme['group']>
-  type: FormFieldType.NumberList
-  field: Omit<TextNumberInputField<FormData, TM>, 'lens' | 'type'>
-  lens: Lens<FormData, Array<number>>
-  isVisible?: (formData: FormData) => boolean
+// export type FormFieldNumberList<FormData> = {
+//   title?: string
+//   description?: string
+//   style?: Partial<FormTheme['group']>
+//   type: FormFieldType.NumberList
+//   field: Omit<TextNumberInputField<FormData>, 'lens' | 'type'>
+//   lens: Lens<FormData, Array<number>>
+//   isVisible?: (formData: FormData) => boolean
+//   length: Lens<FormData, number>
+// }
+
+export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
+  lens: Lens<FormData, Array<T>>
+  type: FormFieldType.FormFieldRepeatGroup
+  fields: GroupFields<T>
   length: Lens<FormData, number>
 }
 
-export type FormField<FormData, TM> =
-  | SingleFormField<FormData, TM>
-  | FormFieldRow<FormData, TM>
-  | FormFieldGroup<FormData, TM>
-  | FormSection<FormData, TM>
-  | FormFieldNumberList<FormData, TM>
+export type FormField<FormData> =
+  | SingleFormField<FormData>
+  | FormFieldRow<FormData>
+  | FormFieldGroup<FormData>
+  | FormSection<FormData>
+  | FormFieldRepeatGroup<FormData>
 
-export type SectionField<FormData, TM> =
-  | SingleFormField<FormData, TM>
-  | FormFieldRow<FormData, TM>
-  | FormFieldGroup<FormData, TM>
-  | FormFieldNumberList<FormData, TM>
+export type SectionField<FormData> =
+  | SingleFormField<FormData>
+  | FormFieldRow<FormData>
+  | FormFieldGroup<FormData>
+  | FormFieldRepeatGroup<FormData>
 
-export type SectionFields<FormData, TM> = Array<SectionField<FormData, TM>>
+export type SectionFields<FormData> = Array<SectionField<FormData>>
 
-export type FormSection<FormData, TM> = {
-  title?: keyof TM
-  description?: keyof TM
+export type FormSection<FormData> = {
+  title?: string
+  description?: string
   style?: Partial<FormTheme['section']>
   type: FormFieldType.FormSection
-  fields: SectionFields<FormData, TM>
+  fields: SectionFields<FormData>
   isVisible?: (formData: FormData) => boolean
 }
 
@@ -384,10 +391,6 @@ export const FormFieldGroupWrapper = styled.div`
   flex-shrink: 0;
 `
 
-export const FormFieldGroupTitle = styled.h4`
-  margin: 32px 0 12px 0;
-`
-
 export const FormSectionWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -395,26 +398,17 @@ export const FormSectionWrapper = styled.div`
   flex-shrink: 0;
 `
 
-export const FormSectionTitle = styled.h3`
-  margin-bottom: 16px;
-  font-size: 18px;
-`
-
-export const FormFieldGroupDescription = styled.p``
-
-export const FormSectionDescription = styled.p``
-
-export type Props<FormData, TM> = {
+export type Props<FormData> = {
   children?: ReactNode
   style?: Partial<FormTheme>
   data: FormData
   display?: DisplayType
-  formFields: Array<FormField<FormData, TM>>
+  formFields: Array<FormField<FormData>>
   onSubmit?: (params: { dispatch: any }) => void
   onInvalidSubmit?: () => void
   onChange: (formState: FormData) => void
   buttons?: Array<
-    Omit<ButtonProps<TM>, 'onClick'> & {
+    Omit<ButtonProps, 'onClick'> & {
       onClick: (params: { submit: () => void; dispatch: any }) => void
       isDisabled?: (d: FormData) => boolean
     }
@@ -425,9 +419,7 @@ export type Props<FormData, TM> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-export const Form = <FormData extends {}, TM extends TranslationGeneric>(
-  props: Props<FormData, TM>,
-) => {
+export const Form = <FormData extends {}>(props: Props<FormData>) => {
   // const formRef = React.createRef<HTMLFormElement>()
 
   const dispatch = useDispatch()
@@ -450,9 +442,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     setShowValidation(false)
   }, [props.formFields])
 
-  const computeFieldError = (
-    f: SingleFormField<FormData, TM>,
-  ): keyof TM | null => {
+  const computeFieldError = (f: SingleFormField<FormData>): string | null => {
     const isRequired =
       'required' in f
         ? typeof f.required === 'function'
@@ -465,7 +455,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
     if (isRequired) {
       if (val === '' || val === null || val === undefined) {
-        return 'fieldRequired' as keyof TM
+        return 'fieldRequired' as string
       }
     }
 
@@ -478,16 +468,16 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
 
     if (f.type === FormFieldType.NumberInput) {
       if ('min' in f && val < f.min) {
-        return 'fieldErrorMin' as keyof TM
+        return 'fieldErrorMin' as string
       } else if ('max' in f && val > f.max) {
-        return 'fieldErrorMax' as keyof TM
+        return 'fieldErrorMax' as string
       }
     }
 
     return null
   }
 
-  const isFieldInvalid = (f: SingleFormField<FormData, TM>): boolean =>
+  const isFieldInvalid = (f: SingleFormField<FormData>): boolean =>
     computeFieldError(f) !== null
 
   const submit = () => {
@@ -505,7 +495,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   }
 
   const renderFormFieldInput = (
-    fieldI: SingleFormField<FormData, TM>,
+    fieldI: SingleFormField<FormData>,
     key: number | string,
   ) => {
     const field = { ...fieldI, key }
@@ -813,7 +803,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   }
 
   const renderFormFieldItem = (width: number = 100) => (
-    field: SingleFormField<FormData, TM>,
+    field: SingleFormField<FormData>,
     key: number | string,
   ) => {
     return !field.isVisible || field.isVisible(props.data) ? (
@@ -832,7 +822,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
   }
 
   const renderFormFieldRow = (
-    formFieldRow: FormFieldRow<FormData, TM>,
+    formFieldRow: FormFieldRow<FormData>,
     key: number | string,
   ) =>
     formFieldRow.some(r => !r.isVisible || r.isVisible(props.data)) ? (
@@ -842,7 +832,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     ) : null
 
   const renderFormField = (
-    formField: FormFieldRow<FormData, TM> | SingleFormField<FormData, TM>,
+    formField: FormFieldRow<FormData> | SingleFormField<FormData>,
     key: string | number,
   ) => {
     if (Array.isArray(formField)) {
@@ -856,25 +846,40 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     }
   }
 
-  const renderNumberList = (
-    formField: FormFieldNumberList<FormData, TM>,
+  const renderFormRepeatGroup = (
+    formGroup: FormFieldRepeatGroup<FormData>,
     key: number | string,
   ) => {
-    const length = formField.length.get(props.data)
-    const fields: Array<FormFieldRow<FormData, TM>> = Array.from({
+    const length = formGroup.length.get(props.data)
+
+    const groups = Array.from({
       length,
-    }).map((_, i) => [
-      {
-        ...formField.field,
-        type: FormFieldType.TextNumber,
-        lens: formField.lens.compose(Lens.fromPath<Array<number>>()([i])),
-      },
-    ])
-    return fields.map((f, i) => renderFormField(f, `${key}-${i}`))
+    }).map((_, i) => ({
+      type: FormFieldType.FormFieldGroup,
+      fields: formGroup.fields.map((f, i) => {
+        if (Array.isArray(f)) {
+          return f.map((f2, i2) => ({
+            ...f2,
+            lens: formGroup.lens
+              .compose(Lens.fromPath<any>()([i, i2]))
+              .compose(f2.lens as any),
+          }))
+        } else {
+          return {
+            ...f,
+            lens: formGroup.lens
+              .compose(Lens.fromPath<any>()([i]))
+              .compose(f.lens as any),
+          }
+        }
+      }),
+    })) as Array<FormFieldGroup<FormData>>
+
+    return groups.map((g, i) => renderFormGroup(g, `${key}-${i}`))
   }
 
   const renderFormSectionItem = (
-    formField: SectionField<FormData, TM>,
+    formField: SectionField<FormData>,
     key: number | string,
   ) => {
     if (
@@ -882,15 +887,18 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       formField.type === FormFieldType.FormFieldGroup
     ) {
       return renderFormGroup(formField, key)
-    } else if ('field' in formField) {
-      return renderNumberList(formField, key)
+    } else if (
+      !Array.isArray(formField) &&
+      formField.type === FormFieldType.FormFieldRepeatGroup
+    ) {
+      return renderFormRepeatGroup(formField, key)
     } else {
       return renderFormField(formField, key)
     }
   }
 
   const renderFormGroup = (
-    formGroup: FormFieldGroup<FormData, TM>,
+    formGroup: FormFieldGroup<FormData>,
     key: number | string,
   ) =>
     !formGroup.isVisible || formGroup.isVisible(props.data) ? (
@@ -902,35 +910,28 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         }}
       >
         {formGroup.title && (
-          <FormFieldGroupTitle
-            itemID={formGroup.title as string}
+          <P
             style={{
               ...getGroupStyle('title'),
               ...(formGroup.style ? formGroup.style.title || {} : {}),
             }}
-          >
-            {translate(formGroup.title)}
-          </FormFieldGroupTitle>
+            label={formGroup.title}
+          />
         )}
         {formGroup.description && (
-          <FormFieldGroupDescription
-            itemID={formGroup.description as string}
+          <P
             style={{
               ...getGroupStyle('description'),
               ...(formGroup.style ? formGroup.style.description || {} : {}),
             }}
-          >
-            {translate(formGroup.description)}
-          </FormFieldGroupDescription>
+            label={formGroup.description}
+          />
         )}
         {formGroup.fields.map(renderFormField)}
       </FormFieldGroupWrapper>
     ) : null
 
-  const renderFormSection = (
-    formSection: FormSection<FormData, TM>,
-    key: number,
-  ) =>
+  const renderFormSection = (formSection: FormSection<FormData>, key: number) =>
     !formSection.isVisible || formSection.isVisible(props.data) ? (
       <FormSectionWrapper
         key={key}
@@ -940,26 +941,22 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
         }}
       >
         {formSection.title && (
-          <FormSectionTitle
-            itemID={formSection.title as string}
+          <P
             style={{
               ...getSectionStyle('title'),
               ...(formSection.style ? formSection.style.title || {} : {}),
             }}
-          >
-            {translate(formSection.title)}
-          </FormSectionTitle>
+            label={formSection.title}
+          />
         )}
         {formSection.description && (
-          <FormSectionDescription
-            itemID={formSection.description as string}
+          <P
             style={{
               ...getSectionStyle('description'),
               ...(formSection.style ? formSection.style.description || {} : {}),
             }}
-          >
-            {translate(formSection.description)}
-          </FormSectionDescription>
+            label={formSection.description}
+          />
         )}
         {formSection.fields.map(renderFormSectionItem)}
       </FormSectionWrapper>
@@ -974,15 +971,15 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
     >
       {props.renderTopChildren && props.renderTopChildren(props.data)}
       <FormContent style={getFormStyle('content')}>
-        {formFields.map((f: FormField<FormData, TM>, key: number) => {
+        {formFields.map((f: FormField<FormData>, key: number) => {
           if (Array.isArray(f)) {
             return renderFormFieldRow(f, key)
           } else if (f.type === FormFieldType.FormFieldGroup) {
             return renderFormGroup(f, key)
           } else if (f.type === FormFieldType.FormSection) {
             return renderFormSection(f, key)
-          } else if (f.type === FormFieldType.NumberList) {
-            return renderNumberList(f, key)
+          } else if (f.type === FormFieldType.FormFieldRepeatGroup) {
+            return renderFormRepeatGroup(f, key)
           } else {
             return renderFormField(f, key)
           }
@@ -992,7 +989,7 @@ export const Form = <FormData extends {}, TM extends TranslationGeneric>(
       {props.buttons && (
         <ButtonContainer style={getFormStyle('buttonContainer')}>
           {props.buttons.map((b, k) => (
-            <Button<TM>
+            <Button
               {...b}
               key={k}
               disabled={b.isDisabled ? b.isDisabled(props.data) : false}

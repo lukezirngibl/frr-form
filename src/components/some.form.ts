@@ -6,17 +6,14 @@ import {
 } from './Form'
 import { FormFieldType } from './types'
 
-type Fn<T, E> = (i: SingleFormField<T, E>) => boolean
+type Fn<T> = (i: SingleFormField<T>) => boolean
 
-const processFormFieldRow = <T, E>(
-  a: Array<SingleFormField<T, E>>,
-  fn: Fn<T, E>,
+const processFormFieldRow = <T>(
+  a: Array<SingleFormField<T>>,
+  fn: Fn<T>,
 ): boolean => a.some(j => fn(j))
 
-const processFormFieldGroup = <T, E>(
-  g: FormFieldGroup<T, E>,
-  fn: Fn<T, E>,
-): boolean =>
+const processFormFieldGroup = <T>(g: FormFieldGroup<T>, fn: Fn<T>): boolean =>
   g.fields.some(f => {
     if (Array.isArray(f)) {
       return processFormFieldRow(f, fn)
@@ -25,34 +22,34 @@ const processFormFieldGroup = <T, E>(
     }
   })
 
-const processFormSectionFields = <T, E>(
-  fields: SectionFields<T, E>,
-  fn: Fn<T, E>,
+const processFormSectionFields = <T>(
+  fields: SectionFields<T>,
+  fn: Fn<T>,
 ): boolean =>
   fields.some(f => {
     if (Array.isArray(f)) {
       return processFormFieldRow(f, fn)
     } else if (f.type === FormFieldType.FormFieldGroup) {
       return processFormFieldGroup(f, fn)
-    } else if (f.type === FormFieldType.NumberList) {
+    } else if (f.type === FormFieldType.FormFieldRepeatGroup) {
       return false
     } else {
       return fn(f)
     }
   })
 
-export const someFormFields = <T, E>(
-  formFields: Array<FormField<T, E>>,
-  fn: Fn<T, E>,
+export const someFormFields = <T>(
+  formFields: Array<FormField<T>>,
+  fn: Fn<T>,
 ): boolean =>
-  formFields.some((f: FormField<T, E>) => {
+  formFields.some((f: FormField<T>) => {
     if (Array.isArray(f)) {
       return processFormFieldRow(f, fn)
     } else if (f.type === FormFieldType.FormFieldGroup) {
       return processFormFieldGroup(f, fn)
     } else if (f.type === FormFieldType.FormSection) {
       return processFormSectionFields(f.fields, fn)
-    } else if (f.type === FormFieldType.NumberList) {
+    } else if (f.type === FormFieldType.FormFieldRepeatGroup) {
       return false
     } else {
       return fn(f)

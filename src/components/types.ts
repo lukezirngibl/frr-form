@@ -21,7 +21,7 @@ export enum FormFieldType {
   TextSelect = 'TextSelect',
   NumberSelect = 'NumberSelect',
   CodeInput = 'CodeInput',
-  NumberList = 'NumberList',
+  FormFieldRepeatGroup = 'FormFieldRepeatGroup',
   Toggle = 'Toggle',
   OptionGroup = 'OptionGroup',
   CountrySelect = 'CountrySelect',
