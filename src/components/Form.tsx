@@ -917,7 +917,6 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
   ) => {
     const length = formSection.length.get(props.data)
 
-    console.log('formSection: ', formSection)
     const groups = Array.from({
       length,
     }).map((_, index) => ({
