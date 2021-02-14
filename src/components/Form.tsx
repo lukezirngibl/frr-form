@@ -82,6 +82,9 @@ import {
 } from 'frr-web/lib/components/OptionGroup'
 import { useDispatch } from 'react-redux'
 import { P } from 'frr-web/lib/html'
+import { Optional } from 'monocle-ts'
+import { none, some } from 'fp-ts/lib/Option'
+import { range } from 'fp-ts/lib/Array'
 
 type FormInput<P extends {}, L, T> = Omit<
   P,
@@ -846,6 +849,60 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     }
   }
 
+  // -------- TOTAL HACK ---------
+  // -----------------------------
+  const createItemLens = (arrayLens: Lens<any, any>, index: number) =>
+    arrayLens
+      .compose(Lens.fromPath<any>()([index]))
+      .asOptional()
+      .compose(
+        new Optional<any, any>(
+          s => (s === undefined ? none : some(s)),
+          s => a => s,
+        ),
+      )
+
+  const updateArrayAtIndex = <T extends {}>(
+    array: Array<T>,
+    index: number,
+    item: T,
+  ): Array<T> => {
+    let filled = array
+    if (index > array.length - 1) {
+      filled = [
+        ...array,
+        ...range(array.length, index).map(i => ({})),
+      ] as Array<T>
+    }
+    return [...filled.slice(0, index), item, ...filled.slice(index + 1)]
+  }
+
+  const createLens = (
+    arrayLens: Lens<any, any>,
+    index: number,
+    lens: Lens<any, any>,
+  ): any => {
+    const itemLens = createItemLens(arrayLens, index)
+    return {
+      get: (data: any) => {
+        const o: any = itemLens.getOption(data)
+        const val = o.fold(null, () => lens.get(o))
+        // console.log('value: ', val)
+        return val
+      },
+      set: (v: any) => (data: any) => {
+        const o: any = arrayLens.get(data)
+        const i: any = (itemLens.getOption(data) as any).getOrElse({})
+        const newArray = updateArrayAtIndex(
+          o,
+          index,
+          lens.set(v)({ ...(i || {}) }),
+        )
+        return arrayLens.set(newArray)(data)
+      },
+    }
+  }
+
   const renderFormRepeatGroup = (
     formGroup: FormFieldRepeatGroup<FormData>,
     key: number | string,
@@ -854,22 +911,15 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
 
     const groups = Array.from({
       length,
-    }).map((_, i) => ({
+    }).map((_, index) => ({
       type: FormFieldType.FormFieldGroup,
-      fields: formGroup.fields.map((f, i) => {
+      fields: formGroup.fields.map((f, fi) => {
         if (Array.isArray(f)) {
-          return f.map((f2, i2) => ({
-            ...f2,
-            lens: formGroup.lens
-              .compose(Lens.fromPath<any>()([i, i2]))
-              .compose(f2.lens as any),
-          }))
+          return <></>
         } else {
           return {
             ...f,
-            lens: formGroup.lens
-              .compose(Lens.fromPath<any>()([i]))
-              .compose(f.lens as any),
+            lens: createLens(formGroup.lens, index, f.lens),
           }
         }
       }),
@@ -877,6 +927,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
 
     return groups.map((g, i) => renderFormGroup(g, `${key}-${i}`))
   }
+  // ------------------------------------
 
   const renderFormSectionItem = (
     formField: SectionField<FormData>,
