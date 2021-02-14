@@ -306,14 +306,23 @@ export type FormField<FormData> =
   | FormFieldGroup<FormData>
   | FormSection<FormData>
   | FormFieldRepeatGroup<FormData>
+  | FormFieldRepeatSection<FormData>
 
 export type SectionField<FormData> =
   | SingleFormField<FormData>
   | FormFieldRow<FormData>
   | FormFieldGroup<FormData>
   | FormFieldRepeatGroup<FormData>
+  | FormFieldRepeatSection<FormData>
 
 export type SectionFields<FormData> = Array<SectionField<FormData>>
+
+export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
+  lens: Lens<FormData, Array<T>>
+  type: FormFieldType.FormFieldRepeatSection
+  fields: Array<SingleFieldOrRow<FormData>>
+  length: Lens<FormData, number>
+}
 
 export type FormSection<FormData> = {
   title?: string
@@ -886,8 +895,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     return {
       get: (data: any) => {
         const o: any = itemLens.getOption(data)
-        const val = o.fold(null, () => lens.get(o))
-        // console.log('value: ', val)
+        const val = o.fold(null, v => lens.get(v))
         return val
       },
       set: (v: any) => (data: any) => {
@@ -901,6 +909,38 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
         return arrayLens.set(newArray)(data)
       },
     }
+  }
+
+  const renderFormRepeatSection = (
+    formSection: FormFieldRepeatSection<FormData>,
+    key: number | string,
+  ) => {
+    const length = formSection.length.get(props.data)
+
+    console.log('formSection: ', formSection)
+    const groups = Array.from({
+      length,
+    }).map((_, index) => ({
+      type: FormFieldType.FormSection,
+      fields: [
+        {
+          type: FormFieldType.FormFieldGroup,
+          title: `${index + 1}`,
+          fields: formSection.fields.map((f, fi) => {
+            if (Array.isArray(f)) {
+              return <></>
+            } else {
+              return {
+                ...f,
+                lens: createLens(formSection.lens, index, f.lens),
+              }
+            }
+          }),
+        },
+      ],
+    })) as Array<FormSection<FormData>>
+
+    return groups.map((g, i) => renderFormSection(g, `${key}-${i}`))
   }
 
   const renderFormRepeatGroup = (
@@ -943,6 +983,11 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
       formField.type === FormFieldType.FormFieldRepeatGroup
     ) {
       return renderFormRepeatGroup(formField, key)
+    } else if (
+      !Array.isArray(formField) &&
+      formField.type === FormFieldType.FormFieldRepeatSection
+    ) {
+      return renderFormRepeatSection(formField, key)
     } else {
       return renderFormField(formField, key)
     }
@@ -982,7 +1027,10 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
       </FormFieldGroupWrapper>
     ) : null
 
-  const renderFormSection = (formSection: FormSection<FormData>, key: number) =>
+  const renderFormSection = (
+    formSection: FormSection<FormData>,
+    key: number | string,
+  ) =>
     !formSection.isVisible || formSection.isVisible(props.data) ? (
       <FormSectionWrapper
         key={key}
@@ -1031,6 +1079,8 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
             return renderFormSection(f, key)
           } else if (f.type === FormFieldType.FormFieldRepeatGroup) {
             return renderFormRepeatGroup(f, key)
+          } else if (f.type === FormFieldType.FormFieldRepeatSection) {
+            return renderFormRepeatSection(f, key)
           } else {
             return renderFormField(f, key)
           }
