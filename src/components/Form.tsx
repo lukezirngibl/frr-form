@@ -18,9 +18,9 @@ import {
   Props as SingleCheckboxProps,
 } from 'frr-web/lib/components/SingleCheckbox'
 import {
-  YesNoToggle,
-  Props as YesNoToggleProps,
-} from 'frr-web/lib/components/YesNoToggle'
+  YesNoOptionGroup,
+  Props as YesNoOptionGroupProps,
+} from 'frr-web/lib/components/YesNoOptionGroup'
 import {
   TextInput,
   Props as TextInputProps,
@@ -80,6 +80,10 @@ import {
   OptionGroup,
   Props as OptionGroupProps,
 } from 'frr-web/lib/components/OptionGroup'
+import {
+  YesNoRadioGroup,
+  Props as YesNoRadioGroupProps,
+} from 'frr-web/lib/components/YesNoRadioGroup'
 import { useDispatch } from 'react-redux'
 import { P } from 'frr-web/lib/html'
 import { Optional } from 'monocle-ts'
@@ -155,7 +159,7 @@ export type CountryDropdownField<FormData> = FormInput<
 >
 
 export type CountrySelectField<FormData> = FormInput<
-  CountryDropdownProps,
+  CountrySelectProps,
   Lens<FormData, string>,
   FormFieldType.CountrySelect
 >
@@ -190,10 +194,16 @@ export type TextInputField<FormData> = FormInput<
   FormFieldType.TextInput
 >
 
-export type YesNoToggleField<FormData> = FormInput<
-  YesNoToggleProps,
+export type YesNoOptionGroupField<FormData> = FormInput<
+  YesNoOptionGroupProps,
   Lens<FormData, boolean>,
-  FormFieldType.YesNoToggle
+  FormFieldType.YesNoOptionGroup
+>
+
+export type YesNoRadioGroupField<FormData> = FormInput<
+  YesNoRadioGroupProps,
+  Lens<FormData, boolean>,
+  FormFieldType.YesNoRadioGroup
 >
 
 export type DatePickerField<FormData> = FormInput<
@@ -249,7 +259,7 @@ export type SingleFormField<FormData> = (
   | MultiSelectField<FormData>
   | CountryDropdownField<FormData>
   | CurrencyInputField<FormData>
-  | YesNoToggleField<FormData>
+  | YesNoOptionGroupField<FormData>
   | TextSelectField<FormData>
   | NumberSelectField<FormData>
   | CodeInputField<FormData>
@@ -258,6 +268,7 @@ export type SingleFormField<FormData> = (
   | OptionGroupField<FormData>
   | DatePickerField<FormData>
   | CountrySelectField<FormData>
+  | YesNoRadioGroupField<FormData>
 ) &
   CommonFieldProps<FormData>
 
@@ -600,10 +611,22 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
       )
     }
 
-    if (field.type === FormFieldType.YesNoToggle) {
+    if (field.type === FormFieldType.YesNoOptionGroup) {
       const { lens, validate, ...fieldProps } = field
       return (
-        <YesNoToggle
+        <YesNoOptionGroup
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
+          label={label}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.YesNoRadioGroup) {
+      const { lens, validate, ...fieldProps } = field
+      return (
+        <YesNoRadioGroup
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}

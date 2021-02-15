@@ -17,7 +17,7 @@ export enum FormFieldType {
   InputWithDropdown = 'InputWithDropdown',
   Switch = 'Switch',
   MultiSelect = 'MultiSelect',
-  YesNoToggle = 'YesNoToggle',
+  YesNoOptionGroup = 'YesNoOptionGroup',
   TextSelect = 'TextSelect',
   NumberSelect = 'NumberSelect',
   CodeInput = 'CodeInput',
@@ -26,6 +26,7 @@ export enum FormFieldType {
   Toggle = 'Toggle',
   OptionGroup = 'OptionGroup',
   CountrySelect = 'CountrySelect',
+  YesNoRadioGroup = 'YesNoRadioGroup',
 }
 
 export enum Orientation {
