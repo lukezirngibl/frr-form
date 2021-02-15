@@ -1,5 +1,5 @@
 import { Lens } from 'monocle-ts'
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode, useEffect, useLayoutEffect } from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import {
   CheckboxGroup,
@@ -442,9 +442,9 @@ export type Props<FormData> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-export const Form = <FormData extends {}>(props: Props<FormData>) => {
-  // const formRef = React.createRef<HTMLFormElement>()
+let scrolled = false
 
+export const Form = <FormData extends {}>(props: Props<FormData>) => {
   const dispatch = useDispatch()
   const theme = React.useContext(getThemeContext())
 
@@ -456,14 +456,20 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
   const getGroupStyle = createGetStyle(theme, 'group')(props.style?.group || {})
   const getFormStyle = createGetStyle(theme, 'form')(props.style?.form || {})
 
-  const language = React.useContext(getLanguageContext())
-  const translate = getTranslation(language)
-
   const [showValidation, setShowValidation] = React.useState(false)
+  // const [scrollToRef, setScrollToRef] = React.useState<
+  //   React.RefObject<HTMLDivElement>
+  // >()
+
+  // useLayoutEffect(() => {
+  //   if (scrollToRef.current) {
+  //     console.log(scrollToRef.current)
+  //   }
+  // }, [scrollToRef])
 
   useEffect(() => {
     setShowValidation(false)
-  }, [props.formFields])
+  }, [props.formFields, props.data])
 
   const computeFieldError = (f: SingleFormField<FormData>): string | null => {
     const isRequired =
@@ -519,14 +525,12 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
 
   const renderFormFieldInput = (
     fieldI: SingleFormField<FormData>,
+    error: { errorLabel: string | null; hasError: boolean },
     key: number | string,
   ) => {
     const field = { ...fieldI, key }
     const { data, onChange, readOnly } = props
-
-    const errorLabel = showValidation ? computeFieldError(field) : null
-
-    const hasError = errorLabel !== null
+    const { errorLabel, hasError } = error
 
     let { label } = field
     if (label) {
@@ -841,15 +845,33 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     field: SingleFormField<FormData>,
     key: number | string,
   ) => {
+    const errorLabel = showValidation ? computeFieldError(field) : null
+
+    const hasError = errorLabel !== null
+
+    let ref = React.createRef<HTMLDivElement>()
+    if (!scrolled && hasError) {
+      scrolled = true
+      setTimeout(() => {
+        if (ref.current) {
+          scrolled = false
+          ref.current.scrollIntoView({
+            behavior: 'smooth',
+          })
+        }
+      }, 300)
+    }
+
     return !field.isVisible || field.isVisible(props.data) ? (
       <FormFieldWrapper
         key={key}
+        ref={ref}
         width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
         maxwidth={field.maxwidth}
         className="form-field"
         style={{ ...getRowStyle('item'), ...(field.itemStyle || {}) }}
       >
-        {renderFormFieldInput(field, key)}
+        {renderFormFieldInput(field, { hasError, errorLabel }, key)}
       </FormFieldWrapper>
     ) : (
       <></>
