@@ -314,6 +314,7 @@ export type FormFieldGroup<FormData> = {
 
 export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
   lens: Lens<FormData, Array<T>>
+  title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatGroup
   fields: GroupFields<T>
   length: Lens<FormData, number>
@@ -338,6 +339,7 @@ export type SectionFields<FormData> = Array<SectionField<FormData>>
 
 export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
   lens: Lens<FormData, Array<T>>
+  title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatSection
   fields: Array<SingleFieldOrRow<FormData>>
   length: Lens<FormData, number>
@@ -455,6 +457,9 @@ let scrolled = false
 export const Form = <FormData extends {}>(props: Props<FormData>) => {
   const dispatch = useDispatch()
   const theme = React.useContext(getThemeContext())
+
+  const language = React.useContext(getLanguageContext())
+  const translate = getTranslation(language)
 
   const getRowStyle = createGetStyle(theme, 'row')(props.style?.row || {})
   const getSectionStyle = createGetStyle(
@@ -985,25 +990,30 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
 
     const groups = Array.from({
       length,
-    }).map((_, index) => ({
-      type: FormFieldType.FormSection,
-      fields: [
-        {
-          type: FormFieldType.FormFieldGroup,
-          title: `${index + 1}`,
-          fields: formSection.fields.map((f, fi) => {
-            if (Array.isArray(f)) {
-              return <></>
-            } else {
-              return {
-                ...f,
-                lens: createLens(formSection.lens, index, f.lens),
+    }).map((_, index) => {
+      const title = formSection.title
+        ? formSection.title({ index, translate })
+        : `${index + 1}`
+      return {
+        type: FormFieldType.FormSection,
+        fields: [
+          {
+            type: FormFieldType.FormFieldGroup,
+            title,
+            fields: formSection.fields.map((f, fi) => {
+              if (Array.isArray(f)) {
+                return <></>
+              } else {
+                return {
+                  ...f,
+                  lens: createLens(formSection.lens, index, f.lens),
+                }
               }
-            }
-          }),
-        },
-      ],
-    })) as Array<FormSection<FormData>>
+            }),
+          },
+        ],
+      }
+    }) as Array<FormSection<FormData>>
 
     return groups.map((g, i) => renderFormSection(g, `${key}-${i}`))
   }
