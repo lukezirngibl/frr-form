@@ -27,6 +27,7 @@ export enum FormFieldType {
   OptionGroup = 'OptionGroup',
   CountrySelect = 'CountrySelect',
   YesNoRadioGroup = 'YesNoRadioGroup',
+  Slider = 'Slider',
 }
 
 export enum Orientation {

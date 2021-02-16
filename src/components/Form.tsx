@@ -84,6 +84,7 @@ import {
   YesNoRadioGroup,
   Props as YesNoRadioGroupProps,
 } from 'frr-web/lib/components/YesNoRadioGroup'
+import { Slider, Props as SliderProps } from 'frr-web/lib/components/Slider'
 import { useDispatch } from 'react-redux'
 import { P } from 'frr-web/lib/html'
 import { Optional } from 'monocle-ts'
@@ -102,6 +103,12 @@ export type OptionGroupField<FormData> = FormInput<
   OptionGroupProps,
   Lens<FormData, string>,
   FormFieldType.OptionGroup
+>
+
+export type SliderField<FormData> = FormInput<
+  SliderProps,
+  Lens<FormData, number>,
+  FormFieldType.Slider
 >
 
 export type ToggleField<FormData> = FormInput<
@@ -269,6 +276,7 @@ export type SingleFormField<FormData> = (
   | DatePickerField<FormData>
   | CountrySelectField<FormData>
   | YesNoRadioGroupField<FormData>
+  | SliderField<FormData>
 ) &
   CommonFieldProps<FormData>
 
@@ -597,6 +605,19 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           value={lens.get(data)}
           onChange={(value: string) => onChange(lens.set(value)(data))}
           error={hasError}
+          label={label}
+        />
+      )
+    }
+
+    if (field.type === FormFieldType.Slider) {
+      const { type, lens, validate, required, ...fieldProps } = field
+      return (
+        <Slider
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
+          // error={hasError}
           label={label}
         />
       )
