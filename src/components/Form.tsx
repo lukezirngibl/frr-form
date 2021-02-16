@@ -318,6 +318,7 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
   type: FormFieldType.FormFieldRepeatGroup
   fields: GroupFields<T>
   length: Lens<FormData, number>
+  isVisible?: (formData: FormData) => boolean
 }
 
 export type FormField<FormData> =
@@ -343,6 +344,7 @@ export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
   type: FormFieldType.FormFieldRepeatSection
   fields: Array<SingleFieldOrRow<FormData>>
   length: Lens<FormData, number>
+  isVisible?: (formData: FormData) => boolean
 }
 
 export type FormSection<FormData> = {
@@ -986,6 +988,10 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     formSection: FormFieldRepeatSection<FormData>,
     key: number | string,
   ) => {
+    if (formSection.isVisible && !formSection.isVisible(props.data)) {
+      return null
+    }
+
     const length = formSection.length.get(props.data)
 
     const groups = Array.from({
@@ -1022,6 +1028,9 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     formGroup: FormFieldRepeatGroup<FormData>,
     key: number | string,
   ) => {
+    if (formGroup.isVisible && !formGroup.isVisible(props.data)) {
+      return null
+    }
     const length = formGroup.length.get(props.data)
 
     const groups = Array.from({
