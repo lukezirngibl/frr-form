@@ -1,5 +1,6 @@
 export enum FormFieldType {
   DatePicker = 'DatePicker',
+  FormattedDatePicker = 'FormattedDatePicker',
   CheckboxGroup = 'CheckboxGroup',
   FormFieldGroup = 'FormFieldGroup',
   FormSection = 'FormSection',

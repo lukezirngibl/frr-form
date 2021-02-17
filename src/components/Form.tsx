@@ -35,6 +35,10 @@ import {
   DatePicker,
   Props as DatePickerProps,
 } from 'frr-web/lib/components/DatePicker'
+import {
+  FormattedDatePicker,
+  Props as FormattedDatePickerProps,
+} from 'frr-web/lib/components/FormattedDatePicker'
 import { someFormFields } from './some.form'
 import { filterByVisibility } from './visible.form'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
@@ -219,6 +223,12 @@ export type DatePickerField<FormData> = FormInput<
   FormFieldType.DatePicker
 >
 
+export type FormattedDatePickerField<FormData> = FormInput<
+  FormattedDatePickerProps,
+  Lens<FormData, string>,
+  FormFieldType.FormattedDatePicker
+>
+
 export type DropdownField<FormData> = FormInput<
   DropdownProps,
   Lens<FormData, string>,
@@ -277,6 +287,7 @@ export type SingleFormField<FormData> = (
   | CountrySelectField<FormData>
   | YesNoRadioGroupField<FormData>
   | SliderField<FormData>
+  | FormattedDatePickerField<FormData>
 ) &
   CommonFieldProps<FormData>
 
@@ -591,6 +602,18 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
       )
     }
 
+    if (field.type === FormFieldType.FormattedDatePicker) {
+      const { type, lens, validate, required, ...fieldProps } = field
+      return (
+        <FormattedDatePicker
+          {...fieldProps}
+          value={lens.get(data)}
+          onChange={value => onChange(lens.set(value)(data))}
+          label={label}
+        />
+      )
+    }
+
     if (field.type === FormFieldType.DatePicker) {
       const { type, lens, validate, required, ...fieldProps } = field
       return (
@@ -598,7 +621,6 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           {...fieldProps}
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
           label={label}
         />
       )
