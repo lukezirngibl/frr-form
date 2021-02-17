@@ -1,4 +1,3 @@
-import { Lens } from 'monocle-ts'
 import React, { ReactNode, useEffect, useLayoutEffect } from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import {
@@ -91,9 +90,7 @@ import {
 import { Slider, Props as SliderProps } from 'frr-web/lib/components/Slider'
 import { useDispatch } from 'react-redux'
 import { P } from 'frr-web/lib/html'
-import { Optional } from 'monocle-ts'
-import { none, some } from 'fp-ts/lib/Option'
-import { range } from 'fp-ts/lib/Array'
+import { createFakeFormLens, FormLens } from '../util'
 
 type FormInput<P extends {}, L, T> = Omit<
   P,
@@ -105,151 +102,151 @@ type FormInput<P extends {}, L, T> = Omit<
 
 export type OptionGroupField<FormData> = FormInput<
   OptionGroupProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.OptionGroup
 >
 
 export type SliderField<FormData> = FormInput<
   SliderProps,
-  Lens<FormData, number>,
+  FormLens<FormData, number>,
   FormFieldType.Slider
 >
 
 export type ToggleField<FormData> = FormInput<
   ToggleProps,
-  Lens<FormData, boolean>,
+  FormLens<FormData, boolean>,
   FormFieldType.Toggle
 >
 
 export type RadioGroupField<FormData> = FormInput<
   RadioGroupProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.RadioGroup
 >
 
 export type CodeInputField<FormData> = FormInput<
   CodeInputProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.CodeInput
 >
 
 export type CurrencyInputField<FormData> = FormInput<
   CurrencyInputProps,
-  Lens<FormData, number>,
+  FormLens<FormData, number>,
   FormFieldType.CurrencyInput
 >
 
 export type MultiSelectField<FormData> = FormInput<
   MultiSelectProps,
-  Lens<FormData, Array<string>>,
+  FormLens<FormData, Array<string>>,
   FormFieldType.MultiSelect
 >
 
 export type TextSelectField<FormData> = FormInput<
   SelectProps,
-  Lens<FormData, string> | Lens<FormData, string | null>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.TextSelect
 >
 
 export type NumberSelectField<FormData> = FormInput<
   SelectProps,
-  Lens<FormData, number | null> | Lens<FormData, number>,
+  FormLens<FormData, number | null> | FormLens<FormData, number>,
   FormFieldType.NumberSelect
 >
 
 export type SwitchField<FormData> = FormInput<
   SwithProps,
-  Lens<FormData, boolean>,
+  FormLens<FormData, boolean>,
   FormFieldType.Switch
 >
 
 export type CountryDropdownField<FormData> = FormInput<
   CountryDropdownProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.CountryDropdown
 >
 
 export type CountrySelectField<FormData> = FormInput<
   CountrySelectProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.CountrySelect
 >
 
 export type InputWithDropdownField<FormData> = FormInput<
   InputWithDropdownProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.InputWithDropdown
 >
 
 export type DropdownNumberField<FormData> = FormInput<
   DropdownNumberProps,
-  Lens<FormData, number>,
+  FormLens<FormData, number>,
   FormFieldType.DropdownNumber
 >
 
 export type TextAreaField<FormData> = FormInput<
   TextAreaProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.TextArea
 >
 
 export type TextNumberInputField<FormData> = FormInput<
   TextNumberInputProps,
-  Lens<FormData, number>,
+  FormLens<FormData, number>,
   FormFieldType.TextNumber
 >
 
 export type TextInputField<FormData> = FormInput<
   TextInputProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.TextInput
 >
 
 export type YesNoOptionGroupField<FormData> = FormInput<
   YesNoOptionGroupProps,
-  Lens<FormData, boolean>,
+  FormLens<FormData, boolean>,
   FormFieldType.YesNoOptionGroup
 >
 
 export type YesNoRadioGroupField<FormData> = FormInput<
   YesNoRadioGroupProps,
-  Lens<FormData, boolean>,
+  FormLens<FormData, boolean>,
   FormFieldType.YesNoRadioGroup
 >
 
 export type DatePickerField<FormData> = FormInput<
   DatePickerProps,
-  Lens<FormData, Date>,
+  FormLens<FormData, Date>,
   FormFieldType.DatePicker
 >
 
 export type FormattedDatePickerField<FormData> = FormInput<
   FormattedDatePickerProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.FormattedDatePicker
 >
 
 export type DropdownField<FormData> = FormInput<
   DropdownProps,
-  Lens<FormData, string>,
+  FormLens<FormData, string>,
   FormFieldType.Dropdown
 >
 
 export type CheckboxGroupField<FormData> = FormInput<
   CheckboxGroupProps,
-  Lens<FormData, Array<string>>,
+  FormLens<FormData, Array<string>>,
   FormFieldType.CheckboxGroup
 >
 
 export type NumberInputField<FormData> = FormInput<
   NumberInputProps,
-  Lens<FormData, number>,
+  FormLens<FormData, number>,
   FormFieldType.NumberInput
 >
 
 export type SingleCheckboxField<FormData> = FormInput<
   SingleCheckboxProps,
-  Lens<FormData, boolean>,
+  FormLens<FormData, boolean>,
   FormFieldType.SingleCheckbox
 >
 
@@ -318,17 +315,17 @@ export type FormFieldGroup<FormData> = {
 //   style?: Partial<FormTheme['group']>
 //   type: FormFieldType.NumberList
 //   field: Omit<TextNumberInputField<FormData>, 'lens' | 'type'>
-//   lens: Lens<FormData, Array<number>>
+//   lens: FormLens<FormData, Array<number>>
 //   isVisible?: (formData: FormData) => boolean
-//   length: Lens<FormData, number>
+//   length: FormLens<FormData, number>
 // }
 
 export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
-  lens: Lens<FormData, Array<T>>
+  lens: FormLens<FormData, Array<T>>
   title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatGroup
   fields: GroupFields<T>
-  length: Lens<FormData, number>
+  length: FormLens<FormData, number>
   isVisible?: (formData: FormData) => boolean
 }
 
@@ -350,11 +347,11 @@ export type SectionField<FormData> =
 export type SectionFields<FormData> = Array<SectionField<FormData>>
 
 export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
-  lens: Lens<FormData, Array<T>>
+  lens: FormLens<FormData, Array<T>>
   title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatSection
   fields: Array<SingleFieldOrRow<FormData>>
-  length: Lens<FormData, number>
+  length: FormLens<FormData, number>
   isVisible?: (formData: FormData) => boolean
 }
 
@@ -558,6 +555,8 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     const { data, onChange, readOnly } = props
     const { errorLabel, hasError } = error
 
+    const dataTestId = field.lens.id()
+
     let { label } = field
     if (label) {
       label = { error: errorLabel !== null, errorLabel, ...label }
@@ -586,6 +585,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           error={hasError}
           readOnly={readOnly || field.readOnly}
           label={label}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -635,6 +635,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           onChange={(value: string) => onChange(lens.set(value)(data))}
           error={hasError}
           label={label}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -685,6 +686,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           label={label}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -711,6 +713,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           onChange={value => onChange(lens.set(value)(data))}
           label={label}
           error={hasError}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -790,6 +793,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           onChange={(value: string) => onChange(lens.set(value)(data))}
           label={label}
           error={hasError}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -803,6 +807,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           onChange={(value: number) => onChange(lens.set(value)(data))}
           label={label}
           error={hasError}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -953,59 +958,6 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     }
   }
 
-  // -------- TOTAL HACK ---------
-  // -----------------------------
-  const createItemLens = (arrayLens: Lens<any, any>, index: number) =>
-    arrayLens
-      .compose(Lens.fromPath<any>()([index]))
-      .asOptional()
-      .compose(
-        new Optional<any, any>(
-          s => (s === undefined ? none : some(s)),
-          s => a => s,
-        ),
-      )
-
-  const updateArrayAtIndex = <T extends {}>(
-    array: Array<T>,
-    index: number,
-    item: T,
-  ): Array<T> => {
-    let filled = array
-    if (index > array.length - 1) {
-      filled = [
-        ...array,
-        ...range(array.length, index).map(i => ({})),
-      ] as Array<T>
-    }
-    return [...filled.slice(0, index), item, ...filled.slice(index + 1)]
-  }
-
-  const createLens = (
-    arrayLens: Lens<any, any>,
-    index: number,
-    lens: Lens<any, any>,
-  ): any => {
-    const itemLens = createItemLens(arrayLens, index)
-    return {
-      get: (data: any) => {
-        const o: any = itemLens.getOption(data)
-        const val = o.fold(null, v => lens.get(v))
-        return val
-      },
-      set: (v: any) => (data: any) => {
-        const o: any = arrayLens.get(data)
-        const i: any = (itemLens.getOption(data) as any).getOrElse({})
-        const newArray = updateArrayAtIndex(
-          o,
-          index,
-          lens.set(v)({ ...(i || {}) }),
-        )
-        return arrayLens.set(newArray)(data)
-      },
-    }
-  }
-
   const renderFormRepeatSection = (
     formSection: FormFieldRepeatSection<FormData>,
     key: number | string,
@@ -1034,7 +986,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
               } else {
                 return {
                   ...f,
-                  lens: createLens(formSection.lens, index, f.lens),
+                  lens: createFakeFormLens(formSection.lens, index, f.lens),
                 }
               }
             }),
@@ -1065,7 +1017,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
         } else {
           return {
             ...f,
-            lens: createLens(formGroup.lens, index, f.lens),
+            lens: createFakeFormLens(formGroup.lens, index, f.lens),
           }
         }
       }),
