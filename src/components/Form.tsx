@@ -43,7 +43,11 @@ import { filterByVisibility } from './visible.form'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import { getThemeContext, FormTheme as Theme, FormTheme } from '../theme/theme'
 import { createGetStyle } from '../theme/util'
-import { Button, Props as ButtonProps } from 'frr-web/lib/components/Button'
+import {
+  Button,
+  Props as ButtonProps,
+  ButtonType,
+} from 'frr-web/lib/components/Button'
 import {
   Props as DropdownNumberProps,
   DropdownNumber,
@@ -610,6 +614,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           label={label}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -622,6 +627,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
           value={lens.get(data)}
           onChange={value => onChange(lens.set(value)(data))}
           label={label}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -1151,6 +1157,9 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
             <Button
               {...b}
               key={k}
+              dataTestId={`form:${(
+                b.type || ButtonType.Secondary
+              ).toLowerCase()}:${k + 1}`}
               disabled={b.isDisabled ? b.isDisabled(props.data) : false}
               onClick={() => b.onClick({ submit, dispatch })}
             />
