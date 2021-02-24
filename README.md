@@ -119,7 +119,7 @@ export const App = () => (
         hairColor: 'brown',
         age: 23,
         height: 194,
-        description: 'very cool',
+        description: 'average height',
         email: 'luke@google.com',
         website: 'www.foronered.com',
       }}
