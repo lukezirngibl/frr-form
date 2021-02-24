@@ -38,8 +38,8 @@ import {
   FormattedDatePicker,
   Props as FormattedDatePickerProps,
 } from 'frr-web/lib/components/FormattedDatePicker'
-import { someFormFields } from './some.form'
-import { filterByVisibility } from './visible.form'
+import { someFormFields } from './functions/some.form'
+import { filterByVisibility } from './functions/visible.form'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import { getThemeContext, FormTheme as Theme, FormTheme } from '../theme/theme'
 import { createGetStyle } from '../theme/util'

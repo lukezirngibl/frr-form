@@ -3,8 +3,8 @@ import {
   FormFieldGroup,
   SectionFields,
   SingleFormField,
-} from './Form'
-import { FormFieldType } from './types'
+} from '../Form'
+import { FormFieldType } from '../types'
 
 type Fn<T> = (i: SingleFormField<T>) => boolean
 

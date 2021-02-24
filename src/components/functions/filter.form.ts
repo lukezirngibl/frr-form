@@ -6,14 +6,12 @@ import {
   SectionFields,
   SingleFieldOrRow,
   SingleFormField,
-} from './Form'
-import { FormFieldType } from './types'
-
-type Fn<T> = (i: { isVisible?: (d: T) => boolean }) => boolean
+} from '../Form'
+import { FormFieldType } from '../types'
 
 const processFormFieldRow = <T>(
   a: Array<SingleFormField<T>>,
-  fn: Fn<T>,
+  fn: (i: SingleFormField<T>) => boolean,
 ): Array<SingleFormField<T>> =>
   a.reduce(
     (acc: Array<SingleFormField<T>>, j: SingleFormField<T>) =>
@@ -23,38 +21,30 @@ const processFormFieldRow = <T>(
 
 const processFormFieldGroup = <T>(
   g: FormFieldGroup<T>,
-  fn: Fn<T>,
-): Array<FormFieldGroup<T>> =>
-  fn(g)
-    ? [
-        {
-          ...g,
-          fields: g.fields.reduce(
-            (
-              filteredFields: Array<SingleFieldOrRow<T>>,
-              e: SingleFieldOrRow<T>,
-            ) => {
-              if (Array.isArray(e)) {
-                return [...filteredFields, processFormFieldRow(e, fn)]
-              } else {
-                return [...filteredFields, ...(fn(e) ? [e] : [])]
-              }
-            },
-            [],
-          ),
-        },
-      ]
-    : []
+  fn: (i: SingleFormField<T>) => boolean,
+): FormFieldGroup<T> => ({
+  ...g,
+  fields: g.fields.reduce(
+    (filteredFields: Array<SingleFieldOrRow<T>>, e: SingleFieldOrRow<T>) => {
+      if (Array.isArray(e)) {
+        return [...filteredFields, processFormFieldRow(e, fn)]
+      } else {
+        return [...filteredFields, ...(fn(e) ? [e] : [])]
+      }
+    },
+    [],
+  ),
+})
 
 const processFormSectionFields = <T>(
   fields: SectionFields<T>,
-  fn: Fn<T>,
+  fn: (i: SingleFormField<T>) => boolean,
 ): SectionFields<T> =>
   fields.reduce((acc: Array<SectionField<T>>, f) => {
     if (Array.isArray(f)) {
-      return [...acc, ...processFormFieldRow(f, fn)]
+      return [...acc, processFormFieldRow(f, fn)]
     } else if (f.type === FormFieldType.FormFieldGroup) {
-      return [...acc, ...processFormFieldGroup(f, fn)]
+      return [...acc, processFormFieldGroup(f, fn)]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection
@@ -67,31 +57,23 @@ const processFormSectionFields = <T>(
 
 const processFormSection = <T>(
   s: FormSection<T>,
-  fn: Fn<T>,
-): Array<FormSection<T>> =>
-  fn(s)
-    ? [
-        {
-          ...s,
-          fields: processFormSectionFields(s.fields, fn),
-        },
-      ]
-    : []
+  fn: (i: SingleFormField<T>) => boolean,
+): FormSection<T> => ({
+  ...s,
+  fields: processFormSectionFields(s.fields, fn),
+})
 
-export const filterByVisibility = <T>(
+export const filterFormFields = <T>(
   formFields: Array<FormField<T>>,
-  data: T,
+  fn: (i: SingleFormField<T>) => boolean,
 ): Array<FormField<T>> =>
   formFields.reduce((groups: Array<FormField<T>>, f: FormField<T>) => {
-    const fn = (i: { isVisible?: (d: T) => boolean }) =>
-      i.isVisible ? i.isVisible(data) : true
-
     if (Array.isArray(f)) {
-      return [...groups, ...processFormFieldRow(f, fn)]
+      return [...groups, processFormFieldRow(f, fn)]
     } else if (f.type === FormFieldType.FormFieldGroup) {
-      return [...groups, ...processFormFieldGroup(f, fn)]
+      return [...groups, processFormFieldGroup(f, fn)]
     } else if (f.type === FormFieldType.FormSection) {
-      return [...groups, ...processFormSection(f, fn)]
+      return [...groups, processFormSection(f, fn)]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection
