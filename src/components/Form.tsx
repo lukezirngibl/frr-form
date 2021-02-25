@@ -451,7 +451,7 @@ export type Props<FormData> = {
   data: FormData
   display?: DisplayType
   formFields: Array<FormField<FormData>>
-  onSubmit?: (params: { dispatch: any }) => void
+  onSubmit?: (params: { dispatch: any; formState: FormData }) => void
   onInvalidSubmit?: () => void
   onChange: (formState: FormData) => void
   buttons?: Array<
@@ -546,7 +546,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
         props.onInvalidSubmit()
       }
     } else if (typeof props.onSubmit === 'function') {
-      props.onSubmit({ dispatch })
+      props.onSubmit({ dispatch, formState: props.data })
     }
   }
 
