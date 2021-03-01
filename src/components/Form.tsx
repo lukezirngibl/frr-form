@@ -92,6 +92,7 @@ import {
   Props as YesNoRadioGroupProps,
 } from 'frr-web/lib/components/YesNoRadioGroup'
 import { Slider, Props as SliderProps } from 'frr-web/lib/components/Slider'
+import { Text, Props as TextProps } from 'frr-web/lib/components/Text'
 import { useDispatch } from 'react-redux'
 import { P } from 'frr-web/lib/html'
 import { createFakeFormLens, FormLens } from '../util'
@@ -103,6 +104,12 @@ type FormInput<P extends {}, L, T> = Omit<
   lens: L
   type: T
 }
+
+export type FormTextField<FormData> = FormInput<
+  TextProps,
+  FormLens<FormData, string>,
+  FormFieldType.FormText
+>
 
 export type OptionGroupField<FormData> = FormInput<
   OptionGroupProps,
@@ -118,7 +125,7 @@ export type SliderField<FormData> = FormInput<
 
 export type ToggleField<FormData> = FormInput<
   ToggleProps,
-  FormLens<FormData, boolean>,
+  FormLens<FormData, boolean> | FormLens<FormData, boolean | null>,
   FormFieldType.Toggle
 >
 
@@ -136,7 +143,7 @@ export type CodeInputField<FormData> = FormInput<
 
 export type CurrencyInputField<FormData> = FormInput<
   CurrencyInputProps,
-  FormLens<FormData, number>,
+  FormLens<FormData, number> | FormLens<FormData, number | null>,
   FormFieldType.CurrencyInput
 >
 
@@ -184,7 +191,7 @@ export type InputWithDropdownField<FormData> = FormInput<
 
 export type DropdownNumberField<FormData> = FormInput<
   DropdownNumberProps,
-  FormLens<FormData, number>,
+  FormLens<FormData, number> | FormLens<FormData, number | null>,
   FormFieldType.DropdownNumber
 >
 
@@ -202,25 +209,25 @@ export type TextNumberInputField<FormData> = FormInput<
 
 export type TextInputField<FormData> = FormInput<
   TextInputProps,
-  FormLens<FormData, string>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.TextInput
 >
 
 export type YesNoOptionGroupField<FormData> = FormInput<
   YesNoOptionGroupProps,
-  FormLens<FormData, boolean>,
+  FormLens<FormData, boolean> | FormLens<FormData, boolean | null>,
   FormFieldType.YesNoOptionGroup
 >
 
 export type YesNoRadioGroupField<FormData> = FormInput<
   YesNoRadioGroupProps,
-  FormLens<FormData, boolean>,
+  FormLens<FormData, boolean> | FormLens<FormData, boolean | null>,
   FormFieldType.YesNoRadioGroup
 >
 
 export type DatePickerField<FormData> = FormInput<
   DatePickerProps,
-  FormLens<FormData, Date>,
+  FormLens<FormData, Date> | FormLens<FormData, Date | null>,
   FormFieldType.DatePicker
 >
 
@@ -244,7 +251,7 @@ export type CheckboxGroupField<FormData> = FormInput<
 
 export type NumberInputField<FormData> = FormInput<
   NumberInputProps,
-  FormLens<FormData, number>,
+  FormLens<FormData, number> | FormLens<FormData, number | null>,
   FormFieldType.NumberInput
 >
 
@@ -313,23 +320,12 @@ export type FormFieldGroup<FormData> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-// export type FormFieldNumberList<FormData> = {
-//   title?: string
-//   description?: string
-//   style?: Partial<FormTheme['group']>
-//   type: FormFieldType.NumberList
-//   field: Omit<TextNumberInputField<FormData>, 'lens' | 'type'>
-//   lens: FormLens<FormData, Array<number>>
-//   isVisible?: (formData: FormData) => boolean
-//   length: FormLens<FormData, number>
-// }
-
 export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
   lens: FormLens<FormData, Array<T>>
   title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatGroup
   fields: GroupFields<T>
-  length: FormLens<FormData, number>
+  length: FormLens<FormData, number> | FormLens<FormData, number | null>
   isVisible?: (formData: FormData) => boolean
 }
 
@@ -355,7 +351,7 @@ export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
   title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatSection
   fields: Array<SingleFieldOrRow<FormData>>
-  length: FormLens<FormData, number>
+  length: FormLens<FormData, number> | FormLens<FormData, number | null>
   isVisible?: (formData: FormData) => boolean
 }
 
@@ -972,7 +968,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
       return null
     }
 
-    const length = formSection.length.get(props.data)
+    const length = formSection.length.get(props.data) || 0
 
     const groups = Array.from({
       length,
@@ -1011,7 +1007,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     if (formGroup.isVisible && !formGroup.isVisible(props.data)) {
       return null
     }
-    const length = formGroup.length.get(props.data)
+    const length = formGroup.length.get(props.data) || 0
 
     const groups = Array.from({
       length,
