@@ -179,7 +179,7 @@ export type CountryDropdownField<FormData> = FormInput<
 
 export type CountrySelectField<FormData> = FormInput<
   CountrySelectProps,
-  FormLens<FormData, string>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.CountrySelect
 >
 
@@ -806,7 +806,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
         <Select
           {...fieldProps}
           value={lens.get(data)}
-          onChange={(value: number) => onChange(lens.set(value)(data))}
+          onChange={value => onChange(lens.set(Number(value))(data))}
           label={label}
           error={hasError}
           dataTestId={dataTestId}
