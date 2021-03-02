@@ -1,11 +1,11 @@
 import {
+  FormFieldType,
   FormField,
   FormFieldGroup,
   FormSection,
   SectionFields,
   SingleFormField,
-} from '../Form'
-import { FormFieldType } from '../types'
+} from '../types'
 
 const processFormFieldGroup = <T, U>(
   g: FormFieldGroup<T>,

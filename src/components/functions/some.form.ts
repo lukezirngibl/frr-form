@@ -1,10 +1,10 @@
 import {
+  FormFieldType,
   FormField,
   FormFieldGroup,
   SectionFields,
   SingleFormField,
-} from '../Form'
-import { FormFieldType } from '../types'
+} from '../types'
 
 type Fn<T> = (i: SingleFormField<T>) => boolean
 

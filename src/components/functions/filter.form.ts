@@ -1,4 +1,5 @@
 import {
+  FormFieldType,
   FormField,
   FormFieldGroup,
   FormSection,
@@ -6,8 +7,7 @@ import {
   SectionFields,
   SingleFieldOrRow,
   SingleFormField,
-} from '../Form'
-import { FormFieldType } from '../types'
+} from '../types'
 
 const processFormFieldRow = <T>(
   a: Array<SingleFormField<T>>,
