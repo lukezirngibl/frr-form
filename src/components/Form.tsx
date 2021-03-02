@@ -1,372 +1,16 @@
-import React, { ReactNode, useEffect, useLayoutEffect } from 'react'
-import styled, { CSSProperties } from 'styled-components'
-import {
-  CheckboxGroup,
-  CheckboxGroupProps,
-} from 'frr-web/lib/components/CheckboxGroup'
-import {
-  NumberInput,
-  Props as NumberInputProps,
-} from 'frr-web/lib/components/NumberInput'
-import {
-  Dropdown,
-  Props as DropdownProps,
-} from 'frr-web/lib/components/Dropdown'
-import {
-  SingleCheckbox,
-  Props as SingleCheckboxProps,
-} from 'frr-web/lib/components/SingleCheckbox'
-import {
-  YesNoOptionGroup,
-  Props as YesNoOptionGroupProps,
-} from 'frr-web/lib/components/YesNoOptionGroup'
-import {
-  TextInput,
-  Props as TextInputProps,
-} from 'frr-web/lib/components/TextInput'
-import { DisplayType, FormFieldType } from './types'
-import { TextArea, TextAreaProps } from 'frr-web/lib/components/TextArea'
-import {
-  TextNumberInput,
-  Props as TextNumberInputProps,
-} from 'frr-web/lib/components/TextNumberInput'
-import {
-  DatePicker,
-  Props as DatePickerProps,
-} from 'frr-web/lib/components/DatePicker'
-import {
-  FormattedDatePicker,
-  Props as FormattedDatePickerProps,
-} from 'frr-web/lib/components/FormattedDatePicker'
-import { someFormFields } from './functions/some.form'
-import { filterByVisibility } from './functions/visible.form'
-import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
-import { getThemeContext, FormTheme as Theme, FormTheme } from '../theme/theme'
-import { createGetStyle } from '../theme/util'
 import {
   Button,
-  Props as ButtonProps,
   ButtonType,
+  Props as ButtonProps,
 } from 'frr-web/lib/components/Button'
-import {
-  Props as DropdownNumberProps,
-  DropdownNumber,
-} from 'frr-web/lib/components/DropdownNumber'
-import {
-  Props as InputWithDropdownProps,
-  InputWithDropdown,
-} from 'frr-web/lib/components/InputWithDropdown'
-import {
-  Props as CountryDropdownProps,
-  CountryDropdown,
-} from 'frr-web/lib/components/CountryDropdown'
-import {
-  Props as CountrySelectProps,
-  CountrySelect,
-} from 'frr-web/lib/components/CountrySelect'
-import { Switch, Props as SwithProps } from 'frr-web/lib/components/Switch'
-import {
-  CurrencyInput,
-  Props as CurrencyInputProps,
-} from 'frr-web/lib/components/CurrencyInput'
-import {
-  MultiSelect,
-  Props as MultiSelectProps,
-} from 'frr-web/lib/components/MultiSelect'
-import { Select, Props as SelectProps } from 'frr-web/lib/components/Select'
-import {
-  CodeInput,
-  Props as CodeInputProps,
-} from 'frr-web/lib/components/CodeInput'
-import {
-  RadioGroup,
-  Props as RadioGroupProps,
-} from 'frr-web/lib/components/RadioGroup'
-import { Toggle, Props as ToggleProps } from 'frr-web/lib/components/Toggle'
-import {
-  OptionGroup,
-  Props as OptionGroupProps,
-} from 'frr-web/lib/components/OptionGroup'
-import {
-  YesNoRadioGroup,
-  Props as YesNoRadioGroupProps,
-} from 'frr-web/lib/components/YesNoRadioGroup'
-import { Slider, Props as SliderProps } from 'frr-web/lib/components/Slider'
-import { useDispatch } from 'react-redux'
-import { P } from 'frr-web/lib/html'
-import { createFakeFormLens, FormLens } from '../util'
-
-type FormInput<P extends {}, L, T> = Omit<
-  P,
-  'onChange' | 'value' | 'error' | 'required'
-> & {
-  lens: L
-  type: T
-}
-
-export type OptionGroupField<FormData> = FormInput<
-  OptionGroupProps,
-  FormLens<FormData, string>,
-  FormFieldType.OptionGroup
->
-
-export type SliderField<FormData> = FormInput<
-  SliderProps,
-  FormLens<FormData, number>,
-  FormFieldType.Slider
->
-
-export type ToggleField<FormData> = FormInput<
-  ToggleProps,
-  FormLens<FormData, boolean>,
-  FormFieldType.Toggle
->
-
-export type RadioGroupField<FormData> = FormInput<
-  RadioGroupProps,
-  FormLens<FormData, string>,
-  FormFieldType.RadioGroup
->
-
-export type CodeInputField<FormData> = FormInput<
-  CodeInputProps,
-  FormLens<FormData, string>,
-  FormFieldType.CodeInput
->
-
-export type CurrencyInputField<FormData> = FormInput<
-  CurrencyInputProps,
-  FormLens<FormData, number>,
-  FormFieldType.CurrencyInput
->
-
-export type MultiSelectField<FormData> = FormInput<
-  MultiSelectProps,
-  FormLens<FormData, Array<string>>,
-  FormFieldType.MultiSelect
->
-
-export type TextSelectField<FormData> = FormInput<
-  SelectProps,
-  FormLens<FormData, string> | FormLens<FormData, string | null>,
-  FormFieldType.TextSelect
->
-
-export type NumberSelectField<FormData> = FormInput<
-  SelectProps,
-  FormLens<FormData, number | null> | FormLens<FormData, number>,
-  FormFieldType.NumberSelect
->
-
-export type SwitchField<FormData> = FormInput<
-  SwithProps,
-  FormLens<FormData, boolean>,
-  FormFieldType.Switch
->
-
-export type CountryDropdownField<FormData> = FormInput<
-  CountryDropdownProps,
-  FormLens<FormData, string>,
-  FormFieldType.CountryDropdown
->
-
-export type CountrySelectField<FormData> = FormInput<
-  CountrySelectProps,
-  FormLens<FormData, string>,
-  FormFieldType.CountrySelect
->
-
-export type InputWithDropdownField<FormData> = FormInput<
-  InputWithDropdownProps,
-  FormLens<FormData, string>,
-  FormFieldType.InputWithDropdown
->
-
-export type DropdownNumberField<FormData> = FormInput<
-  DropdownNumberProps,
-  FormLens<FormData, number>,
-  FormFieldType.DropdownNumber
->
-
-export type TextAreaField<FormData> = FormInput<
-  TextAreaProps,
-  FormLens<FormData, string>,
-  FormFieldType.TextArea
->
-
-export type TextNumberInputField<FormData> = FormInput<
-  TextNumberInputProps,
-  FormLens<FormData, number>,
-  FormFieldType.TextNumber
->
-
-export type TextInputField<FormData> = FormInput<
-  TextInputProps,
-  FormLens<FormData, string>,
-  FormFieldType.TextInput
->
-
-export type YesNoOptionGroupField<FormData> = FormInput<
-  YesNoOptionGroupProps,
-  FormLens<FormData, boolean>,
-  FormFieldType.YesNoOptionGroup
->
-
-export type YesNoRadioGroupField<FormData> = FormInput<
-  YesNoRadioGroupProps,
-  FormLens<FormData, boolean>,
-  FormFieldType.YesNoRadioGroup
->
-
-export type DatePickerField<FormData> = FormInput<
-  DatePickerProps,
-  FormLens<FormData, Date>,
-  FormFieldType.DatePicker
->
-
-export type FormattedDatePickerField<FormData> = FormInput<
-  FormattedDatePickerProps,
-  FormLens<FormData, string>,
-  FormFieldType.FormattedDatePicker
->
-
-export type DropdownField<FormData> = FormInput<
-  DropdownProps,
-  FormLens<FormData, string>,
-  FormFieldType.Dropdown
->
-
-export type CheckboxGroupField<FormData> = FormInput<
-  CheckboxGroupProps,
-  FormLens<FormData, Array<string>>,
-  FormFieldType.CheckboxGroup
->
-
-export type NumberInputField<FormData> = FormInput<
-  NumberInputProps,
-  FormLens<FormData, number>,
-  FormFieldType.NumberInput
->
-
-export type SingleCheckboxField<FormData> = FormInput<
-  SingleCheckboxProps,
-  FormLens<FormData, boolean>,
-  FormFieldType.SingleCheckbox
->
-
-type CommonFieldProps<FormData> = {
-  isVisible?: (formData: FormData) => boolean
-  isDisabled?: boolean
-  validate?: (formData: FormData) => null | string
-  maxwidth?: number
-  itemStyle?: CSSProperties
-  required?: boolean | ((formData: FormData) => boolean)
-}
-
-export type SingleFormField<FormData> = (
-  | CheckboxGroupField<FormData>
-  | NumberInputField<FormData>
-  | DropdownField<FormData>
-  | SingleCheckboxField<FormData>
-  | TextAreaField<FormData>
-  | TextNumberInputField<FormData>
-  | TextInputField<FormData>
-  | InputWithDropdownField<FormData>
-  | DropdownNumberField<FormData>
-  | SwitchField<FormData>
-  | MultiSelectField<FormData>
-  | CountryDropdownField<FormData>
-  | CurrencyInputField<FormData>
-  | YesNoOptionGroupField<FormData>
-  | TextSelectField<FormData>
-  | NumberSelectField<FormData>
-  | CodeInputField<FormData>
-  | RadioGroupField<FormData>
-  | ToggleField<FormData>
-  | OptionGroupField<FormData>
-  | DatePickerField<FormData>
-  | CountrySelectField<FormData>
-  | YesNoRadioGroupField<FormData>
-  | SliderField<FormData>
-  | FormattedDatePickerField<FormData>
-) &
-  CommonFieldProps<FormData>
-
-export type FormFieldRow<FormData> = Array<SingleFormField<FormData>>
-
-export type Fields<FormData> = Array<
-  SingleFormField<FormData> | FormFieldRow<FormData>
->
-
-export type SingleFieldOrRow<FormData> =
-  | SingleFormField<FormData>
-  | FormFieldRow<FormData>
-
-export type GroupFields<FormData> = Array<SingleFieldOrRow<FormData>>
-
-export type FormFieldGroup<FormData> = {
-  title?: string
-  description?: string
-  style?: Partial<FormTheme['group']>
-  type: FormFieldType.FormFieldGroup
-  fields: GroupFields<FormData>
-  isVisible?: (formData: FormData) => boolean
-}
-
-// export type FormFieldNumberList<FormData> = {
-//   title?: string
-//   description?: string
-//   style?: Partial<FormTheme['group']>
-//   type: FormFieldType.NumberList
-//   field: Omit<TextNumberInputField<FormData>, 'lens' | 'type'>
-//   lens: FormLens<FormData, Array<number>>
-//   isVisible?: (formData: FormData) => boolean
-//   length: FormLens<FormData, number>
-// }
-
-export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
-  lens: FormLens<FormData, Array<T>>
-  title?: (params: { index: number; translate: any }) => string
-  type: FormFieldType.FormFieldRepeatGroup
-  fields: GroupFields<T>
-  length: FormLens<FormData, number>
-  isVisible?: (formData: FormData) => boolean
-}
-
-export type FormField<FormData> =
-  | SingleFormField<FormData>
-  | FormFieldRow<FormData>
-  | FormFieldGroup<FormData>
-  | FormSection<FormData>
-  | FormFieldRepeatGroup<FormData>
-  | FormFieldRepeatSection<FormData>
-
-export type SectionField<FormData> =
-  | SingleFormField<FormData>
-  | FormFieldRow<FormData>
-  | FormFieldGroup<FormData>
-  | FormFieldRepeatGroup<FormData>
-  | FormFieldRepeatSection<FormData>
-
-export type SectionFields<FormData> = Array<SectionField<FormData>>
-
-export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
-  lens: FormLens<FormData, Array<T>>
-  title?: (params: { index: number; translate: any }) => string
-  type: FormFieldType.FormFieldRepeatSection
-  fields: Array<SingleFieldOrRow<FormData>>
-  length: FormLens<FormData, number>
-  isVisible?: (formData: FormData) => boolean
-}
-
-export type FormSection<FormData> = {
-  title?: string
-  description?: string
-  style?: Partial<FormTheme['section']>
-  type: FormFieldType.FormSection
-  fields: SectionFields<FormData>
-  isVisible?: (formData: FormData) => boolean
-}
+import React, { ReactNode, useEffect } from 'react'
+import styled from 'styled-components'
+import { FormTheme, getThemeContext } from '../theme/theme'
+import { createGetStyle } from '../theme/util'
+import { someFormFields } from './functions/some.form'
+import { filterByVisibility } from './functions/visible.form'
+import { getRenderFormField } from './render/renderFormField'
+import { DisplayType, FormField, FormFieldType, SingleFormField } from './types'
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -415,9 +59,8 @@ export const FormFieldWrapper = styled.div<{
   maxwidth?: number
 }>`
   position: relative;
-  max-width: ${props =>
-    props.maxwidth !== undefined ? `${props.maxwidth}px` : 'none'};
-  width: ${props => props.width};
+  max-width: ${({ maxwidth }) => (!!maxwidth ? `${maxwidth}px` : 'none')};
+  width: ${({ width }) => width};
 
   @media (max-width: 768px) {
     width: 100% !important;
@@ -450,8 +93,9 @@ export type Props<FormData> = {
   style?: Partial<FormTheme>
   data: FormData
   display?: DisplayType
+  dispatch: (func: any) => void
   formFields: Array<FormField<FormData>>
-  onSubmit?: (params: { dispatch: any }) => void
+  onSubmit?: ({ dispatch }) => void
   onInvalidSubmit?: () => void
   onChange: (formState: FormData) => void
   buttons?: Array<
@@ -466,22 +110,24 @@ export type Props<FormData> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-let scrolled = false
-
-export const Form = <FormData extends {}>(props: Props<FormData>) => {
-  const dispatch = useDispatch()
+export const Form = <FormData extends {}>({
+  children,
+  style,
+  data,
+  dispatch,
+  display,
+  formFields,
+  onSubmit,
+  onInvalidSubmit,
+  onChange,
+  buttons,
+  renderTopChildren,
+  renderBottomChildren,
+  readOnly,
+  isVisible,
+}: Props<FormData>) => {
   const theme = React.useContext(getThemeContext())
-
-  const language = React.useContext(getLanguageContext())
-  const translate = getTranslation(language)
-
-  const getRowStyle = createGetStyle(theme, 'row')(props.style?.row || {})
-  const getSectionStyle = createGetStyle(
-    theme,
-    'section',
-  )(props.style?.section || {})
-  const getGroupStyle = createGetStyle(theme, 'group')(props.style?.group || {})
-  const getFormStyle = createGetStyle(theme, 'form')(props.style?.form || {})
+  const getFormStyle = createGetStyle(theme, 'form')(style?.form || {})
 
   const [showValidation, setShowValidation] = React.useState(false)
   // const [scrollToRef, setScrollToRef] = React.useState<
@@ -496,17 +142,17 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
 
   useEffect(() => {
     setShowValidation(false)
-  }, [props.formFields, props.data])
+  }, [formFields, data])
 
   const computeFieldError = (f: SingleFormField<FormData>): string | null => {
     const isRequired =
       'required' in f
         ? typeof f.required === 'function'
-          ? f.required(props.data)
+          ? f.required(data)
           : f.required
         : false
 
-    let val = f.lens.get(props.data)
+    let val = f.lens.get(data)
     val = typeof val === 'string' ? val.trim() : val
 
     if (isRequired) {
@@ -516,7 +162,7 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     }
 
     if ('validate' in f && f.validate !== undefined) {
-      const l = f.validate(props.data)
+      const l = f.validate(data)
       if (l !== null) {
         return l
       }
@@ -537,630 +183,49 @@ export const Form = <FormData extends {}>(props: Props<FormData>) => {
     computeFieldError(f) !== null
 
   const submit = () => {
-    const visibleFormFields = filterByVisibility(props.formFields, props.data)
+    const visibleFormFields = filterByVisibility(formFields, data)
     const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
 
     if (isNotValid) {
       setShowValidation(true)
-      if (props.onInvalidSubmit) {
-        props.onInvalidSubmit()
+      if (onInvalidSubmit) {
+        onInvalidSubmit()
       }
-    } else if (typeof props.onSubmit === 'function') {
-      props.onSubmit({ dispatch })
+    } else if (typeof onSubmit === 'function') {
+      onSubmit({ dispatch })
     }
   }
 
-  const renderFormFieldInput = (
-    fieldI: SingleFormField<FormData>,
-    error: { errorLabel: string | null; hasError: boolean },
-    key: number | string,
-  ) => {
-    const field = { ...fieldI, key }
-    const { data, onChange, readOnly } = props
-    const { errorLabel, hasError } = error
-
-    const dataTestId = field.lens.id()
-
-    let { label } = field
-    if (label) {
-      label = { error: errorLabel !== null, errorLabel, ...label }
-    }
-
-    if (field.type === FormFieldType.TextArea) {
-      const { type, lens, validate, ...fieldProps } = field
-      return (
-        <TextArea
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.TextInput) {
-      const { type, lens, validate, required, ...fieldProps } = field
-      return (
-        <TextInput
-          {...fieldProps}
-          value={lens.get(data) || ''}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          readOnly={readOnly || field.readOnly}
-          label={label}
-          dataTestId={dataTestId}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.Toggle) {
-      const { type, lens, validate, required, ...fieldProps } = field
-      return (
-        <Toggle
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.FormattedDatePicker) {
-      const { type, lens, validate, required, ...fieldProps } = field
-      return (
-        <FormattedDatePicker
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          label={label}
-          dataTestId={dataTestId}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.DatePicker) {
-      const { type, lens, validate, required, ...fieldProps } = field
-      return (
-        <DatePicker
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          label={label}
-          dataTestId={dataTestId}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.CountrySelect) {
-      const { type, lens, validate, required, ...fieldProps } = field
-      return (
-        <CountrySelect
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={(value: string) => onChange(lens.set(value)(data))}
-          error={hasError}
-          label={label}
-          dataTestId={dataTestId}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.Slider) {
-      const { type, lens, validate, required, ...fieldProps } = field
-      return (
-        <Slider
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          // error={hasError}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.CheckboxGroup) {
-      const { lens, validate, ...fieldProps } = field
-      return (
-        <CheckboxGroup
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.YesNoOptionGroup) {
-      const { lens, validate, ...fieldProps } = field
-      return (
-        <YesNoOptionGroup
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.YesNoRadioGroup) {
-      const { lens, validate, ...fieldProps } = field
-      return (
-        <YesNoRadioGroup
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          label={label}
-          dataTestId={dataTestId}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.OptionGroup) {
-      const { lens, validate, ...fieldProps } = field
-      return (
-        <OptionGroup
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          label={label}
-          error={hasError}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.RadioGroup) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <RadioGroup
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          label={label}
-          error={hasError}
-          dataTestId={dataTestId}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.SingleCheckbox) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <SingleCheckbox
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.CodeInput) {
-      const { lens, validate, ...fieldProps } = field
-      return (
-        <CodeInput
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.Switch) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <Switch
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.NumberInput) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <NumberInput
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          readOnly={readOnly}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.TextNumber) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <TextNumberInput
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          // error={hasError}
-          readOnly={readOnly || field.readOnly}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.TextSelect) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <Select
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={(value: string) => onChange(lens.set(value)(data))}
-          label={label}
-          error={hasError}
-          dataTestId={dataTestId}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.NumberSelect) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <Select
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={(value: number) => onChange(lens.set(value)(data))}
-          label={label}
-          error={hasError}
-          dataTestId={dataTestId}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.MultiSelect) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <MultiSelect
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.InputWithDropdown) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <InputWithDropdown
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          readOnly={readOnly || field.readOnly}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.CountryDropdown) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <CountryDropdown
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.CurrencyInput) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <CurrencyInput
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.Dropdown) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <Dropdown
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          readOnly={readOnly || field.readOnly}
-          label={label}
-        />
-      )
-    }
-
-    if (field.type === FormFieldType.DropdownNumber) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <DropdownNumber
-          {...fieldProps}
-          value={lens.get(data)}
-          onChange={value => onChange(lens.set(value)(data))}
-          error={hasError}
-          readOnly={readOnly || field.readOnly}
-          label={label}
-        />
-      )
-    }
-
-    return <div />
-  }
-
-  const renderFormFieldItem = (width: number = 100) => (
-    field: SingleFormField<FormData>,
-    key: number | string,
-  ) => {
-    const errorLabel = showValidation ? computeFieldError(field) : null
-
-    const hasError = errorLabel !== null
-
-    let ref = React.createRef<HTMLDivElement>()
-    if (!scrolled && hasError) {
-      scrolled = true
-      setTimeout(() => {
-        if (ref.current) {
-          scrolled = false
-          ref.current.scrollIntoView({
-            behavior: 'smooth',
-          })
-        }
-      }, 300)
-    }
-
-    return !field.isVisible || field.isVisible(props.data) ? (
-      <FormFieldWrapper
-        key={key}
-        ref={ref}
-        width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
-        maxwidth={field.maxwidth}
-        className="form-field"
-        style={{ ...getRowStyle('item'), ...(field.itemStyle || {}) }}
-      >
-        {renderFormFieldInput(field, { hasError, errorLabel }, key)}
-      </FormFieldWrapper>
-    ) : (
-      <></>
-    )
-  }
-
-  const renderFormFieldRow = (
-    formFieldRow: FormFieldRow<FormData>,
-    key: number | string,
-  ) =>
-    formFieldRow.some(r => !r.isVisible || r.isVisible(props.data)) ? (
-      <FormFieldRowWrapper key={key} style={getRowStyle('wrapper')}>
-        {formFieldRow.map(renderFormFieldItem((1 / formFieldRow.length) * 100))}
-      </FormFieldRowWrapper>
-    ) : null
-
-  const renderFormField = (
-    formField: FormFieldRow<FormData> | SingleFormField<FormData>,
-    key: string | number,
-  ) => {
-    if (Array.isArray(formField)) {
-      return renderFormFieldRow(formField, key)
-    } else {
-      return (
-        <FormFieldRowWrapper style={getRowStyle('wrapper')} key={key}>
-          {renderFormFieldItem()(formField, key)}
-        </FormFieldRowWrapper>
-      )
-    }
-  }
-
-  const renderFormRepeatSection = (
-    formSection: FormFieldRepeatSection<FormData>,
-    key: number | string,
-  ) => {
-    if (formSection.isVisible && !formSection.isVisible(props.data)) {
-      return null
-    }
-
-    const length = formSection.length.get(props.data)
-
-    const groups = Array.from({
-      length,
-    }).map((_, index) => {
-      const title = formSection.title
-        ? formSection.title({ index, translate })
-        : `${index + 1}`
-      return {
-        type: FormFieldType.FormSection,
-        fields: [
-          {
-            type: FormFieldType.FormFieldGroup,
-            title,
-            fields: formSection.fields.map((f, fi) => {
-              if (Array.isArray(f)) {
-                return <></>
-              } else {
-                return {
-                  ...f,
-                  lens: createFakeFormLens(formSection.lens, index, f.lens),
-                }
-              }
-            }),
-          },
-        ],
-      }
-    }) as Array<FormSection<FormData>>
-
-    return groups.map((g, i) => renderFormSection(g, `${key}-${i}`))
-  }
-
-  const renderFormRepeatGroup = (
-    formGroup: FormFieldRepeatGroup<FormData>,
-    key: number | string,
-  ) => {
-    if (formGroup.isVisible && !formGroup.isVisible(props.data)) {
-      return null
-    }
-    const length = formGroup.length.get(props.data)
-
-    const groups = Array.from({
-      length,
-    }).map((_, index) => ({
-      type: FormFieldType.FormFieldGroup,
-      fields: formGroup.fields.map((f, fi) => {
-        if (Array.isArray(f)) {
-          return <></>
-        } else {
-          return {
-            ...f,
-            lens: createFakeFormLens(formGroup.lens, index, f.lens),
-          }
-        }
-      }),
-    })) as Array<FormFieldGroup<FormData>>
-
-    return groups.map((g, i) => renderFormGroup(g, `${key}-${i}`))
-  }
-  // ------------------------------------
-
-  const renderFormSectionItem = (
-    formField: SectionField<FormData>,
-    key: number | string,
-  ) => {
-    if (
-      !Array.isArray(formField) &&
-      formField.type === FormFieldType.FormFieldGroup
-    ) {
-      return renderFormGroup(formField, key)
-    } else if (
-      !Array.isArray(formField) &&
-      formField.type === FormFieldType.FormFieldRepeatGroup
-    ) {
-      return renderFormRepeatGroup(formField, key)
-    } else if (
-      !Array.isArray(formField) &&
-      formField.type === FormFieldType.FormFieldRepeatSection
-    ) {
-      return renderFormRepeatSection(formField, key)
-    } else {
-      return renderFormField(formField, key)
-    }
-  }
-
-  const renderFormGroup = (
-    formGroup: FormFieldGroup<FormData>,
-    key: number | string,
-  ) =>
-    !formGroup.isVisible || formGroup.isVisible(props.data) ? (
-      <FormFieldGroupWrapper
-        key={key}
-        style={{
-          ...getGroupStyle('wrapper'),
-          ...(formGroup.style ? formGroup.style.wrapper || {} : {}),
-        }}
-      >
-        {formGroup.title && (
-          <P
-            style={{
-              ...getGroupStyle('title'),
-              ...(formGroup.style ? formGroup.style.title || {} : {}),
-            }}
-            label={formGroup.title}
-          />
-        )}
-        {formGroup.description && (
-          <P
-            style={{
-              ...getGroupStyle('description'),
-              ...(formGroup.style ? formGroup.style.description || {} : {}),
-            }}
-            label={formGroup.description}
-          />
-        )}
-        {formGroup.fields.map(renderFormField)}
-      </FormFieldGroupWrapper>
-    ) : null
-
-  const renderFormSection = (
-    formSection: FormSection<FormData>,
-    key: number | string,
-  ) =>
-    !formSection.isVisible || formSection.isVisible(props.data) ? (
-      <FormSectionWrapper
-        key={key}
-        style={{
-          ...getSectionStyle('wrapper'),
-          ...(formSection.style ? formSection.style.wrapper || {} : {}),
-        }}
-      >
-        {formSection.title && (
-          <P
-            style={{
-              ...getSectionStyle('title'),
-              ...(formSection.style ? formSection.style.title || {} : {}),
-            }}
-            label={formSection.title}
-          />
-        )}
-        {formSection.description && (
-          <P
-            style={{
-              ...getSectionStyle('description'),
-              ...(formSection.style ? formSection.style.description || {} : {}),
-            }}
-            label={formSection.description}
-          />
-        )}
-        {formSection.fields.map(renderFormSectionItem)}
-      </FormSectionWrapper>
-    ) : null
-
-  const { formFields } = props
-
-  return !props.isVisible || props.isVisible(props.data) ? (
+  const renderFormField = getRenderFormField({
+    data,
+    style,
+    onChange,
+    showValidation,
+    formReadOnly: readOnly,
+  })
+  return !isVisible || isVisible(data) ? (
     <FormWrapper
       style={getFormStyle('wrapper')}
-      className={props.readOnly ? 'read-only' : ''}
+      className={readOnly ? 'read-only' : ''}
     >
-      {props.renderTopChildren && props.renderTopChildren(props.data)}
+      {renderTopChildren && renderTopChildren(data)}
+
       <FormContent style={getFormStyle('content')}>
-        {formFields.map((f: FormField<FormData>, key: number) => {
-          if (Array.isArray(f)) {
-            return renderFormFieldRow(f, key)
-          } else if (f.type === FormFieldType.FormFieldGroup) {
-            return renderFormGroup(f, key)
-          } else if (f.type === FormFieldType.FormSection) {
-            return renderFormSection(f, key)
-          } else if (f.type === FormFieldType.FormFieldRepeatGroup) {
-            return renderFormRepeatGroup(f, key)
-          } else if (f.type === FormFieldType.FormFieldRepeatSection) {
-            return renderFormRepeatSection(f, key)
-          } else {
-            return renderFormField(f, key)
-          }
-        })}
+        {formFields.map(renderFormField)}
       </FormContent>
-      {props.renderBottomChildren && props.renderBottomChildren(props.data)}
-      {props.buttons && (
+
+      {renderBottomChildren && renderBottomChildren(data)}
+
+      {buttons && (
         <ButtonContainer style={getFormStyle('buttonContainer')}>
-          {props.buttons.map((b, k) => (
+          {buttons.map((b, k) => (
             <Button
               {...b}
               key={k}
               dataTestId={`form:${(
                 b.type || ButtonType.Secondary
               ).toLowerCase()}:${k + 1}`}
-              disabled={b.isDisabled ? b.isDisabled(props.data) : false}
+              disabled={b.isDisabled ? b.isDisabled(data) : false}
               onClick={() => b.onClick({ submit, dispatch })}
             />
           ))}

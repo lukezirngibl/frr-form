@@ -5,7 +5,9 @@ import { keys } from 'frr-util/lib/util'
 export type FormTheme = {
   row: {
     wrapper: CSSProperties
+    wrapperReadonly: CSSProperties
     item: CSSProperties
+    itemReadonly: CSSProperties
   }
   group: {
     title: CSSProperties
@@ -14,25 +16,50 @@ export type FormTheme = {
   }
   section: {
     title: CSSProperties
+    titleReadonly: CSSProperties
     wrapper: CSSProperties
     description: CSSProperties
+  }
+  sectionRight: {
+    wrapper: CSSProperties
+    editLink: CSSProperties
+    editIcon: CSSProperties
   }
   form: {
     wrapper: CSSProperties
     content: CSSProperties
     buttonContainer: CSSProperties
   }
+  fieldReadonly: {
+    wrapper: CSSProperties
+    item: CSSProperties
+    label: CSSProperties
+  }
+  icon: {
+    edit: {
+      svg?: string
+      viewBox?: string
+    }
+  }
 }
 
-const defaultTheme: FormTheme = {
+export const defaultTheme: FormTheme = {
   section: {
     title: {},
+    titleReadonly: {},
     wrapper: {},
     description: {},
   },
+  sectionRight: {
+    wrapper: {},
+    editIcon: {},
+    editLink: {}
+  },
   row: {
     wrapper: {},
+    wrapperReadonly: {},
     item: {},
+    itemReadonly: {},
   },
   group: {
     title: {},
@@ -44,6 +71,14 @@ const defaultTheme: FormTheme = {
     content: {},
     buttonContainer: {},
   },
+  fieldReadonly: {
+    wrapper: {},
+    item: {},
+    label: {},
+  },
+  icon: {
+    edit: {}
+  }
 }
 
 export type FormThemeConfig = { [k in keyof FormTheme]?: Partial<FormTheme[k]> }
