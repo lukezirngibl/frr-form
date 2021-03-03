@@ -97,11 +97,10 @@ export const FieldItem = <FormData extends {}>(
   const computeFieldError = getComputeFieldError(props.data)
 
   const renderFormFieldInput = (
-    fieldI: SingleFormField<FormData>,
+    field: SingleFormField<FormData>,
     error: { errorLabel: string | null; hasError: boolean },
     key: number | string,
   ) => {
-    const field = { ...fieldI, key } as SingleFormField<FormData>
     const { errorLabel, hasError } = error
 
     const dataTestId = field.lens.id()
@@ -116,6 +115,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <TextArea
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -129,6 +129,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <TextInput
           {...fieldProps}
+          key={key}
           value={lens.get(props.data) || ''}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -143,6 +144,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <Toggle
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
@@ -155,6 +157,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <FormattedDatePicker
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
@@ -168,6 +171,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <DatePicker
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
@@ -181,6 +185,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <CountrySelect
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={(value: string) =>
             props.onChange(lens.set(value)(props.data))
@@ -197,6 +202,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <Slider
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           // error={hasError}
@@ -210,6 +216,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <CheckboxGroup
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -223,6 +230,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <YesNoOptionGroup
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
@@ -235,6 +243,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <YesNoRadioGroup
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
@@ -248,6 +257,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <OptionGroup
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
@@ -261,6 +271,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <RadioGroup
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
@@ -275,6 +286,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <SingleCheckbox
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -288,6 +300,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <CodeInput
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
@@ -300,6 +313,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <Switch
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -313,6 +327,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <NumberInput
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -326,6 +341,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <TextNumberInput
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           // error={hasError}
@@ -339,6 +355,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <Select
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={(value: string) =>
             props.onChange(lens.set(value)(props.data))
@@ -355,6 +372,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <Select
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={(value: number) =>
             props.onChange(lens.set(value)(props.data))
@@ -371,6 +389,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <MultiSelect
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -384,6 +403,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <InputWithDropdown
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -397,6 +417,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <CountryDropdown
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -410,6 +431,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <CurrencyInput
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -423,6 +445,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <Dropdown
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
@@ -436,6 +459,7 @@ export const FieldItem = <FormData extends {}>(
       return (
         <DropdownNumber
           {...fieldProps}
+          key={key}
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
