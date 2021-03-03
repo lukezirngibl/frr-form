@@ -7,7 +7,7 @@ import { FieldRow, FieldRowWrapper } from './FieldRow'
 import { FieldType, FormField, FormFieldRow, SingleFormField } from './types'
 
 // ------------------------------------
-interface FieldProps<FormData> extends FieldType<FormData> {
+type FieldProps<FormData> = FieldType<FormData> & {
   field: FormField<FormData>
 }
 
@@ -26,7 +26,7 @@ export const Field = <FormData extends {}>({
   const getRowStyle = createGetStyle(theme, 'row')(style?.row || {})
 
   const commonFieldItemProps = { data, style }
-  
+
   return Array.isArray(field) ? (
     <FieldRow
       field={field as FormFieldRow<FormData>}

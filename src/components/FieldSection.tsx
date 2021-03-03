@@ -46,7 +46,7 @@ const EditIcon = styled.svg`
   }
 `
 
-interface FieldSection<FormData> extends FieldType<FormData> {
+type FieldSection<FormData> = FieldType<FormData> & {
   field: FormSection<FormData>
 }
 

@@ -5,7 +5,7 @@ import { createGetStyle } from '../theme/util'
 import { Field } from './Field'
 import { FieldType, FormFieldGroup } from './types'
 
-interface FieldGroup<FormData> extends FieldType<FormData> {
+type FieldGroup<FormData> = FieldType<FormData> & {
   field: FormFieldGroup<FormData>
 }
 // ------------------------------------

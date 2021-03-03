@@ -30,7 +30,7 @@ export const FieldRowWrapper = styled.div`
   }
 `
 
-interface FieldRowProps<FormData> extends FieldType<FormData> {
+type FieldRowProps<FormData> = FieldType<FormData> & {
   field: FormFieldRow<FormData>
 }
 

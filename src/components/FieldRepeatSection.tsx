@@ -9,7 +9,7 @@ import {
   FormSection,
 } from './types'
 
-interface FieldRepeatSection<FormData> extends FieldType<FormData> {
+type FieldRepeatSection<FormData> = FieldType<FormData> & {
   field: FormFieldRepeatSection<FormData>
 }
 // ------------------------------------

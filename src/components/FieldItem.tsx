@@ -81,7 +81,7 @@ export const FormFieldWrapper = styled.div<{
  * Render field function
  */
 
-interface FieldItemProps<FormData> extends Omit<FieldType<FormData>, 'formReadOnly'> {
+type FieldItemProps<FormData> = Omit<FieldType<FormData>, 'formReadOnly'> & {
   field: SingleFormField<FormData>
   width?: number
 }

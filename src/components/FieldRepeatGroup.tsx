@@ -8,7 +8,7 @@ import {
   FormFieldType,
 } from './types'
 
-interface FieldRepeatGroup<FormData> extends FieldType<FormData> {
+type FieldRepeatGroup<FormData> = FieldType<FormData> & {
   field: FormFieldRepeatGroup<FormData>
 }
 // ------------------------------------
