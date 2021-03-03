@@ -21,7 +21,7 @@ var formatter = {
 
 type MapperParams<T> = { value: T; translate: (str: string) => string }
 
-const defaultMapper = ({
+const defaultStrNumMapper = ({
   value,
 }: MapperParams<string | number | null>): string => (value ? `${value}` : '')
 
@@ -31,7 +31,7 @@ const defaultBooleanMapper = ({ value }: MapperParams<boolean>): string =>
 const defaultCurrencyMapper = ({ value }: MapperParams<number>): string =>
   value ? formatter.long.format(value) : ''
 
-const getMultiSelectValue = (
+const defaultOptionArrayMapper = (
   params: MapperParams<Array<string>> & {
     options: Array<{ label: string; value: string }>
   },
@@ -49,7 +49,7 @@ const getMultiSelectValue = (
         .join(', ')
     : ''
 
-const readOnlyMappers: {
+const defaultReadOnlyMappers: {
   [K in FormFieldType]: (
     params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
       value: typeof fieldMap[K]['_value']
@@ -57,28 +57,28 @@ const readOnlyMappers: {
     },
   ) => string
 } = {
-  [FormFieldType.NumberInput]: defaultMapper,
+  [FormFieldType.NumberInput]: defaultStrNumMapper,
   [FormFieldType.DatePicker]: v => v.value.toDateString(),
-  [FormFieldType.MultiSelect]: getMultiSelectValue,
-  [FormFieldType.CheckboxGroup]: getMultiSelectValue,
-  [FormFieldType.CodeInput]: defaultMapper,
-  [FormFieldType.CountryDropdown]: defaultMapper,
-  [FormFieldType.CountrySelect]: defaultMapper,
+  [FormFieldType.MultiSelect]: defaultOptionArrayMapper,
+  [FormFieldType.CheckboxGroup]: defaultOptionArrayMapper,
+  [FormFieldType.CodeInput]: defaultStrNumMapper,
+  [FormFieldType.CountryDropdown]: defaultStrNumMapper,
+  [FormFieldType.CountrySelect]: defaultStrNumMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
-  [FormFieldType.Dropdown]: defaultMapper,
-  [FormFieldType.DropdownNumber]: defaultMapper,
-  [FormFieldType.FormattedDatePicker]: defaultMapper,
-  [FormFieldType.InputWithDropdown]: defaultMapper,
-  [FormFieldType.NumberSelect]: defaultMapper,
-  [FormFieldType.OptionGroup]: defaultMapper,
-  [FormFieldType.RadioGroup]: defaultMapper,
+  [FormFieldType.Dropdown]: defaultStrNumMapper,
+  [FormFieldType.DropdownNumber]: defaultStrNumMapper,
+  [FormFieldType.FormattedDatePicker]: defaultStrNumMapper,
+  [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
+  [FormFieldType.NumberSelect]: defaultStrNumMapper,
+  [FormFieldType.OptionGroup]: defaultStrNumMapper,
+  [FormFieldType.RadioGroup]: defaultStrNumMapper,
   [FormFieldType.SingleCheckbox]: defaultBooleanMapper,
-  [FormFieldType.Slider]: defaultMapper,
+  [FormFieldType.Slider]: defaultStrNumMapper,
   [FormFieldType.Switch]: defaultBooleanMapper,
-  [FormFieldType.TextArea]: defaultMapper,
-  [FormFieldType.TextInput]: defaultMapper,
-  [FormFieldType.TextNumber]: defaultMapper,
-  [FormFieldType.TextSelect]: defaultMapper,
+  [FormFieldType.TextArea]: defaultStrNumMapper,
+  [FormFieldType.TextInput]: defaultStrNumMapper,
+  [FormFieldType.TextNumber]: defaultStrNumMapper,
+  [FormFieldType.TextSelect]: defaultStrNumMapper,
   [FormFieldType.Toggle]: defaultBooleanMapper,
   [FormFieldType.YesNoOptionGroup]: defaultBooleanMapper,
   [FormFieldType.YesNoRadioGroup]: defaultBooleanMapper,
@@ -161,7 +161,7 @@ export const FieldItemReadOnly = <FormData extends {}>(
   )(props.style?.fieldReadOnly || {})
 
   const readOnlyMapper =
-    props.field.readOnlyMapper || readOnlyMappers[props.field.type]
+    props.field.readOnlyMapper || defaultReadOnlyMappers[props.field.type]
 
   return !props.field.isVisible || props.field.isVisible(props.data) ? (
     <FormFieldWrapper
