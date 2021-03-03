@@ -4,6 +4,7 @@ import {
   Props as ButtonProps,
 } from 'frr-web/lib/components/Button'
 import React, { ReactNode, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
 import { createGetStyle } from '../theme/util'
@@ -98,9 +99,8 @@ export type Props<FormData> = {
   style?: Partial<FormTheme>
   data: FormData
   display?: DisplayType
-  dispatch: (func: any) => void
   formFields: Array<FormFieldProps<FormData>>
-  onSubmit?: ({ dispatch }) => void
+  onSubmit?: (params: { dispatch: any; formState: FormData }) => void
   onInvalidSubmit?: () => void
   onChange: (formState: FormData) => void
   buttons?: Array<
@@ -119,7 +119,6 @@ export const Form = <FormData extends {}>({
   children,
   style,
   data,
-  dispatch,
   display,
   formFields,
   onSubmit,
@@ -131,6 +130,7 @@ export const Form = <FormData extends {}>({
   readOnly,
   isVisible,
 }: Props<FormData>) => {
+  const dispatch = useDispatch()
   const theme = React.useContext(getThemeContext())
   const getFormStyle = createGetStyle(theme, 'form')(style?.form || {})
 
@@ -197,7 +197,7 @@ export const Form = <FormData extends {}>({
         onInvalidSubmit()
       }
     } else if (typeof onSubmit === 'function') {
-      onSubmit({ dispatch })
+      onSubmit({ dispatch, formState: data })
     }
   }
 

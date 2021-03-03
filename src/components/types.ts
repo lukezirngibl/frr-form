@@ -96,6 +96,7 @@ export enum FormFieldType {
   CountrySelect = 'CountrySelect',
   YesNoRadioGroup = 'YesNoRadioGroup',
   Slider = 'Slider',
+  FormText = 'FormText',
 }
 
 export enum Orientation {
