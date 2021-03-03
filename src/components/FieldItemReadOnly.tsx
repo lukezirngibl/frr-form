@@ -49,6 +49,16 @@ const defaultOptionArrayMapper = (
         .join(', ')
     : ''
 
+const defaultOptionMapper = (
+  params: MapperParams<string> & {
+    options: Array<{ label: string; value: string }>
+  },
+): string =>
+  findFirst(params.options, o => o.value === params.value).fold(
+    'null',
+    o => o.label,
+  )
+
 const defaultReadOnlyMappers: {
   [K in FormFieldType]: (
     params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
@@ -70,15 +80,15 @@ const defaultReadOnlyMappers: {
   [FormFieldType.FormattedDatePicker]: defaultStrNumMapper,
   [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
   [FormFieldType.NumberSelect]: defaultStrNumMapper,
-  [FormFieldType.OptionGroup]: defaultStrNumMapper,
-  [FormFieldType.RadioGroup]: defaultStrNumMapper,
+  [FormFieldType.OptionGroup]: defaultOptionMapper,
+  [FormFieldType.RadioGroup]: defaultOptionMapper,
   [FormFieldType.SingleCheckbox]: defaultBooleanMapper,
   [FormFieldType.Slider]: defaultStrNumMapper,
   [FormFieldType.Switch]: defaultBooleanMapper,
   [FormFieldType.TextArea]: defaultStrNumMapper,
   [FormFieldType.TextInput]: defaultStrNumMapper,
   [FormFieldType.TextNumber]: defaultStrNumMapper,
-  [FormFieldType.TextSelect]: defaultStrNumMapper,
+  [FormFieldType.TextSelect]: defaultOptionMapper,
   [FormFieldType.Toggle]: defaultBooleanMapper,
   [FormFieldType.YesNoOptionGroup]: defaultBooleanMapper,
   [FormFieldType.YesNoRadioGroup]: defaultBooleanMapper,
