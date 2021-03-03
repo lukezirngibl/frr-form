@@ -84,7 +84,7 @@ type FormInput<V, P extends { value: V }, L, T> = Omit<
   lens: L
   type: T
   readOnlyMapper?: (params: Omit<P, 'onChange'>) => string
-  _value: P['value']
+  _value?: P['value']
 }
 
 export type FormTextField<FormData> = FormInput<
