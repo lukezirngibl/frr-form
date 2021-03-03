@@ -36,64 +36,6 @@ export const FormContent = styled.div`
   flex-grow: 1;
 `
 
-export const FormFieldRowWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-  flex-shrink: 0;
-
-  @media (max-width: 768px) {
-    flex-wrap: wrap;
-  }
-
-  & > * {
-    margin-left: 4px;
-    margin-right: 4px;
-
-    &:first-child {
-      margin-left: 0;
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-`
-
-export const FormFieldWrapper = styled.div<{
-  width: string
-  maxwidth?: number
-}>`
-  position: relative;
-  max-width: ${({ maxwidth }) => (!!maxwidth ? `${maxwidth}px` : 'none')};
-  width: ${({ width }) => width};
-
-  @media (max-width: 768px) {
-    width: 100% !important;
-    margin-top: 12px;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-
-    &:first-of-type {
-      margin-top: 0;
-    }
-  }
-`
-
-export const FormFieldGroupWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 8px;
-  flex-shrink: 0;
-`
-
-export const FormSectionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 16px 0 8px 0;
-  flex-shrink: 0;
-`
-
 export type Props<FormData> = {
   children?: ReactNode
   style?: Partial<FormTheme>
