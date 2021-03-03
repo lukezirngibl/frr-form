@@ -1,14 +1,3 @@
-import { Options } from 'frr-web/lib/util'
-import React from 'react'
-import styled from 'styled-components'
-import { FormTheme, getThemeContext } from '../../theme/theme'
-import { createGetStyle } from '../../theme/util'
-import {
-  FormField,
-  FormFieldRow,
-  FormFieldType,
-  SingleFormField,
-} from '../types'
 import { CheckboxGroup } from 'frr-web/lib/components/CheckboxGroup'
 import { CodeInput } from 'frr-web/lib/components/CodeInput'
 import { CountryDropdown } from 'frr-web/lib/components/CountryDropdown'
@@ -33,7 +22,12 @@ import { TextNumberInput } from 'frr-web/lib/components/TextNumberInput'
 import { Toggle } from 'frr-web/lib/components/Toggle'
 import { YesNoOptionGroup } from 'frr-web/lib/components/YesNoOptionGroup'
 import { YesNoRadioGroup } from 'frr-web/lib/components/YesNoRadioGroup'
-import { getComputeFieldError } from '../functions/computeFieldError.form'
+import React from 'react'
+import styled from 'styled-components'
+import { getThemeContext } from '../theme/theme'
+import { createGetStyle } from '../theme/util'
+import { getComputeFieldError } from './functions/computeFieldError.form'
+import { FieldType, FormFieldType, SingleFormField } from './types'
 
 /*
  * Styled components
@@ -87,20 +81,15 @@ export const FormFieldWrapper = styled.div<{
  * Render field function
  */
 
-type FormFieldProps<FormData> = {
-  data: FormData
-  style: Partial<FormTheme> | undefined
-  onChange: (formState: FormData) => void
-  showValidation: boolean
+interface FieldItemProps<FormData> extends Omit<FieldType<FormData>, 'formReadOnly'> {
+  field: SingleFormField<FormData>
+  width?: number
 }
 
 let scrolled = false
 
-export const getRenderFormFieldItem = <FormData extends {}>(
-  props: FormFieldProps<FormData>,
-) => (width: number = 100) => (
-  field: SingleFormField<FormData>,
-  fieldIndex: number,
+export const FieldItem = <FormData extends {}>(
+  props: FieldItemProps<FormData>,
 ) => {
   const theme = React.useContext(getThemeContext())
   const getRowStyle = createGetStyle(theme, 'row')(props.style?.row || {})
@@ -458,7 +447,9 @@ export const getRenderFormFieldItem = <FormData extends {}>(
     return <div />
   }
 
-  const errorLabel = props.showValidation ? computeFieldError(field) : null
+  const errorLabel = props.showValidation
+    ? computeFieldError(props.field)
+    : null
 
   const hasError = errorLabel !== null
 
@@ -475,16 +466,23 @@ export const getRenderFormFieldItem = <FormData extends {}>(
     }, 300)
   }
 
-  return !field.isVisible || field.isVisible(props.data) ? (
+  const width = !isNaN(props.width) ? props.width : 100
+  return !props.field.isVisible || props.field.isVisible(props.data) ? (
     <FormFieldWrapper
-      key={fieldIndex}
       ref={ref}
       width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
-      maxwidth={field.maxwidth}
+      maxwidth={props.field.maxwidth}
       className="form-field"
-      style={{ ...getRowStyle('item'), ...(field.itemStyle || {}) }}
+      style={{
+        ...getRowStyle('item'),
+        ...(props.field.itemStyle || {}),
+      }}
     >
-      {renderFormFieldInput(field, { hasError, errorLabel }, fieldIndex)}
+      {renderFormFieldInput(
+        props.field,
+        { hasError, errorLabel },
+        props.fieldIndex,
+      )}
     </FormFieldWrapper>
   ) : (
     <></>

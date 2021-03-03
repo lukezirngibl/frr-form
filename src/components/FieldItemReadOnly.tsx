@@ -1,16 +1,11 @@
-import {
-  FormFieldType,
-  FormField,
-  FormFieldRow,
-  SingleFormField,
-} from '../types'
 import { P } from 'frr-web/lib/html'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import { Options } from 'frr-web/lib/util'
 import React from 'react'
 import styled from 'styled-components'
-import { FormTheme, getThemeContext } from '../../theme/theme'
-import { createGetStyle } from '../../theme/util'
+import { getThemeContext } from '../theme/theme'
+import { createGetStyle } from '../theme/util'
+import { FieldType, FormFieldType, SingleFormField } from './types'
 
 /*
  * Value mapper
@@ -26,7 +21,7 @@ var formatter = {
 
 type getValueType<ValueType> = {
   value?: ValueType | null
-  translate: (k: string) => string
+  translate?: (k: string) => string
   options?: Options<string | number>
 }
 
@@ -45,17 +40,17 @@ const getMultiSelectValue = ({
 }: getValueType<string[]>): string =>
   Array.isArray(value)
     ? value
-        .map(val => getSelectValue({ value: val, translate, options }))
+        .map(val => translate(getSelectValue({ value: val, options })))
         .join(', ')
     : ''
+
 const getSelectValue = ({
   value,
-  translate,
   options,
 }: getValueType<string | number>): string => {
   const option = Array.isArray(options) && options.find(o => o.value === value)
 
-  return (!!option && option.label && translate(option.label)) || ''
+  return (option?.label || '')
 }
 
 const FieldValueMapper = {
@@ -137,74 +132,64 @@ export const FormFieldWrapper = styled.div<{
  * Render field function
  */
 
-type FieldItemProps<FormData> = {
+interface FieldItemReadOnlyProps<FormData>
+  extends Omit<
+    FieldType<FormData>,
+    'onChange' | 'showValidation' | 'formReadOnly'
+  > {
   field: SingleFormField<FormData>
-  // TODO: fix type for getValue: (getValueType<string | number | string[] | Date | boolean | null>) => string
-  getValue: any
-  style?: Partial<FormTheme> | undefined
-  data: FormData
+  width?: number
 }
 
-export const getRenderReadOnlyFormFieldItem = <FormData extends {}>({
-  data,
-  style,
-}: {
-  data: FormData
-  style: Partial<FormTheme> | undefined
-}) => (width: number = 100) => (
-  field: SingleFormField<FormData>,
-  index: number,
+export const FieldItemReadOnly = <FormData extends {}>(
+  props: FieldItemReadOnlyProps<FormData>,
 ) => {
+  const language = React.useContext(getLanguageContext())
+  const translate = getTranslation(language)
+
   const theme = React.useContext(getThemeContext())
-  const getRowStyle = createGetStyle(theme, 'row')(style?.row || {})
+  const getRowStyle = createGetStyle(theme, 'row')(props.style?.row || {})
   const getFieldStyle = createGetStyle(
     theme,
-    'fieldReadonly',
-  )(style?.fieldReadonly || {})
+    'fieldReadOnly',
+  )(props.style?.fieldReadOnly || {})
 
-  /*
-   * Render field item
-   */
+  const options =
+    props.field.type === FormFieldType.TextSelect ||
+    props.field.type === FormFieldType.RadioGroup ||
+    props.field.type === FormFieldType.MultiSelect
+      ? (props.field.options as Options<string>)
+      : []
 
-  const FieldItem = ({ field, getValue, data }: FieldItemProps<FormData>) => {
-    const language = React.useContext(getLanguageContext())
-    const translate = getTranslation(language)
+  const getValue = FieldValueMapper[props.field.type]
 
-    const options =
-      field.type === FormFieldType.TextSelect ||
-      field.type === FormFieldType.RadioGroup ||
-      field.type === FormFieldType.MultiSelect
-        ? (field.options as Options<string>)
-        : []
+  if (!getValue) console.log('GET VALUE MiSSING', props.field)
 
-    if (!getValue) console.log('GET VALUE MiSSING', field)
-
-    return !!getValue ? (
-      <div style={getFieldStyle('wrapper')}>
-        {field.label && (
-          <P
-            style={getFieldStyle('label')}
-            label={field.label.label}
-            data={field.label.labelData}
-          />
-        )}
-        <p style={{ ...getFieldStyle('item') }}>
-          {getValue({ value: field.lens.get(data), translate, options })}
-        </p>
-      </div>
-    ) : null
-  }
-
-  const getValue = FieldValueMapper[field.type]
-
-  return !field.isVisible || field.isVisible(data) ? (
+  return !props.field.isVisible || props.field.isVisible(props.data) ? (
     <FormFieldWrapper
-      key={`field-item-${index}`}
       className="form-field"
-      style={{...getRowStyle('item'), ...getRowStyle('itemReadonly')}}
-      width={`${width}%`}
+      style={{ ...getRowStyle('item'), ...getRowStyle('itemReadOnly') }}
+      width={`${isNaN(props.width) ? 100 : props.width}%`}
     >
-      <FieldItem field={field} getValue={getValue} style={style} data={data} />
+      {!!getValue ? (
+        <div style={getFieldStyle('wrapper')}>
+          {props.field.label && (
+            <P
+              style={getFieldStyle('label')}
+              label={props.field.label.label}
+              data={props.field.label.labelData}
+            />
+          )}
+          <P
+            style={{ ...getFieldStyle('item') }}
+            label={getValue({
+              value: props.field.lens.get(props.data) as any,
+              translate,
+              options,
+            })}
+          />
+        </div>
+      ) : null}
     </FormFieldWrapper>
   ) : (
     <></>

@@ -386,3 +386,13 @@ export type FormSection<FormData> = {
   fieldComponent?: ReactNode
   onEdit?: () => void
 }
+
+export type FieldType<FormData> = {
+   data: FormData
+  field: FormField<FormData>
+  fieldIndex: number
+  formReadOnly: boolean
+  onChange: (formState: FormData) => void
+  showValidation: boolean
+  style: Partial<FormTheme> | undefined
+}

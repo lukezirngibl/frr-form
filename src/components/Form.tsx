@@ -7,10 +7,15 @@ import React, { ReactNode, useEffect } from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
 import { createGetStyle } from '../theme/util'
+import { FormField } from './FormField'
 import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
-import { getRenderFormField } from './render/renderFormField'
-import { DisplayType, FormField, FormFieldType, SingleFormField } from './types'
+import {
+  DisplayType,
+  FormField as FormFieldProps,
+  FormFieldType,
+  SingleFormField,
+} from './types'
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -94,7 +99,7 @@ export type Props<FormData> = {
   data: FormData
   display?: DisplayType
   dispatch: (func: any) => void
-  formFields: Array<FormField<FormData>>
+  formFields: Array<FormFieldProps<FormData>>
   onSubmit?: ({ dispatch }) => void
   onInvalidSubmit?: () => void
   onChange: (formState: FormData) => void
@@ -196,13 +201,6 @@ export const Form = <FormData extends {}>({
     }
   }
 
-  const renderFormField = getRenderFormField({
-    data,
-    style,
-    onChange,
-    showValidation,
-    formReadOnly: readOnly,
-  })
   return !isVisible || isVisible(data) ? (
     <FormWrapper
       style={getFormStyle('wrapper')}
@@ -211,7 +209,20 @@ export const Form = <FormData extends {}>({
       {renderTopChildren && renderTopChildren(data)}
 
       <FormContent style={getFormStyle('content')}>
-        {formFields.map(renderFormField)}
+        {/* formFields.map(renderFormField) */}
+
+        {formFields.map((field, fieldIndex) => (
+          <FormField
+            key={`field-${fieldIndex}`}
+            data={data}
+            field={field}
+            fieldIndex={fieldIndex}
+            formReadOnly={readOnly}
+            onChange={onChange}
+            showValidation={showValidation}
+            style={style}
+          />
+        ))}
       </FormContent>
 
       {renderBottomChildren && renderBottomChildren(data)}

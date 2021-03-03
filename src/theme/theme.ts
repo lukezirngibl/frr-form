@@ -5,9 +5,9 @@ import { keys } from 'frr-util/lib/util'
 export type FormTheme = {
   row: {
     wrapper: CSSProperties
-    wrapperReadonly: CSSProperties
+    wrapperReadOnly: CSSProperties
     item: CSSProperties
-    itemReadonly: CSSProperties
+    itemReadOnly: CSSProperties
   }
   group: {
     title: CSSProperties
@@ -16,7 +16,7 @@ export type FormTheme = {
   }
   section: {
     title: CSSProperties
-    titleReadonly: CSSProperties
+    titleReadOnly: CSSProperties
     wrapper: CSSProperties
     description: CSSProperties
   }
@@ -30,7 +30,7 @@ export type FormTheme = {
     content: CSSProperties
     buttonContainer: CSSProperties
   }
-  fieldReadonly: {
+  fieldReadOnly: {
     wrapper: CSSProperties
     item: CSSProperties
     label: CSSProperties
@@ -46,7 +46,7 @@ export type FormTheme = {
 export const defaultTheme: FormTheme = {
   section: {
     title: {},
-    titleReadonly: {},
+    titleReadOnly: {},
     wrapper: {},
     description: {},
   },
@@ -57,9 +57,9 @@ export const defaultTheme: FormTheme = {
   },
   row: {
     wrapper: {},
-    wrapperReadonly: {},
+    wrapperReadOnly: {},
     item: {},
-    itemReadonly: {},
+    itemReadOnly: {},
   },
   group: {
     title: {},
@@ -71,7 +71,7 @@ export const defaultTheme: FormTheme = {
     content: {},
     buttonContainer: {},
   },
-  fieldReadonly: {
+  fieldReadOnly: {
     wrapper: {},
     item: {},
     label: {},
