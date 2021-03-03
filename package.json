@@ -10,6 +10,8 @@
     "start:example": "react-scripts start ./example/index.ts",
     "build:watch": "yarn build --watch",
     "build": "babel ./src --out-dir lib --extensions '.ts','.tsx','.js','.jsx'",
+    "dev:watch": "yarn link:frr && yarn build:watch",
+    "link-frr": "yarn link frr-web",
     "check-types": "install-peers && tsc",
     "check-types:watch": "yarn check-types --watch",
     "patch": "yarn run build && git add -A && git commit -m 'patch' && npm version patch",
