@@ -113,7 +113,7 @@ export type FormTextField<FormData> = FormInput<
 
 export type OptionGroupField<FormData> = FormInput<
   OptionGroupProps,
-  FormLens<FormData, string>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.OptionGroup
 >
 
@@ -131,13 +131,13 @@ export type ToggleField<FormData> = FormInput<
 
 export type RadioGroupField<FormData> = FormInput<
   RadioGroupProps,
-  FormLens<FormData, string>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.RadioGroup
 >
 
 export type CodeInputField<FormData> = FormInput<
   CodeInputProps,
-  FormLens<FormData, string>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.CodeInput
 >
 
@@ -173,7 +173,7 @@ export type SwitchField<FormData> = FormInput<
 
 export type CountryDropdownField<FormData> = FormInput<
   CountryDropdownProps,
-  FormLens<FormData, string>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.CountryDropdown
 >
 
@@ -185,7 +185,7 @@ export type CountrySelectField<FormData> = FormInput<
 
 export type InputWithDropdownField<FormData> = FormInput<
   InputWithDropdownProps,
-  FormLens<FormData, string>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.InputWithDropdown
 >
 
@@ -233,13 +233,13 @@ export type DatePickerField<FormData> = FormInput<
 
 export type FormattedDatePickerField<FormData> = FormInput<
   FormattedDatePickerProps,
-  FormLens<FormData, string>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.FormattedDatePicker
 >
 
 export type DropdownField<FormData> = FormInput<
   DropdownProps,
-  FormLens<FormData, string>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.Dropdown
 >
 
