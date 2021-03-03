@@ -368,7 +368,7 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
   title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatGroup
   fields: GroupFields<T>
-  length: FormLens<FormData, number>
+  length: FormLens<FormData, number> | FormLens<FormData, number | null>
   isVisible?: (formData: FormData) => boolean
 }
 
@@ -394,7 +394,7 @@ export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
   title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatSection
   fields: Array<SingleFieldOrRow<FormData>>
-  length: FormLens<FormData, number>
+  length: FormLens<FormData, number> | FormLens<FormData, number | null>
   isVisible?: (formData: FormData) => boolean
 }
 

@@ -30,7 +30,7 @@ export const FieldRepeatSection = <FormData extends {}>({
     return <></>
   }
 
-  const length = fieldRepeatSection.length.get(data)
+  const length = fieldRepeatSection.length.get(data) || 0
   const sections = Array.from({
     length,
   }).map((_, index) => {

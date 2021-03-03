@@ -26,7 +26,7 @@ export const FieldRepeatGroup = <FormData extends {}>({
   }
 
   // Map groups
-  const length = fieldRepeatGroup.length.get(data)
+  const length = fieldRepeatGroup.length.get(data) || 0
   const groups = Array.from({
     length,
   }).map((_, index) => ({
