@@ -83,6 +83,7 @@ type FormInput<V, P extends { value: V }, L, T> = Omit<
 > & {
   lens: L
   type: T
+  readOnlyMapper?: (params: P) => string
   _value: P['value']
 }
 
@@ -311,11 +312,11 @@ export const fieldMap = {
   [FormFieldType.Toggle]: null as ToggleField<unknown>,
   [FormFieldType.YesNoOptionGroup]: null as YesNoOptionGroupField<unknown>,
   [FormFieldType.YesNoRadioGroup]: null as YesNoRadioGroupField<unknown>,
-  // [FormFieldType.FormFieldGroup]: null,
-  // [FormFieldType.FormFieldRepeatGroup]: null,
-  // [FormFieldType.FormFieldRepeatSection]: null,
-  // [FormFieldType.FormSection]: null,
-  // [FormFieldType.FormText]: null,
+  [FormFieldType.FormFieldGroup]: null,
+  [FormFieldType.FormFieldRepeatGroup]: null,
+  [FormFieldType.FormFieldRepeatSection]: null,
+  [FormFieldType.FormSection]: null,
+  [FormFieldType.FormText]: null,
 } as const
 
 export type SingleFormField<FormData> = (

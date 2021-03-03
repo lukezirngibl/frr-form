@@ -1,13 +1,10 @@
 import { P } from 'frr-web/lib/html'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
-import { Options } from 'frr-web/lib/util'
 import React from 'react'
 import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
 import { createGetStyle } from '../theme/util'
 import { FieldType, FormFieldType, SingleFormField, fieldMap } from './types'
-import { Form } from './Form'
-import { format } from 'date-fns';
 
 /*
  * Value mapper
@@ -21,68 +18,61 @@ var formatter = {
   short: new Intl.NumberFormat('de-CH'),
 }
 
-const getTextValue = ({ value }: getValueType<string>): string => value || ''
-const getDateValue = ({ value }: getValueType<string>): string => value || ''
+type MapperParams<T> = { value: T; translate: (str: string) => string }
 
-const getNumberValue = ({ value }: getValueType<number>): string =>
-  value ? `${value}` : '0'
-
-const getAmountValue = ({ value }: number): string =>
-  value ? formatter.long.format(value) : ''
-const getYesNoValue = ({ value, translate }: getValueType<boolean>): string =>
-  !!value ? translate('yes') : translate('no')
-const getMultiSelectValue = ({
+const defaultMapper = ({
   value,
-  translate,
-  options,
-}: getValueType<string[]>): string =>
-  Array.isArray(value)
-    ? value
-        .map(val => translate(getSelectValue({ value: val, options })))
-        .join(', ')
+}: MapperParams<string | number | null>): string => (value ? `${value}` : '')
+
+const defaultBooleanMapper = ({ value }: MapperParams<boolean>): string =>
+  value ? 'yes' : 'no'
+
+const defaultCurrencyMapper = ({ value }: MapperParams<number>): string =>
+  value ? formatter.long.format(value) : ''
+
+const getMultiSelectValue = (params: MapperParams<Array<string>>): string =>
+  Array.isArray(params.value)
+    ? params.value.map(val => params.translate(val)).join(', ')
     : ''
 
-const getSelectValue = ({
-  value,
-  options,
-}: getValueType<string | number>): string => {
-  const option = Array.isArray(options) && options.find(o => o.value === value)
-
-  return option?.label || ''
-}
-
-const FieldValueMapper: {
+const readOnlyMappers: {
   [K in FormFieldType]: (
     params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
       value: typeof fieldMap[K]['_value']
+      translate: (str: string) => string
     },
   ) => string
 } = {
-  [FormFieldType.NumberInput]: v => `${v.value}`,
-  [FormFieldType.DatePicker]: v => format(v.value, v.),
+  [FormFieldType.NumberInput]: defaultMapper,
+  [FormFieldType.DatePicker]: v => v.value.toDateString(),
   [FormFieldType.MultiSelect]: getMultiSelectValue,
-  [FormFieldType.CheckboxGroup]: getTextValue,
-  [FormFieldType.CodeInput]: getTextValue,
-  [FormFieldType.CountryDropdown]: getTextValue,
-  [FormFieldType.CountrySelect]: getTextValue,
-  [FormFieldType.CurrencyInput]: getAmountValue,
-  [FormFieldType.Dropdown]: getTextValue,
-  [FormFieldType.DropdownNumber]: getNumberValue,
-  [FormFieldType.FormattedDatePicker]: getTextValue,
-  [FormFieldType.InputWithDropdown]: getTextValue,
-  [FormFieldType.NumberSelect]: getNumberValue,
-  [FormFieldType.OptionGroup]: getTextValue,
-  [FormFieldType.RadioGroup]: getSelectValue,
-  [FormFieldType.SingleCheckbox]: getTextValue,
-  [FormFieldType.Slider]: getTextValue,
-  [FormFieldType.Switch]: getTextValue,
-  [FormFieldType.TextArea]: getTextValue,
-  [FormFieldType.TextInput]: getTextValue,
-  [FormFieldType.TextNumber]: getTextValue,
-  [FormFieldType.TextSelect]: getSelectValue,
-  [FormFieldType.Toggle]: getYesNoValue,
-  [FormFieldType.YesNoOptionGroup]: getYesNoValue,
-  [FormFieldType.YesNoRadioGroup]: getYesNoValue,
+  [FormFieldType.CheckboxGroup]: getMultiSelectValue,
+  [FormFieldType.CodeInput]: defaultMapper,
+  [FormFieldType.CountryDropdown]: defaultMapper,
+  [FormFieldType.CountrySelect]: defaultMapper,
+  [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
+  [FormFieldType.Dropdown]: defaultMapper,
+  [FormFieldType.DropdownNumber]: defaultMapper,
+  [FormFieldType.FormattedDatePicker]: defaultMapper,
+  [FormFieldType.InputWithDropdown]: defaultMapper,
+  [FormFieldType.NumberSelect]: defaultMapper,
+  [FormFieldType.OptionGroup]: defaultMapper,
+  [FormFieldType.RadioGroup]: defaultMapper,
+  [FormFieldType.SingleCheckbox]: defaultBooleanMapper,
+  [FormFieldType.Slider]: defaultMapper,
+  [FormFieldType.Switch]: defaultBooleanMapper,
+  [FormFieldType.TextArea]: defaultMapper,
+  [FormFieldType.TextInput]: defaultMapper,
+  [FormFieldType.TextNumber]: defaultMapper,
+  [FormFieldType.TextSelect]: defaultMapper,
+  [FormFieldType.Toggle]: defaultBooleanMapper,
+  [FormFieldType.YesNoOptionGroup]: defaultBooleanMapper,
+  [FormFieldType.YesNoRadioGroup]: defaultBooleanMapper,
+  [FormFieldType.FormText]: () => '',
+  [FormFieldType.FormFieldGroup]: () => '',
+  [FormFieldType.FormSection]: () => '',
+  [FormFieldType.FormFieldRepeatGroup]: () => '',
+  [FormFieldType.FormFieldRepeatSection]: () => '',
 }
 
 /*
@@ -157,16 +147,8 @@ export const FieldItemReadOnly = <FormData extends {}>(
     'fieldReadOnly',
   )(props.style?.fieldReadOnly || {})
 
-  const options =
-    props.field.type === FormFieldType.TextSelect ||
-    props.field.type === FormFieldType.RadioGroup ||
-    props.field.type === FormFieldType.MultiSelect
-      ? (props.field.options as Options<string>)
-      : []
-
-  const getValue = FieldValueMapper[props.field.type]
-
-  if (!getValue) console.log('GET VALUE MiSSING', props.field)
+  const readOnlyMapper =
+    props.field.readOnlyMapper || readOnlyMappers[props.field.type]
 
   return !props.field.isVisible || props.field.isVisible(props.data) ? (
     <FormFieldWrapper
@@ -174,25 +156,23 @@ export const FieldItemReadOnly = <FormData extends {}>(
       style={{ ...getRowStyle('item'), ...getRowStyle('itemReadOnly') }}
       width={`${isNaN(props.width) ? 100 : props.width}%`}
     >
-      {!!getValue ? (
-        <div style={getFieldStyle('wrapper')}>
-          {props.field.label && (
-            <P
-              style={getFieldStyle('label')}
-              label={props.field.label.label}
-              data={props.field.label.labelData}
-            />
-          )}
+      <div style={getFieldStyle('wrapper')}>
+        {props.field.label && (
           <P
-            style={{ ...getFieldStyle('item') }}
-            label={getValue({
-              value: props.field.lens.get(props.data) as any,
-              translate,
-              options,
-            })}
+            style={getFieldStyle('label')}
+            label={props.field.label.label}
+            data={props.field.label.labelData}
           />
-        </div>
-      ) : null}
+        )}
+        <P
+          style={{ ...getFieldStyle('item') }}
+          label={readOnlyMapper({
+            ...props.field,
+            value: props.field.lens.get(props.data),
+            translate,
+          } as any)}
+        />
+      </div>
     </FormFieldWrapper>
   ) : (
     <></>

@@ -35,7 +35,6 @@
     "styled-components": "4.3.2"
   },
   "dependencies": {
-    "date-fns": "^2.18.0",
     "monocle-ts": "2.0.0",
     "react-html-parser": "^2.0.2"
   },

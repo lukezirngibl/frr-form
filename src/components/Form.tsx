@@ -77,15 +77,6 @@ export const Form = <FormData extends {}>({
   const getFormStyle = createGetStyle(theme, 'form')(style?.form || {})
 
   const [showValidation, setShowValidation] = React.useState(false)
-  // const [scrollToRef, setScrollToRef] = React.useState<
-  //   React.RefObject<HTMLDivElement>
-  // >()
-
-  // useLayoutEffect(() => {
-  //   if (scrollToRef.current) {
-  //     console.log(scrollToRef.current)
-  //   }
-  // }, [scrollToRef])
 
   useEffect(() => {
     setShowValidation(false)
