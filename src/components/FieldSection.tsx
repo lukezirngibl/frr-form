@@ -1,4 +1,5 @@
 import { P } from 'frr-web/lib/html'
+import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
@@ -67,6 +68,10 @@ export const FieldSection = <FormData extends {}>({
     'sectionRight',
   )(style?.section || {})
 
+  // Translation
+  const language = React.useContext(getLanguageContext())
+  const translate = getTranslation(language)
+
   // Icon
   const getIcon = createGetStyle(theme, 'icon')({})
   const editIcon = getIcon('edit')
@@ -89,6 +94,7 @@ export const FieldSection = <FormData extends {}>({
       }
       style={{
         ...getSectionStyle('wrapper'),
+        ...(formReadOnly ? getSectionStyle('wrapperReadOnly') : {}),
         ...(fieldSection.style ? fieldSection.style.wrapper || {} : {}),
       }}
     >
@@ -159,7 +165,7 @@ export const FieldSection = <FormData extends {}>({
             >
               {editIcon.svg && renderHtml(editIcon.svg)}
             </EditIcon>
-            <P label={'edit'} />
+            {translate('edit')}
           </EditLink>
         )}
       </RightSectionWrapper>
