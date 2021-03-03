@@ -35,15 +35,18 @@ const EditLink = styled.a`
   display: flex;
   cursor: pointer;
 `
-const EditIcon = styled.svg`
+const EditIcon = styled.span`
   height: 20px;
   width: 20px;
-  color: currentColor;
 
-  & path,
-  circle,
-  polygon {
-    fill: currentColor;
+  & svg {
+    color: currentColor;
+
+    & path,
+    circle,
+    polygon {
+      fill: currentColor;
+    }
   }
 `
 
@@ -157,14 +160,12 @@ export const FieldSection = <FormData extends {}>({
             }}
             style={getSectionRightStyle('editLink')}
           >
-            <EditIcon
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox={editIcon.viewBox}
-              style={getSectionRightStyle('editIcon')}
-            >
-              {editIcon.svg && renderHtml(editIcon.svg)}
-            </EditIcon>
+            {editIcon.svg && (
+              <EditIcon
+                dangerouslySetInnerHTML={{ __html: editIcon.svg }}
+                style={getSectionRightStyle('editIcon')}
+              />
+            )}
             {translate('edit')}
           </EditLink>
         )}
