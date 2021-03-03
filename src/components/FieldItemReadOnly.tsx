@@ -5,7 +5,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
 import { createGetStyle } from '../theme/util'
-import { FieldType, FormFieldType, SingleFormField } from './types'
+import { FieldType, FormFieldType, SingleFormField, fieldMap } from './types'
+import { Form } from './Form'
+import { format } from 'date-fns';
 
 /*
  * Value mapper
@@ -19,17 +21,13 @@ var formatter = {
   short: new Intl.NumberFormat('de-CH'),
 }
 
-type getValueType<ValueType> = {
-  value?: ValueType | null
-  translate?: (k: string) => string
-  options?: Options<string | number>
-}
-
 const getTextValue = ({ value }: getValueType<string>): string => value || ''
 const getDateValue = ({ value }: getValueType<string>): string => value || ''
+
 const getNumberValue = ({ value }: getValueType<number>): string =>
   value ? `${value}` : '0'
-const getAmountValue = ({ value }: getValueType<number>): string =>
+
+const getAmountValue = ({ value }: number): string =>
   value ? formatter.long.format(value) : ''
 const getYesNoValue = ({ value, translate }: getValueType<boolean>): string =>
   !!value ? translate('yes') : translate('no')
@@ -50,12 +48,18 @@ const getSelectValue = ({
 }: getValueType<string | number>): string => {
   const option = Array.isArray(options) && options.find(o => o.value === value)
 
-  return (option?.label || '')
+  return option?.label || ''
 }
 
-const FieldValueMapper = {
-  [FormFieldType.NumberInput]: getAmountValue,
-  [FormFieldType.DatePicker]: getDateValue,
+const FieldValueMapper: {
+  [K in FormFieldType]: (
+    params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
+      value: typeof fieldMap[K]['_value']
+    },
+  ) => string
+} = {
+  [FormFieldType.NumberInput]: v => `${v.value}`,
+  [FormFieldType.DatePicker]: v => format(v.value, v.),
   [FormFieldType.MultiSelect]: getMultiSelectValue,
   [FormFieldType.CheckboxGroup]: getTextValue,
   [FormFieldType.CodeInput]: getTextValue,
@@ -76,11 +80,10 @@ const FieldValueMapper = {
   [FormFieldType.TextInput]: getTextValue,
   [FormFieldType.TextNumber]: getTextValue,
   [FormFieldType.TextSelect]: getSelectValue,
-  [FormFieldType.UnitInput]: getTextValue,
   [FormFieldType.Toggle]: getYesNoValue,
   [FormFieldType.YesNoOptionGroup]: getYesNoValue,
   [FormFieldType.YesNoRadioGroup]: getYesNoValue,
-} as const
+}
 
 /*
  * Styled components

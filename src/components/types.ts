@@ -32,8 +32,7 @@ export enum FormFieldType {
   DatePicker = 'DatePicker',
   FormattedDatePicker = 'FormattedDatePicker',
   CheckboxGroup = 'CheckboxGroup',
-  FormFieldGroup = 'FormFieldGroup',
-  FormSection = 'FormSection',
+
   NumberInput = 'NumberInput',
   RadioGroup = 'RadioGroup',
   Dropdown = 'Dropdown',
@@ -43,7 +42,6 @@ export enum FormFieldType {
   DropdownNumber = 'DropdownNumber',
   TextArea = 'TextArea',
   TextInput = 'TextInput',
-  UnitInput = 'UnitInput',
   TextNumber = 'TextNumber',
   InputWithDropdown = 'InputWithDropdown',
   Switch = 'Switch',
@@ -52,14 +50,16 @@ export enum FormFieldType {
   TextSelect = 'TextSelect',
   NumberSelect = 'NumberSelect',
   CodeInput = 'CodeInput',
-  FormFieldRepeatGroup = 'FormFieldRepeatGroup',
-  FormFieldRepeatSection = 'FormFieldRepeatSection',
   Toggle = 'Toggle',
   OptionGroup = 'OptionGroup',
   CountrySelect = 'CountrySelect',
   YesNoRadioGroup = 'YesNoRadioGroup',
   Slider = 'Slider',
   FormText = 'FormText',
+  FormFieldGroup = 'FormFieldGroup',
+  FormSection = 'FormSection',
+  FormFieldRepeatGroup = 'FormFieldRepeatGroup',
+  FormFieldRepeatSection = 'FormFieldRepeatSection',
 }
 
 export enum Orientation {
@@ -77,165 +77,198 @@ export type DropdownOption = {
   value: string
 }
 
-type FormInput<P extends {}, L, T> = Omit<
+type FormInput<V, P extends { value: V }, L, T> = Omit<
   P,
   'onChange' | 'value' | 'error' | 'required'
 > & {
   lens: L
   type: T
+  _value: P['value']
 }
 
-export type FormTextField<FormData> = FormInput<
-  TextProps,
-  FormLens<FormData, string>,
-  FormFieldType.FormText
->
+// export type FormTextField<FormData> = FormInput<
+// string,
+//   TextProps,
+//   FormLens<FormData, string>,
+//   FormFieldType.FormText
+// >
 
 export type OptionGroupField<FormData> = FormInput<
+  string | null,
   OptionGroupProps,
   FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.OptionGroup
 >
 
 export type SliderField<FormData> = FormInput<
+  number | null,
   SliderProps,
   FormLens<FormData, number>,
   FormFieldType.Slider
 >
 
 export type ToggleField<FormData> = FormInput<
+  boolean | null,
   ToggleProps,
   FormLens<FormData, boolean> | FormLens<FormData, boolean | null>,
   FormFieldType.Toggle
 >
 
 export type RadioGroupField<FormData> = FormInput<
+  string | null,
   RadioGroupProps,
   FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.RadioGroup
 >
 
 export type CodeInputField<FormData> = FormInput<
+  string | null,
   CodeInputProps,
   FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.CodeInput
 >
 
 export type CurrencyInputField<FormData> = FormInput<
+  number | null,
   CurrencyInputProps,
   FormLens<FormData, number> | FormLens<FormData, number | null>,
   FormFieldType.CurrencyInput
 >
 
 export type MultiSelectField<FormData> = FormInput<
+  Array<string>,
   MultiSelectProps,
   FormLens<FormData, Array<string>>,
   FormFieldType.MultiSelect
 >
 
 export type TextSelectField<FormData> = FormInput<
+  string | number | null,
   SelectProps,
-  FormLens<FormData, string> | FormLens<FormData, string | null>,
+  | FormLens<FormData, string>
+  | FormLens<FormData, number>
+  | FormLens<FormData, string | null>
+  | FormLens<FormData, number | null>,
   FormFieldType.TextSelect
 >
 
 export type NumberSelectField<FormData> = FormInput<
+  string | number | null,
   SelectProps,
-  FormLens<FormData, number | null> | FormLens<FormData, number>,
+  | FormLens<FormData, string>
+  | FormLens<FormData, number>
+  | FormLens<FormData, string | null>
+  | FormLens<FormData, number | null>,
   FormFieldType.NumberSelect
 >
 
 export type SwitchField<FormData> = FormInput<
+  boolean | null,
   SwithProps,
   FormLens<FormData, boolean>,
   FormFieldType.Switch
 >
 
 export type CountryDropdownField<FormData> = FormInput<
+  string | null,
   CountryDropdownProps,
   FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.CountryDropdown
 >
 
 export type CountrySelectField<FormData> = FormInput<
+  string | number | null,
   CountrySelectProps,
   FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.CountrySelect
 >
 
 export type InputWithDropdownField<FormData> = FormInput<
+  string | null,
   InputWithDropdownProps,
   FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.InputWithDropdown
 >
 
 export type DropdownNumberField<FormData> = FormInput<
+  number | null,
   DropdownNumberProps,
   FormLens<FormData, number> | FormLens<FormData, number | null>,
   FormFieldType.DropdownNumber
 >
 
 export type TextAreaField<FormData> = FormInput<
+  string | null,
   TextAreaProps,
   FormLens<FormData, string>,
   FormFieldType.TextArea
 >
 
 export type TextNumberInputField<FormData> = FormInput<
+  number | null,
   TextNumberInputProps,
   FormLens<FormData, number>,
   FormFieldType.TextNumber
 >
 
 export type TextInputField<FormData> = FormInput<
+  string | null,
   TextInputProps,
   FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.TextInput
 >
 
 export type YesNoOptionGroupField<FormData> = FormInput<
+  boolean | null,
   YesNoOptionGroupProps,
   FormLens<FormData, boolean> | FormLens<FormData, boolean | null>,
   FormFieldType.YesNoOptionGroup
 >
 
 export type YesNoRadioGroupField<FormData> = FormInput<
+  boolean | null,
   YesNoRadioGroupProps,
   FormLens<FormData, boolean> | FormLens<FormData, boolean | null>,
   FormFieldType.YesNoRadioGroup
 >
 
 export type DatePickerField<FormData> = FormInput<
+  Date | null,
   DatePickerProps,
   FormLens<FormData, Date> | FormLens<FormData, Date | null>,
   FormFieldType.DatePicker
 >
 
 export type FormattedDatePickerField<FormData> = FormInput<
+  string | null,
   FormattedDatePickerProps,
   FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.FormattedDatePicker
 >
 
 export type DropdownField<FormData> = FormInput<
+  string | null,
   DropdownProps,
   FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.Dropdown
 >
 
 export type CheckboxGroupField<FormData> = FormInput<
+  Array<string>,
   CheckboxGroupProps,
   FormLens<FormData, Array<string>>,
   FormFieldType.CheckboxGroup
 >
 
 export type NumberInputField<FormData> = FormInput<
+  number | null,
   NumberInputProps,
   FormLens<FormData, number> | FormLens<FormData, number | null>,
   FormFieldType.NumberInput
 >
 
 export type SingleCheckboxField<FormData> = FormInput<
+  boolean,
   SingleCheckboxProps,
   FormLens<FormData, boolean>,
   FormFieldType.SingleCheckbox
@@ -249,6 +282,41 @@ type CommonFieldProps<FormData> = {
   itemStyle?: CSSProperties
   required?: boolean | ((formData: FormData) => boolean)
 }
+
+export const fieldMap = {
+  [FormFieldType.NumberInput]: null as NumberInputField<unknown>,
+  [FormFieldType.TextInput]: null as TextInputField<unknown>,
+  [FormFieldType.DatePicker]: null as DatePickerField<unknown>,
+  [FormFieldType.MultiSelect]: null as MultiSelectField<unknown>,
+  [FormFieldType.CheckboxGroup]: null as CheckboxGroupField<unknown>,
+  [FormFieldType.CodeInput]: null as CodeInputField<unknown>,
+  [FormFieldType.CountryDropdown]: null as CountryDropdownField<unknown>,
+  [FormFieldType.CountrySelect]: null as CountrySelectField<unknown>,
+  [FormFieldType.CurrencyInput]: null as CurrencyInputField<unknown>,
+  [FormFieldType.Dropdown]: null as DropdownField<unknown>,
+  [FormFieldType.DropdownNumber]: null as DropdownField<unknown>,
+  [FormFieldType.FormattedDatePicker]: null as FormattedDatePickerField<
+    unknown
+  >,
+  [FormFieldType.InputWithDropdown]: null as InputWithDropdownField<unknown>,
+  [FormFieldType.NumberSelect]: null as NumberSelectField<unknown>,
+  [FormFieldType.OptionGroup]: null as OptionGroupField<unknown>,
+  [FormFieldType.RadioGroup]: null as RadioGroupField<unknown>,
+  [FormFieldType.SingleCheckbox]: null as SingleCheckboxField<unknown>,
+  [FormFieldType.Slider]: null as SliderField<unknown>,
+  [FormFieldType.Switch]: null as SwitchField<unknown>,
+  [FormFieldType.TextArea]: null as TextAreaField<unknown>,
+  [FormFieldType.TextNumber]: null as TextNumberInputField<unknown>,
+  [FormFieldType.TextSelect]: null as TextSelectField<unknown>,
+  [FormFieldType.Toggle]: null as ToggleField<unknown>,
+  [FormFieldType.YesNoOptionGroup]: null as YesNoOptionGroupField<unknown>,
+  [FormFieldType.YesNoRadioGroup]: null as YesNoRadioGroupField<unknown>,
+  // [FormFieldType.FormFieldGroup]: null,
+  // [FormFieldType.FormFieldRepeatGroup]: null,
+  // [FormFieldType.FormFieldRepeatSection]: null,
+  // [FormFieldType.FormSection]: null,
+  // [FormFieldType.FormText]: null,
+} as const
 
 export type SingleFormField<FormData> = (
   | CheckboxGroupField<FormData>
