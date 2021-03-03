@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
 import { createGetStyle } from '../theme/util'
 import { FieldType, FormFieldType, SingleFormField, fieldMap } from './types'
+import { findFirst } from 'fp-ts/lib/Array'
 
 /*
  * Value mapper
@@ -30,9 +31,22 @@ const defaultBooleanMapper = ({ value }: MapperParams<boolean>): string =>
 const defaultCurrencyMapper = ({ value }: MapperParams<number>): string =>
   value ? formatter.long.format(value) : ''
 
-const getMultiSelectValue = (params: MapperParams<Array<string>>): string =>
+const getMultiSelectValue = (
+  params: MapperParams<Array<string>> & {
+    options: Array<{ label: string; value: string }>
+  },
+): string =>
   Array.isArray(params.value)
-    ? params.value.map(val => params.translate(val)).join(', ')
+    ? params.value
+        .map(val =>
+          params.translate(
+            findFirst(params.options, o => o.value === val).fold(
+              'null',
+              o => o.label,
+            ),
+          ),
+        )
+        .join(', ')
     : ''
 
 const readOnlyMappers: {

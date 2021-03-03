@@ -27,6 +27,7 @@
     "lib/**/*"
   ],
   "peerDependencies": {
+    "fp-ts": "1.19.5",
     "frr-util": "^1.0.3",
     "frr-web": "^1.1.30",
     "react": "^16.12.0",
