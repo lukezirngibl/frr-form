@@ -55,7 +55,7 @@ const defaultOptionMapper = (
   },
 ): string =>
   findFirst(params.options, o => o.value === params.value).fold(
-    'null',
+    '',
     o => o.label,
   )
 
@@ -79,7 +79,7 @@ const defaultReadOnlyMappers: {
   [FormFieldType.DropdownNumber]: defaultStrNumMapper,
   [FormFieldType.FormattedDatePicker]: defaultStrNumMapper,
   [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
-  [FormFieldType.NumberSelect]: defaultStrNumMapper,
+  [FormFieldType.NumberSelect]: defaultOptionMapper,
   [FormFieldType.OptionGroup]: defaultOptionMapper,
   [FormFieldType.RadioGroup]: defaultOptionMapper,
   [FormFieldType.SingleCheckbox]: defaultBooleanMapper,
