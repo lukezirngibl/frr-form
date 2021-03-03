@@ -146,20 +146,14 @@ export type MultiSelectField<FormData> = FormInput<
 export type TextSelectField<FormData> = FormInput<
   string | number | null,
   SelectProps,
-  | FormLens<FormData, string>
-  | FormLens<FormData, number>
-  | FormLens<FormData, string | null>
-  | FormLens<FormData, number | null>,
+  FormLens<FormData, string> | FormLens<FormData, string | null>,
   FormFieldType.TextSelect
 >
 
 export type NumberSelectField<FormData> = FormInput<
   string | number | null,
   SelectProps,
-  | FormLens<FormData, string>
-  | FormLens<FormData, number>
-  | FormLens<FormData, string | null>
-  | FormLens<FormData, number | null>,
+  FormLens<FormData, number> | FormLens<FormData, number | null>,
   FormFieldType.NumberSelect
 >
 
