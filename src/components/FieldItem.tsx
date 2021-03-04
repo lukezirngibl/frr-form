@@ -456,20 +456,19 @@ export const FieldItem = <FormData extends {}>(
       )
     }
 
-    // Temp
-    // if (field.type === FormFieldType.DropdownNumber) {
-    //   const { lens, validate, required, ...fieldProps } = field
-    //   return (
-    //     <DropdownNumber
-    //       {...fieldProps}
-    //       key={key}
-    //       value={lens.get(props.data)}
-    //       onChange={value => props.onChange(lens.set(value)(props.data))}
-    //       error={hasError}
-    //       label={label}
-    //     />
-    //   )
-    // }
+    if (field.type === FormFieldType.DropdownNumber) {
+      const { lens, validate, required, ...fieldProps } = field
+      return (
+        <DropdownNumber
+          {...fieldProps}
+          key={key}
+          value={lens.get(props.data)}
+          onChange={value => props.onChange(lens.set(value)(props.data))}
+          error={hasError}
+          label={label}
+        />
+      )
+    }
 
     return <div />
   }
