@@ -1,4 +1,5 @@
 import { P } from 'frr-web/lib/html'
+import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
@@ -34,15 +35,18 @@ const EditLink = styled.a`
   display: flex;
   cursor: pointer;
 `
-const EditIcon = styled.svg`
+const EditIcon = styled.span`
   height: 20px;
   width: 20px;
-  color: currentColor;
 
-  & path,
-  circle,
-  polygon {
-    fill: currentColor;
+  & svg {
+    color: currentColor;
+
+    & path,
+    circle,
+    polygon {
+      fill: currentColor;
+    }
   }
 `
 
@@ -67,6 +71,10 @@ export const FieldSection = <FormData extends {}>({
     'sectionRight',
   )(style?.section || {})
 
+  // Translation
+  const language = React.useContext(getLanguageContext())
+  const translate = getTranslation(language)
+
   // Icon
   const getIcon = createGetStyle(theme, 'icon')({})
   const editIcon = getIcon('edit')
@@ -89,6 +97,7 @@ export const FieldSection = <FormData extends {}>({
       }
       style={{
         ...getSectionStyle('wrapper'),
+        ...(formReadOnly ? getSectionStyle('wrapperReadOnly') : {}),
         ...(fieldSection.style ? fieldSection.style.wrapper || {} : {}),
       }}
     >
@@ -151,15 +160,13 @@ export const FieldSection = <FormData extends {}>({
             }}
             style={getSectionRightStyle('editLink')}
           >
-            <EditIcon
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox={editIcon.viewBox}
-              style={getSectionRightStyle('editIcon')}
-            >
-              {editIcon.svg && renderHtml(editIcon.svg)}
-            </EditIcon>
-            <P label={'edit'} />
+            {editIcon.svg && (
+              <EditIcon
+                dangerouslySetInnerHTML={{ __html: editIcon.svg }}
+                style={getSectionRightStyle('editIcon')}
+              />
+            )}
+            {translate('edit')}
           </EditLink>
         )}
       </RightSectionWrapper>
