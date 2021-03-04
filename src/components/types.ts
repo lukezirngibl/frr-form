@@ -367,7 +367,7 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
   lens: FormLens<FormData, Array<T>>
   title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatGroup
-  fields: GroupFields<T>
+  fields: Array<SingleFieldOrRow<FormData>>
   length: FormLens<FormData, number> | FormLens<FormData, number | null>
   isVisible?: (formData: FormData) => boolean
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { createFakeFormLens } from '../util'
+import { createFakeFormLens, processRepeatGroup } from '../util'
 import { FieldGroup } from './FieldGroup'
 import {
   FieldType,
@@ -11,6 +11,7 @@ import {
 type FieldRepeatGroup<FormData> = FieldType<FormData> & {
   field: FormFieldRepeatGroup<FormData>
 }
+
 // ------------------------------------
 export const FieldRepeatGroup = <FormData extends {}>({
   data,
@@ -25,27 +26,7 @@ export const FieldRepeatGroup = <FormData extends {}>({
     return <></>
   }
 
-  // Map groups
-  const length = fieldRepeatGroup.length.get(data) || 0
-  const groups = Array.from({
-    length,
-  }).map((_, index) => ({
-    type: FormFieldType.FormFieldGroup,
-    fields: fieldRepeatGroup.fields.map(repeatGroup => {
-      if (Array.isArray(repeatGroup)) {
-        return <></>
-      } else {
-        return {
-          ...repeatGroup,
-          lens: createFakeFormLens(
-            fieldRepeatGroup.lens,
-            index,
-            fieldRepeatGroup.lens,
-          ),
-        }
-      }
-    }),
-  })) as Array<FormFieldGroup<FormData>>
+  const groups = processRepeatGroup(fieldRepeatGroup, data)
 
   return (
     <div key={`repeat-group-${fieldRepeatGroupIndex}`}>

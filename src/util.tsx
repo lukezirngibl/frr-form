@@ -1,7 +1,15 @@
+import React from 'react'
 import { Lens as MonocleLens } from 'monocle-ts'
 import { Optional } from 'monocle-ts'
 import { none, some } from 'fp-ts/lib/Option'
 import { range } from 'fp-ts/lib/Array'
+import {
+  FormFieldRepeatGroup,
+  FormFieldType,
+  FormFieldGroup,
+  FormFieldRepeatSection,
+  FormSection,
+} from './components/types'
 
 export declare class FormLens<S, A> {
   readonly get: (s: S) => A
@@ -79,7 +87,7 @@ export const createFakeFormLens = (
 ): any => {
   const itemLens = createItemLens(arrayLens, index)
   return {
-    id: () => 'test',
+    id: () => `${arrayLens.id()}.${index}.${lens.id()}`,
     get: (data: any) => {
       const o: any = itemLens.getOption(data)
       const val = o.fold(null, v => lens.get(v))
@@ -96,4 +104,71 @@ export const createFakeFormLens = (
       return arrayLens.set(newArray)(data)
     },
   }
+}
+
+export const processRepeatGroup = <FormData extends {}>(
+  fieldRepeatGroup: FormFieldRepeatGroup<FormData>,
+  data: FormData,
+) => {
+  const length = fieldRepeatGroup.length.get(data)
+  return Array.from({
+    length,
+  }).map((_, index) => ({
+    type: FormFieldType.FormFieldGroup,
+    fields: fieldRepeatGroup.fields.map(repeatGroup => {
+      if (Array.isArray(repeatGroup)) {
+        return <></>
+      } else {
+        return {
+          ...repeatGroup,
+          lens: createFakeFormLens(
+            fieldRepeatGroup.lens,
+            index,
+            repeatGroup.lens,
+          ),
+        }
+      }
+    }),
+  })) as Array<FormFieldGroup<FormData>>
+}
+
+export const processRepeatSection = <FormData extends {}>(
+  fieldRepeatSection: FormFieldRepeatSection<FormData>,
+  data: FormData,
+  translate: any,
+) => {
+  const length = fieldRepeatSection.length.get(data)
+  return Array.from({
+    length,
+  }).map((_, index) => {
+    const title = fieldRepeatSection.title
+      ? fieldRepeatSection.title({
+          index,
+          translate,
+        })
+      : `${index + 1}`
+    return {
+      type: FormFieldType.FormSection,
+      fields: [
+        {
+          type: FormFieldType.FormFieldGroup,
+          title,
+          fields: fieldRepeatSection.fields.map(repeatSectionField => {
+            if (Array.isArray(repeatSectionField)) {
+              return <></>
+            } else {
+              return {
+                ...repeatSectionField,
+                lens: createFakeFormLens(
+                  fieldRepeatSection.lens,
+                  index,
+                  repeatSectionField.lens,
+                ),
+              }
+            }
+          }),
+        },
+      ],
+    }
+  }) as Array<FormSection<FormData>>
 }

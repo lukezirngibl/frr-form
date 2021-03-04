@@ -120,6 +120,7 @@ export const FieldItem = <FormData extends {}>(
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -235,6 +236,7 @@ export const FieldItem = <FormData extends {}>(
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -438,6 +440,7 @@ export const FieldItem = <FormData extends {}>(
           onChange={value => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
+          dataTestId={dataTestId}
         />
       )
     }
