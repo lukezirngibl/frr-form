@@ -148,6 +148,7 @@ export const FieldItem = <FormData extends {}>(
           value={lens.get(props.data)}
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -262,6 +263,7 @@ export const FieldItem = <FormData extends {}>(
           onChange={value => props.onChange(lens.set(value)(props.data))}
           label={label}
           error={hasError}
+          dataTestId={dataTestId}
         />
       )
     }
@@ -454,19 +456,20 @@ export const FieldItem = <FormData extends {}>(
       )
     }
 
-    if (field.type === FormFieldType.DropdownNumber) {
-      const { lens, validate, required, ...fieldProps } = field
-      return (
-        <DropdownNumber
-          {...fieldProps}
-          key={key}
-          value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
-          error={hasError}
-          label={label}
-        />
-      )
-    }
+    // Temp
+    // if (field.type === FormFieldType.DropdownNumber) {
+    //   const { lens, validate, required, ...fieldProps } = field
+    //   return (
+    //     <DropdownNumber
+    //       {...fieldProps}
+    //       key={key}
+    //       value={lens.get(props.data)}
+    //       onChange={value => props.onChange(lens.set(value)(props.data))}
+    //       error={hasError}
+    //       label={label}
+    //     />
+    //   )
+    // }
 
     return <div />
   }

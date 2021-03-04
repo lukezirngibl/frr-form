@@ -166,9 +166,13 @@ export const Form = <FormData extends {}>({
             <Button
               {...b}
               key={k}
-              dataTestId={`form:${(
-                b.type || ButtonType.Secondary
-              ).toLowerCase()}:${k + 1}`}
+              dataTestId={
+                b.type === ButtonType.Primary
+                  ? 'form:primary'
+                  : `form:${(
+                      b.type || ButtonType.Secondary
+                    ).toLowerCase()}:${k + 1}`
+              }
               disabled={b.isDisabled ? b.isDisabled(data) : false}
               onClick={() => b.onClick({ submit, dispatch })}
             />
