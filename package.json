@@ -9,8 +9,8 @@
   "scripts": {
     "start:example": "react-scripts start ./example/index.ts",
     "build": "tsc",
-    "build:watch": "yarn build --watch",
-    "build:babel": "babel ./src --out-dir lib --extensions '.ts','.tsx','.js','.jsx'",
+    "build:watch": "yarn build:babel --watch",
+    "build:babel": "yarn clean && babel ./src --out-dir lib --extensions '.ts','.tsx','.js','.jsx'",
     "dev:watch": "yarn link-frr && yarn build:watch",
     "link-frr": "yarn link frr-web",
     "prepare": "install-peers",
