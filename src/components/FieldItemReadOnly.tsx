@@ -3,7 +3,7 @@ import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
-import { createGetStyle } from '../theme/util'
+import { useInlineStyle } from '../theme/util'
 import { FieldType, FormFieldType, SingleFormField, fieldMap } from './types'
 import { findFirst } from 'fp-ts/lib/Array'
 
@@ -164,8 +164,8 @@ export const FieldItemReadOnly = <FormData extends {}>(
   const translate = getTranslation(language)
 
   const theme = React.useContext(getThemeContext())
-  const getRowStyle = createGetStyle(theme, 'row')(props.style?.row || {})
-  const getFieldStyle = createGetStyle(
+  const getRowStyle = useInlineStyle(theme, 'row')(props.style?.row || {})
+  const getFieldStyle = useInlineStyle(
     theme,
     'fieldReadOnly',
   )(props.style?.fieldReadOnly || {})

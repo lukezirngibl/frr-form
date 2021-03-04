@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { CSSProperties } from 'styled-components'
+import { CSSProperties } from 'frr-web/lib/theme/theme'
 import { keys } from 'frr-util/lib/util'
 
 export type FormTheme = {

@@ -25,7 +25,7 @@ import { YesNoRadioGroup } from 'frr-web/lib/components/YesNoRadioGroup'
 import React from 'react'
 import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
-import { createGetStyle } from '../theme/util'
+import { useInlineStyle } from '../theme/util'
 import { getComputeFieldError } from './functions/computeFieldError.form'
 import { FieldType, FormFieldType, SingleFormField } from './types'
 
@@ -92,7 +92,7 @@ export const FieldItem = <FormData extends {}>(
   props: FieldItemProps<FormData>,
 ) => {
   const theme = React.useContext(getThemeContext())
-  const getRowStyle = createGetStyle(theme, 'row')(props.style?.row || {})
+  const getRowStyle = useInlineStyle(theme, 'row')(props.style?.row || {})
 
   const computeFieldError = getComputeFieldError(props.data)
 

@@ -3,7 +3,7 @@ import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { createGetStyle } from '../theme/util'
+import { useInlineStyle } from '../theme/util'
 import { Field } from './Field'
 import { FieldGroup } from './FieldGroup'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
@@ -65,8 +65,8 @@ export const FieldSection = <FormData extends {}>({
 }: FieldSection<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getSectionStyle = createGetStyle(theme, 'section')(style?.section || {})
-  const getSectionRightStyle = createGetStyle(
+  const getSectionStyle = useInlineStyle(theme, 'section')(style?.section || {})
+  const getSectionRightStyle = useInlineStyle(
     theme,
     'sectionRight',
   )(style?.section || {})
@@ -76,7 +76,7 @@ export const FieldSection = <FormData extends {}>({
   const translate = getTranslation(language)
 
   // Icon
-  const getIcon = createGetStyle(theme, 'icon')({})
+  const getIcon = useInlineStyle(theme, 'icon')({})
   const editIcon = getIcon('edit')
 
   const commonFieldProps = {
