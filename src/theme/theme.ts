@@ -18,6 +18,7 @@ export type FormTheme = {
     title: CSSProperties
     titleReadOnly: CSSProperties
     wrapper: CSSProperties
+    wrapperReadOnly: CSSProperties
     description: CSSProperties
   }
   sectionRight: {
@@ -48,12 +49,13 @@ export const defaultTheme: FormTheme = {
     title: {},
     titleReadOnly: {},
     wrapper: {},
+    wrapperReadOnly: {},
     description: {},
   },
   sectionRight: {
     wrapper: {},
     editIcon: {},
-    editLink: {}
+    editLink: {},
   },
   row: {
     wrapper: {},
@@ -77,8 +79,8 @@ export const defaultTheme: FormTheme = {
     label: {},
   },
   icon: {
-    edit: {}
-  }
+    edit: {},
+  },
 }
 
 export type FormThemeConfig = { [k in keyof FormTheme]?: Partial<FormTheme[k]> }
