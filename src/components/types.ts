@@ -408,7 +408,7 @@ export type FormSection<FormData> = {
   fields: SectionFields<FormData>
   isVisible?: (formData: FormData) => boolean
   fieldComponent?: ReactNode
-  onEdit?: () => void
+  onEdit?: (params: { dispatch: any }) => void
 }
 
 export type FieldType<FormData> = {

@@ -17,6 +17,7 @@ import {
   FormSection,
 } from './types'
 import { renderHtml } from './utils/renderHtml'
+import { useDispatch } from 'react-redux'
 
 export const FormSectionWrapper = styled.div`
   display: flex;
@@ -63,6 +64,7 @@ export const FieldSection = <FormData extends {}>({
   showValidation,
   style,
 }: FieldSection<FormData>) => {
+  const dispatch = useDispatch()
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
   const getSectionStyle = createGetStyle(theme, 'section')(style?.section || {})
@@ -155,8 +157,7 @@ export const FieldSection = <FormData extends {}>({
         {!!fieldSection.onEdit && (
           <EditLink
             onClick={() => {
-              console.log('Go to tab', fieldSection.title)
-              fieldSection.onEdit()
+              fieldSection.onEdit({ dispatch })
             }}
             style={getSectionRightStyle('editLink')}
           >
