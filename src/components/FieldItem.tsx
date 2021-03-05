@@ -381,7 +381,7 @@ export const FieldItem = <FormData extends {}>(
           key={key}
           value={lens.get(props.data)}
           onChange={(value: number) =>
-            props.onChange(lens.set(value)(props.data))
+            props.onChange(lens.set(Number(value))(props.data))
           }
           label={label}
           error={hasError}
