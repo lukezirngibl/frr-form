@@ -1,6 +1,6 @@
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
-import { createFakeFormLens } from '../util'
+import { createFakeFormLens, processRepeatSection } from '../util'
 import { FieldSection } from './FieldSection'
 import {
   FieldType,
@@ -30,40 +30,7 @@ export const FieldRepeatSection = <FormData extends {}>({
     return <></>
   }
 
-  const length = fieldRepeatSection.length.get(data)
-  const sections = Array.from({
-    length,
-  }).map((_, index) => {
-    const title = fieldRepeatSection.title
-      ? fieldRepeatSection.title({
-          index,
-          translate,
-        })
-      : `${index + 1}`
-    return {
-      type: FormFieldType.FormSection,
-      fields: [
-        {
-          type: FormFieldType.FormFieldGroup,
-          title,
-          fields: fieldRepeatSection.fields.map((repeatSectionField, fi) => {
-            if (Array.isArray(repeatSectionField)) {
-              return <></>
-            } else {
-              return {
-                ...repeatSectionField,
-                lens: createFakeFormLens(
-                  fieldRepeatSection.lens,
-                  index,
-                  repeatSectionField.lens,
-                ),
-              }
-            }
-          }),
-        },
-      ],
-    }
-  }) as Array<FormSection<FormData>>
+  const sections = processRepeatSection(fieldRepeatSection, data, translate)
 
   return (
     <div key={`repeat-section-${fieldRepeatSectionIndex}`}>

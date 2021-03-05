@@ -7,7 +7,7 @@ import React, { ReactNode, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { createGetStyle } from '../theme/util'
+import { useInlineStyle } from '../theme/util'
 import { FormField } from './FormField'
 import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
@@ -74,7 +74,7 @@ export const Form = <FormData extends {}>({
 }: Props<FormData>) => {
   const dispatch = useDispatch()
   const theme = React.useContext(getThemeContext())
-  const getFormStyle = createGetStyle(theme, 'form')(style?.form || {})
+  const getFormStyle = useInlineStyle(theme, 'form')(style?.form || {})
 
   const [showValidation, setShowValidation] = React.useState(false)
 
@@ -166,9 +166,13 @@ export const Form = <FormData extends {}>({
             <Button
               {...b}
               key={k}
-              dataTestId={`form:${(
-                b.type || ButtonType.Secondary
-              ).toLowerCase()}:${k + 1}`}
+              dataTestId={
+                b.type === ButtonType.Primary
+                  ? 'form:primary'
+                  : `form:${(
+                      b.type || ButtonType.Secondary
+                    ).toLowerCase()}:${k + 1}`
+              }
               disabled={b.isDisabled ? b.isDisabled(data) : false}
               onClick={() => b.onClick({ submit, dispatch })}
             />

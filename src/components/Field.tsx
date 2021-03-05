@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { createGetStyle } from '../theme/util'
+import { useInlineStyle } from '../theme/util'
 import { FieldItem } from './FieldItem'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldRow, FieldRowWrapper } from './FieldRow'
@@ -23,7 +23,7 @@ export const Field = <FormData extends {}>({
 }: FieldProps<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getRowStyle = createGetStyle(theme, 'row')(style?.row || {})
+  const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
 
   const commonFieldItemProps = { data, style }
 
