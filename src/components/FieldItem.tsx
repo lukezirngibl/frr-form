@@ -31,7 +31,7 @@ import { getComputeFieldError } from './functions/computeFieldError.form'
 import {
   FieldType,
   FormFieldType,
-  MultiFormField,
+  MultiTextInputField,
   SingleFormField,
 } from './types'
 
@@ -88,7 +88,7 @@ export const FormFieldWrapper = styled.div<{
  */
 
 type FieldItemProps<FormData> = Omit<FieldType<FormData>, 'formReadOnly'> & {
-  field: SingleFormField<FormData> | MultiFormField<FormData>
+  field: SingleFormField<FormData> | MultiTextInputField<FormData>
   width?: number
 }
 
@@ -514,7 +514,7 @@ export const FieldItem = <FormData extends {}>(
     )
   }
 
-  const renderMultiFieldItemWrapper = (field: MultiFormField<FormData>) => {
+  const renderMultiFieldItemWrapper = (field: MultiTextInputField<FormData>) => {
     return (
       <>
         {field.label && <Label {...field.label} />}

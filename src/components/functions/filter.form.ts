@@ -7,7 +7,7 @@ import {
   SectionFields,
   SingleFieldOrRow,
   SingleFormField,
-  MultiFormField,
+  MultiTextInputField,
 } from '../types'
 
 const processFormFieldRow = <T>(
@@ -22,7 +22,7 @@ const processFormFieldRow = <T>(
 
 const processFormFieldGroup = <T>(
   g: FormFieldGroup<T>,
-  fn: (i: SingleFormField<T> | MultiFormField<T>) => boolean,
+  fn: (i: SingleFormField<T> | MultiTextInputField<T>) => boolean,
 ): FormFieldGroup<T> => ({
   ...g,
   fields: g.fields.reduce(
@@ -39,7 +39,7 @@ const processFormFieldGroup = <T>(
 
 const processFormSectionFields = <T>(
   fields: SectionFields<T>,
-  fn: (i: SingleFormField<T> | MultiFormField<T>) => boolean,
+  fn: (i: SingleFormField<T> | MultiTextInputField<T>) => boolean,
 ): SectionFields<T> =>
   fields.reduce((acc: Array<SectionField<T>>, f) => {
     if (Array.isArray(f)) {
@@ -66,7 +66,7 @@ const processFormSection = <T>(
 
 export const filterFormFields = <T>(
   formFields: Array<FormField<T>>,
-  fn: (i: SingleFormField<T> | MultiFormField<T>) => boolean,
+  fn: (i: SingleFormField<T> | MultiTextInputField<T>) => boolean,
 ): Array<FormField<T>> =>
   formFields.reduce((groups: Array<FormField<T>>, f: FormField<T>) => {
     if (Array.isArray(f)) {

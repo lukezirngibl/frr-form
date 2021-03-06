@@ -5,11 +5,11 @@ import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
 import {
+  fieldMap,
   FieldType,
   FormFieldType,
+  MultiTextInputField,
   SingleFormField,
-  fieldMap,
-  MultiFormField,
 } from './types'
 import { findFirst } from 'fp-ts/lib/Array'
 
@@ -73,18 +73,24 @@ const defaultReadOnlyMappers: {
     },
   ) => string
 } = {
-  [FormFieldType.NumberInput]: defaultStrNumMapper,
-  [FormFieldType.DatePicker]: v => v.value.toDateString(),
-  [FormFieldType.MultiSelect]: defaultOptionArrayMapper,
   [FormFieldType.CheckboxGroup]: defaultOptionArrayMapper,
   [FormFieldType.CodeInput]: defaultStrNumMapper,
   [FormFieldType.CountryDropdown]: defaultStrNumMapper,
   [FormFieldType.CountrySelect]: defaultStrNumMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
+  [FormFieldType.DatePicker]: v => v.value.toDateString(),
   [FormFieldType.Dropdown]: defaultStrNumMapper,
   [FormFieldType.DropdownNumber]: defaultStrNumMapper,
   [FormFieldType.FormattedDatePicker]: defaultStrNumMapper,
+  [FormFieldType.FormFieldGroup]: () => '',
+  [FormFieldType.FormFieldRepeatGroup]: () => '',
+  [FormFieldType.FormFieldRepeatSection]: () => '',
+  [FormFieldType.FormSection]: () => '',
+  [FormFieldType.FormText]: () => '',
   [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
+  [FormFieldType.MultiSelect]: defaultOptionArrayMapper,
+  [FormFieldType.MultiTextInput]: () => '',
+  [FormFieldType.NumberInput]: defaultStrNumMapper,
   [FormFieldType.NumberSelect]: defaultOptionMapper,
   [FormFieldType.OptionGroup]: defaultOptionMapper,
   [FormFieldType.RadioGroup]: defaultOptionMapper,
@@ -93,17 +99,11 @@ const defaultReadOnlyMappers: {
   [FormFieldType.Switch]: defaultBooleanMapper,
   [FormFieldType.TextArea]: defaultStrNumMapper,
   [FormFieldType.TextInput]: defaultStrNumMapper,
-  [FormFieldType.MultiTextInput]: () => '',
   [FormFieldType.TextNumber]: defaultStrNumMapper,
   [FormFieldType.TextSelect]: defaultOptionMapper,
   [FormFieldType.Toggle]: defaultBooleanMapper,
   [FormFieldType.YesNoOptionGroup]: defaultBooleanMapper,
   [FormFieldType.YesNoRadioGroup]: defaultBooleanMapper,
-  [FormFieldType.FormText]: () => '',
-  [FormFieldType.FormFieldGroup]: () => '',
-  [FormFieldType.FormSection]: () => '',
-  [FormFieldType.FormFieldRepeatGroup]: () => '',
-  [FormFieldType.FormFieldRepeatSection]: () => '',
 }
 
 /*
@@ -160,7 +160,7 @@ type FieldItemReadOnlyProps<FormData> = Omit<
   FieldType<FormData>,
   'onChange' | 'showValidation' | 'formReadOnly'
 > & {
-  field: SingleFormField<FormData> | MultiFormField<FormData>
+  field: SingleFormField<FormData> | MultiTextInputField<FormData>
   width?: number
 }
 

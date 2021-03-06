@@ -10,7 +10,6 @@ import { Props as FormattedDatePickerProps } from 'frr-web/lib/components/Format
 import { Props as InputWithDropdownProps } from 'frr-web/lib/components/InputWithDropdown'
 import { LabelProps } from 'frr-web/lib/components/Label'
 import { Props as MultiSelectProps } from 'frr-web/lib/components/MultiSelect'
-import { Props as MultiTextInputProps } from 'frr-web/lib/components/MultiTextInput'
 import { Props as NumberInputProps } from 'frr-web/lib/components/NumberInput'
 import { Props as OptionGroupProps } from 'frr-web/lib/components/OptionGroup'
 import { Props as RadioGroupProps } from 'frr-web/lib/components/RadioGroup'
@@ -299,6 +298,7 @@ export const fieldMap = {
   [FormFieldType.FormText]: null,
   [FormFieldType.InputWithDropdown]: null as InputWithDropdownField<unknown>,
   [FormFieldType.MultiSelect]: null as MultiSelectField<unknown>,
+  [FormFieldType.MultiTextInput]: null as MultiTextInputField<unknown>,
   [FormFieldType.NumberInput]: null as NumberInputField<unknown>,
   [FormFieldType.NumberSelect]: null as NumberSelectField<unknown>,
   [FormFieldType.OptionGroup]: null as OptionGroupField<unknown>,
@@ -344,7 +344,7 @@ export type SingleFormField<FormData> = (
 ) &
   CommonFieldProps<FormData>
 
-export type MultiFormField<FormData> = {
+export type MultiTextInputField<FormData> = {
   label?: LabelProps
   type: FormFieldType.MultiTextInput
   fields: Array<SingleFormField<FormData>>
@@ -360,7 +360,7 @@ export type Fields<FormData> = Array<
 
 export type SingleFieldOrRow<FormData> =
   | SingleFormField<FormData>
-  | MultiFormField<FormData>
+  | MultiTextInputField<FormData>
   | FormFieldRow<FormData>
 
 export type GroupFields<FormData> = Array<SingleFieldOrRow<FormData>>
@@ -385,7 +385,7 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
 
 export type FormField<FormData> =
   | SingleFormField<FormData>
-  | MultiFormField<FormData>
+  | MultiTextInputField<FormData>
   | FormFieldRow<FormData>
   | FormFieldGroup<FormData>
   | FormSection<FormData>
