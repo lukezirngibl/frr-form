@@ -1,12 +1,12 @@
+import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
-import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { useInlineStyle } from '../theme/util'
+import { useCSSStyle } from '../theme/util'
 import { FieldItem } from './FieldItem'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldType, FormFieldRow } from './types'
 
-export const FieldRowWrapper = styled.div`
+export const FieldRowWrapper = createStyled('div')`
   display: flex;
   align-items: center;
   margin-bottom: 12px;
@@ -46,17 +46,15 @@ export const FieldRow = <FormData extends {}>({
 }: FieldRowProps<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
+  const getRowStyle = useCSSStyle(theme, 'row')(style?.row || {})
 
   const commonFieldItemProps = { data, style, width: (1 / field.length) * 100 }
 
   return field.some(r => !r.isVisible || r.isVisible(data)) ? (
     <FieldRowWrapper
       key={`row-${fieldIndex}`}
-      style={{
-        ...getRowStyle('wrapper'),
-        ...(formReadOnly ? getRowStyle('wrapperReadOnly') : {}),
-      }}
+      read-only={formReadOnly}
+      {...getRowStyle('wrapper')}
     >
       {field.map((fieldItem, fieldItemIndex) =>
         formReadOnly ? (

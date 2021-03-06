@@ -5,9 +5,7 @@ import { keys } from 'frr-util/lib/util'
 export type FormTheme = {
   row: {
     wrapper: CSSProperties
-    wrapperReadOnly: CSSProperties
     item: CSSProperties
-    itemReadOnly: CSSProperties
   }
   group: {
     title: CSSProperties
@@ -16,9 +14,7 @@ export type FormTheme = {
   }
   section: {
     title: CSSProperties
-    titleReadOnly: CSSProperties
     wrapper: CSSProperties
-    wrapperReadOnly: CSSProperties
     description: CSSProperties
   }
   sectionRight: {

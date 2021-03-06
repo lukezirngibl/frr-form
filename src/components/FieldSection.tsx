@@ -3,7 +3,8 @@ import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { useInlineStyle } from '../theme/util'
+import { useCSSStyle, useInlineStyle } from '../theme/util'
+import { createStyled } from 'frr-web/lib/theme/util'
 import { Field } from './Field'
 import { FieldGroup } from './FieldGroup'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
@@ -17,12 +18,12 @@ import {
   FormSection,
 } from './types'
 
-export const FormSectionWrapper = styled.div`
+export const FormSectionWrapper = createStyled('div')`
   display: flex;
   margin: 16px 0 8px 0;
 `
 
-export const MainSectionWrapper = styled.div`
+export const MainSectionWrapper = createStyled('div')`
   flex-grow: 1;
 `
 
@@ -64,7 +65,7 @@ export const FieldSection = <FormData extends {}>({
 }: FieldSection<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getSectionStyle = useInlineStyle(theme, 'section')(style?.section || {})
+  const getSectionStyle = useCSSStyle(theme, 'section')(style?.section || {})
   const getSectionRightStyle = useInlineStyle(
     theme,
     'sectionRight',
@@ -95,19 +96,17 @@ export const FieldSection = <FormData extends {}>({
           : `section-${fieldSectionIndex}`
       }
       style={{
-        ...getSectionStyle('wrapper'),
-        ...(formReadOnly ? getSectionStyle('wrapperReadOnly') : {}),
-        ...(fieldSection.style ? fieldSection.style.wrapper || {} : {}),
+        ...(fieldSection.style?.wrapper || {}),
       }}
+      read-only={formReadOnly}
+      {...getSectionStyle('wrapper')}
     >
       <MainSectionWrapper>
         {fieldSection.title && (
           <P
-            style={{
-              ...getSectionStyle('title'),
-              ...(formReadOnly ? getSectionStyle('titleReadOnly') : {}),
-              ...(fieldSection.style ? fieldSection.style.title || {} : {}),
-            }}
+            style={fieldSection.style?.title || {}}
+            styleCSS={getSectionStyle('title')}
+            readOnly={formReadOnly}
             label={fieldSection.title}
           />
         )}

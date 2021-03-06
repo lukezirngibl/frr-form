@@ -1,9 +1,10 @@
+import { findFirst } from 'fp-ts/lib/Array'
 import { P } from 'frr-web/lib/html'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
+import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
-import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
-import { useInlineStyle } from '../theme/util'
+import { useCSSStyle, useInlineStyle } from '../theme/util'
 import {
   fieldMap,
   FieldType,
@@ -11,7 +12,6 @@ import {
   MultiTextInputField,
   SingleFormField,
 } from './types'
-import { findFirst } from 'fp-ts/lib/Array'
 
 /*
  * Value mapper
@@ -110,31 +110,7 @@ const defaultReadOnlyMappers: {
  * Styled components
  */
 
-export const FormFieldRowWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-  flex-shrink: 0;
-
-  @media (max-width: 768px) {
-    flex-wrap: wrap;
-  }
-
-  & > * {
-    margin-left: 4px;
-    margin-right: 4px;
-
-    &:first-child {
-      margin-left: 0;
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-`
-
-export const FormFieldWrapper = styled.div<{
+export const FormFieldWrapper = createStyled('div')<{
   width?: string
 }>`
   position: relative;
@@ -171,7 +147,7 @@ export const FieldItemReadOnly = <FormData extends {}>(
   const translate = getTranslation(language)
 
   const theme = React.useContext(getThemeContext())
-  const getRowStyle = useInlineStyle(theme, 'row')(props.style?.row || {})
+  const getRowStyle = useCSSStyle(theme, 'row')(props.style?.row || {})
   const getFieldStyle = useInlineStyle(
     theme,
     'fieldReadOnly',
@@ -184,7 +160,8 @@ export const FieldItemReadOnly = <FormData extends {}>(
   return !props.field.isVisible || props.field.isVisible(props.data) ? (
     <FormFieldWrapper
       className="form-field"
-      style={{ ...getRowStyle('item'), ...getRowStyle('itemReadOnly') }}
+      {...getRowStyle('item')}
+      read-only={true}
       width={`${isNaN(props.width) ? 100 : props.width}%`}
     >
       <div style={getFieldStyle('wrapper')}>
