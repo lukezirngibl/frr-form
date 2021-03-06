@@ -25,17 +25,16 @@ export const Field = <FormData extends {}>({
   const theme = React.useContext(getThemeContext()) as FormTheme
   const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
 
-  const commonFieldItemProps = { data, style }
+  const commonFieldProps = { data, style }
 
   return Array.isArray(field) ? (
     <FieldRow
       field={field as FormFieldRow<FormData>}
       fieldIndex={fieldIndex}
-      data={data}
       formReadOnly={formReadOnly}
       onChange={onChange}
       showValidation={showValidation}
-      style={style}
+      {...commonFieldProps}
     />
   ) : (
     <FieldRowWrapper
@@ -46,13 +45,13 @@ export const Field = <FormData extends {}>({
     >
       {formReadOnly ? (
         <FieldItemReadOnly
-          {...commonFieldItemProps}
+          {...commonFieldProps}
           field={field as SingleFormField<FormData>}
           fieldIndex={fieldIndex}
         />
       ) : (
         <FieldItem
-          {...commonFieldItemProps}
+          {...commonFieldProps}
           field={field as SingleFormField<FormData>}
           fieldIndex={fieldIndex}
           onChange={onChange}

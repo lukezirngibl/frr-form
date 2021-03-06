@@ -8,6 +8,7 @@ import { Dropdown } from 'frr-web/lib/components/Dropdown'
 import { DropdownNumber } from 'frr-web/lib/components/DropdownNumber'
 import { FormattedDatePicker } from 'frr-web/lib/components/FormattedDatePicker'
 import { InputWithDropdown } from 'frr-web/lib/components/InputWithDropdown'
+import { Label } from 'frr-web/lib/components/Label'
 import { MultiSelect } from 'frr-web/lib/components/MultiSelect'
 import { NumberInput } from 'frr-web/lib/components/NumberInput'
 import { OptionGroup } from 'frr-web/lib/components/OptionGroup'
@@ -27,7 +28,12 @@ import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
 import { getComputeFieldError } from './functions/computeFieldError.form'
-import { FieldType, FormFieldType, SingleFormField } from './types'
+import {
+  FieldType,
+  FormFieldType,
+  MultiFormField,
+  SingleFormField,
+} from './types'
 
 /*
  * Styled components
@@ -82,7 +88,7 @@ export const FormFieldWrapper = styled.div<{
  */
 
 type FieldItemProps<FormData> = Omit<FieldType<FormData>, 'formReadOnly'> & {
-  field: SingleFormField<FormData>
+  field: SingleFormField<FormData> | MultiFormField<FormData>
   width?: number
 }
 
@@ -476,44 +482,61 @@ export const FieldItem = <FormData extends {}>(
     return <div />
   }
 
-  const errorLabel = props.showValidation
-    ? computeFieldError(props.field)
-    : null
+  const width = !isNaN(props.width) ? props.width : 100
 
-  const hasError = errorLabel !== null
+  const renderFieldItemWrapper = (
+    field: SingleFormField<FormData>,
+    fieldIndex: number,
+  ) => {
+    const errorLabel = props.showValidation ? computeFieldError(field) : null
 
-  let ref = React.createRef<HTMLDivElement>()
-  if (!scrolled && hasError) {
-    scrolled = true
-    setTimeout(() => {
-      if (ref.current) {
-        scrolled = false
-        ref.current.scrollIntoView({
-          behavior: 'smooth',
-        })
-      }
-    }, 300)
+    const hasError = errorLabel !== null
+
+    let ref = React.createRef<HTMLDivElement>()
+    if (!scrolled && hasError) {
+      scrolled = true
+      setTimeout(() => {
+        if (ref.current) {
+          scrolled = false
+          ref.current.scrollIntoView({
+            behavior: 'smooth',
+          })
+        }
+      }, 300)
+    }
+
+    return !field.isVisible || field.isVisible(props.data) ? (
+      <div ref={ref}>
+        {renderFormFieldInput(field, { hasError, errorLabel }, fieldIndex)}
+      </div>
+    ) : (
+      <></>
+    )
   }
 
-  const width = !isNaN(props.width) ? props.width : 100
-  return !props.field.isVisible || props.field.isVisible(props.data) ? (
+  const renderMultiFieldItemWrapper = (field: MultiFormField<FormData>) => {
+    return (
+      <>
+        {field.label && <Label {...field.label} />}
+        {field.fields.map((fieldItem, fieldItemIndex) =>
+          renderFieldItemWrapper(fieldItem, fieldItemIndex),
+        )}
+      </>
+    )
+  }
+
+  return (
     <FormFieldWrapper
-      ref={ref}
       width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
-      maxwidth={props.field.maxwidth}
       className="form-field"
       style={{
         ...getRowStyle('item'),
         ...(props.field.itemStyle || {}),
       }}
     >
-      {renderFormFieldInput(
-        props.field,
-        { hasError, errorLabel },
-        props.fieldIndex,
-      )}
+      {props.field.type === FormFieldType.MultiTextInput
+        ? renderMultiFieldItemWrapper(props.field)
+        : renderFieldItemWrapper(props.field, props.fieldIndex)}
     </FormFieldWrapper>
-  ) : (
-    <></>
   )
 }

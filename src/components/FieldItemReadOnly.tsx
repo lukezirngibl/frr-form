@@ -4,7 +4,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
-import { FieldType, FormFieldType, SingleFormField, fieldMap } from './types'
+import {
+  FieldType,
+  FormFieldType,
+  SingleFormField,
+  fieldMap,
+  MultiFormField,
+} from './types'
 import { findFirst } from 'fp-ts/lib/Array'
 
 /*
@@ -87,6 +93,7 @@ const defaultReadOnlyMappers: {
   [FormFieldType.Switch]: defaultBooleanMapper,
   [FormFieldType.TextArea]: defaultStrNumMapper,
   [FormFieldType.TextInput]: defaultStrNumMapper,
+  [FormFieldType.MultiTextInput]: () => '',
   [FormFieldType.TextNumber]: defaultStrNumMapper,
   [FormFieldType.TextSelect]: defaultOptionMapper,
   [FormFieldType.Toggle]: defaultBooleanMapper,
@@ -153,7 +160,7 @@ type FieldItemReadOnlyProps<FormData> = Omit<
   FieldType<FormData>,
   'onChange' | 'showValidation' | 'formReadOnly'
 > & {
-  field: SingleFormField<FormData>
+  field: SingleFormField<FormData> | MultiFormField<FormData>
   width?: number
 }
 
@@ -171,7 +178,8 @@ export const FieldItemReadOnly = <FormData extends {}>(
   )(props.style?.fieldReadOnly || {})
 
   const readOnlyMapper =
-    props.field.readOnlyMapper || defaultReadOnlyMappers[props.field.type]
+    props.field.type !== FormFieldType.MultiTextInput &&
+    (props.field.readOnlyMapper || defaultReadOnlyMappers[props.field.type])
 
   return !props.field.isVisible || props.field.isVisible(props.data) ? (
     <FormFieldWrapper
@@ -187,14 +195,33 @@ export const FieldItemReadOnly = <FormData extends {}>(
             data={props.field.label.labelData}
           />
         )}
-        <P
-          style={{ ...getFieldStyle('item') }}
-          label={readOnlyMapper({
-            ...props.field,
-            value: props.field.lens.get(props.data),
-            translate,
-          } as any)}
-        />
+        {props.field.type === FormFieldType.MultiTextInput ? (
+          props.field.fields.map(fieldItem => {
+            const readOnlyItemMapper =
+              fieldItem.readOnlyMapper ||
+              defaultReadOnlyMappers[props.field.type]
+
+            return (
+              <P
+                style={{ ...getFieldStyle('item') }}
+                label={readOnlyItemMapper({
+                  ...fieldItem,
+                  value: fieldItem.lens.get(props.data),
+                  translate,
+                } as any)}
+              />
+            )
+          })
+        ) : (
+          <P
+            style={{ ...getFieldStyle('item') }}
+            label={readOnlyMapper({
+              ...props.field,
+              value: props.field.lens.get(props.data),
+              translate,
+            } as any)}
+          />
+        )}
       </div>
     </FormFieldWrapper>
   ) : (

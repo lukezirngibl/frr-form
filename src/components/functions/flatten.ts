@@ -5,13 +5,14 @@ import {
   FormSection,
   SectionFields,
   SingleFormField,
+  MultiFormField,
 } from '../types'
 import { processRepeatGroup, processRepeatSection } from '../../util'
 
 const processFormFieldGroup = <T>(
   g: FormFieldGroup<T>,
-): Array<SingleFormField<T>> => {
-  let acc: Array<SingleFormField<T>> = []
+): Array<SingleFormField<T> | MultiFormField<T>> => {
+  let acc: Array<SingleFormField<T> | MultiFormField<T>> = []
   for (let f of g.fields) {
     if (Array.isArray(f)) {
       acc = [...acc, ...f]
@@ -26,8 +27,8 @@ const processFormFieldGroup = <T>(
 const processFormSectionFields = <T>(
   fields: SectionFields<T>,
   data: T,
-): Array<SingleFormField<T>> => {
-  let acc: Array<SingleFormField<T>> = []
+): Array<SingleFormField<T> | MultiFormField<T>> => {
+  let acc: Array<SingleFormField<T> | MultiFormField<T>> = []
   for (let f of fields) {
     if (Array.isArray(f)) {
       acc = [...acc, ...f]
@@ -58,14 +59,15 @@ const processFormSectionFields = <T>(
 const processFormSection = <T>(
   s: FormSection<T>,
   data: T,
-): Array<SingleFormField<T>> => processFormSectionFields(s.fields, data)
+): Array<SingleFormField<T> | MultiFormField<T>> =>
+  processFormSectionFields(s.fields, data)
 
 export const flatten = <T>(
   formFields: Array<FormField<T>>,
   data: T,
-): Array<SingleFormField<T>> => {
+): Array<SingleFormField<T> | MultiFormField<T>> => {
   console.log('flatten...')
-  let array: Array<SingleFormField<T>> = []
+  let array: Array<SingleFormField<T> | MultiFormField<T>> = []
   for (let f of formFields) {
     if (Array.isArray(f)) {
       array = [...array, ...f]
