@@ -54,7 +54,7 @@ export const FieldGroup = <FormData extends {}>({
       )}
       {fieldGroup.fields.map((field, fieldIndex) => (
         <Field
-          key={`field-${field}`}
+          key={`field-${fieldIndex}`}
           data={data}
           field={field}
           fieldIndex={fieldIndex}
