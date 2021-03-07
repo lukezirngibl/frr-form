@@ -43,9 +43,7 @@ export type FormTheme = {
 export const defaultTheme: FormTheme = {
   section: {
     title: {},
-    titleReadOnly: {},
     wrapper: {},
-    wrapperReadOnly: {},
     description: {},
   },
   sectionRight: {
@@ -55,9 +53,7 @@ export const defaultTheme: FormTheme = {
   },
   row: {
     wrapper: {},
-    wrapperReadOnly: {},
     item: {},
-    itemReadOnly: {},
   },
   group: {
     title: {},
