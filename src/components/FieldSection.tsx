@@ -3,7 +3,7 @@ import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { uesCSSStyles, useInlineStyle } from '../theme/util'
+import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { createStyled } from 'frr-web/lib/theme/util'
 import { Field } from './Field'
 import { FieldGroup } from './FieldGroup'
@@ -65,7 +65,7 @@ export const FieldSection = <FormData extends {}>({
 }: FieldSection<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getSectionStyle = uesCSSStyles(theme, 'section')(style?.section || {})
+  const getSectionStyle = useCSSStyles(theme, 'section')(style?.section || {})
   const getSectionRightStyle = useInlineStyle(
     theme,
     'sectionRight',
