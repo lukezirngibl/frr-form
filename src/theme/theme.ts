@@ -27,6 +27,10 @@ export type FormTheme = {
     content: CSSProperties
     buttonContainer: CSSProperties
   }
+  fieldMultiInput: {
+    wrapper: CSSProperties
+    item: CSSProperties
+  }
   fieldReadOnly: {
     wrapper: CSSProperties
     item: CSSProperties
@@ -64,6 +68,10 @@ export const defaultTheme: FormTheme = {
     wrapper: {},
     content: {},
     buttonContainer: {},
+  },
+  fieldMultiInput: {
+    wrapper: {},
+    item: {},
   },
   fieldReadOnly: {
     wrapper: {},

@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { useCSSStyle } from '../theme/util'
+import { uesCSSStyles } from '../theme/util'
 import { FieldItem } from './FieldItem'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldRow, FieldRowWrapper } from './FieldRow'
@@ -23,7 +23,7 @@ export const Field = <FormData extends {}>({
 }: FieldProps<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getRowStyle = useCSSStyle(theme, 'row')(style?.row || {})
+  const getRowStyle = uesCSSStyles(theme, 'row')(style?.row || {})
 
   const commonFieldProps = { data, style }
 
@@ -38,7 +38,7 @@ export const Field = <FormData extends {}>({
     />
   ) : (
     <FieldRowWrapper
-      {...getRowStyle('wrapper')}
+      cssStyles={getRowStyle('wrapper')}
       read-only={formReadOnly}
     >
       {formReadOnly ? (

@@ -1,12 +1,13 @@
 import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
+import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { useCSSStyle } from '../theme/util'
+import { uesCSSStyles } from '../theme/util'
 import { FieldItem } from './FieldItem'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldType, FormFieldRow } from './types'
 
-export const FieldRowWrapper = createStyled('div')`
+export const FieldRowWrapper = createStyled(styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 12px;
@@ -28,7 +29,7 @@ export const FieldRowWrapper = createStyled('div')`
       margin-right: 0;
     }
   }
-`
+`)
 
 type FieldRowProps<FormData> = FieldType<FormData> & {
   field: FormFieldRow<FormData>
@@ -46,7 +47,7 @@ export const FieldRow = <FormData extends {}>({
 }: FieldRowProps<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getRowStyle = useCSSStyle(theme, 'row')(style?.row || {})
+  const getRowStyle = uesCSSStyles(theme, 'row')(style?.row || {})
 
   const commonFieldItemProps = { data, style, width: (1 / field.length) * 100 }
 
@@ -54,7 +55,7 @@ export const FieldRow = <FormData extends {}>({
     <FieldRowWrapper
       key={`row-${fieldIndex}`}
       read-only={formReadOnly}
-      {...getRowStyle('wrapper')}
+      cssStyles={getRowStyle('wrapper')}
     >
       {field.map((fieldItem, fieldItemIndex) =>
         formReadOnly ? (

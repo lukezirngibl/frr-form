@@ -5,14 +5,14 @@ import {
   FormSection,
   SectionFields,
   SingleFormField,
-  MultiTextInputField,
+  MultiInputField,
 } from '../types'
 import { processRepeatGroup, processRepeatSection } from '../../util'
 
 const processFormFieldGroup = <T>(
   g: FormFieldGroup<T>,
-): Array<SingleFormField<T> | MultiTextInputField<T>> => {
-  let acc: Array<SingleFormField<T> | MultiTextInputField<T>> = []
+): Array<SingleFormField<T> | MultiInputField<T>> => {
+  let acc: Array<SingleFormField<T> | MultiInputField<T>> = []
   for (let f of g.fields) {
     if (Array.isArray(f)) {
       acc = [...acc, ...f]
@@ -27,8 +27,8 @@ const processFormFieldGroup = <T>(
 const processFormSectionFields = <T>(
   fields: SectionFields<T>,
   data: T,
-): Array<SingleFormField<T> | MultiTextInputField<T>> => {
-  let acc: Array<SingleFormField<T> | MultiTextInputField<T>> = []
+): Array<SingleFormField<T> | MultiInputField<T>> => {
+  let acc: Array<SingleFormField<T> | MultiInputField<T>> = []
   for (let f of fields) {
     if (Array.isArray(f)) {
       acc = [...acc, ...f]
@@ -59,15 +59,15 @@ const processFormSectionFields = <T>(
 const processFormSection = <T>(
   s: FormSection<T>,
   data: T,
-): Array<SingleFormField<T> | MultiTextInputField<T>> =>
+): Array<SingleFormField<T> | MultiInputField<T>> =>
   processFormSectionFields(s.fields, data)
 
 export const flatten = <T>(
   formFields: Array<FormField<T>>,
   data: T,
-): Array<SingleFormField<T> | MultiTextInputField<T>> => {
+): Array<SingleFormField<T> | MultiInputField<T>> => {
   console.log('flatten...')
-  let array: Array<SingleFormField<T> | MultiTextInputField<T>> = []
+  let array: Array<SingleFormField<T> | MultiInputField<T>> = []
   for (let f of formFields) {
     if (Array.isArray(f)) {
       array = [...array, ...f]

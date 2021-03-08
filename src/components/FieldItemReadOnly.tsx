@@ -3,13 +3,14 @@ import { P } from 'frr-web/lib/html'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
+import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
-import { useCSSStyle, useInlineStyle } from '../theme/util'
+import { useCSSStyles, useInlineStyle } from '../theme/util'
 import {
   fieldMap,
   FieldType,
   FormFieldType,
-  MultiTextInputField,
+  MultiInputField,
   SingleFormField,
 } from './types'
 
@@ -89,7 +90,7 @@ const defaultReadOnlyMappers: {
   [FormFieldType.FormText]: () => '',
   [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
   [FormFieldType.MultiSelect]: defaultOptionArrayMapper,
-  [FormFieldType.MultiTextInput]: () => '',
+  [FormFieldType.MultiInput]: () => '',
   [FormFieldType.NumberInput]: defaultStrNumMapper,
   [FormFieldType.NumberSelect]: defaultOptionMapper,
   [FormFieldType.OptionGroup]: defaultOptionMapper,
@@ -110,11 +111,9 @@ const defaultReadOnlyMappers: {
  * Styled components
  */
 
-export const FormFieldWrapper = createStyled('div')<{
-  width?: string
-}>`
+export const FormFieldWrapper = createStyled(styled.div`
   position: relative;
-  width: ${({ width }) => width || '100%'};
+  width: ${({ width }: { width?: string }) => width || '100%'};
 
   @media (max-width: 768px) {
     width: 100% !important;
@@ -126,7 +125,7 @@ export const FormFieldWrapper = createStyled('div')<{
       margin-top: 0;
     }
   }
-`
+`)
 
 /*
  * Render field function
@@ -136,7 +135,7 @@ type FieldItemReadOnlyProps<FormData> = Omit<
   FieldType<FormData>,
   'onChange' | 'showValidation' | 'formReadOnly'
 > & {
-  field: SingleFormField<FormData> | MultiTextInputField<FormData>
+  field: SingleFormField<FormData> | MultiInputField<FormData>
   width?: number
 }
 
@@ -147,20 +146,20 @@ export const FieldItemReadOnly = <FormData extends {}>(
   const translate = getTranslation(language)
 
   const theme = React.useContext(getThemeContext())
-  const getRowStyle = useCSSStyle(theme, 'row')(props.style?.row || {})
+  const getRowStyle = useCSSStyles(theme, 'row')(props.style?.row || {})
   const getFieldStyle = useInlineStyle(
     theme,
     'fieldReadOnly',
   )(props.style?.fieldReadOnly || {})
 
   const readOnlyMapper =
-    props.field.type !== FormFieldType.MultiTextInput &&
+    props.field.type !== FormFieldType.MultiInput &&
     (props.field.readOnlyMapper || defaultReadOnlyMappers[props.field.type])
 
   return !props.field.isVisible || props.field.isVisible(props.data) ? (
     <FormFieldWrapper
       className="form-field"
-      {...getRowStyle('item')}
+      cssStyles={getRowStyle('item')}
       read-only={true}
       width={`${isNaN(props.width) ? 100 : props.width}%`}
     >
@@ -172,7 +171,7 @@ export const FieldItemReadOnly = <FormData extends {}>(
             data={props.field.label.labelData}
           />
         )}
-        {props.field.type === FormFieldType.MultiTextInput ? (
+        {props.field.type === FormFieldType.MultiInput ? (
           props.field.fields.map(fieldItem => {
             const readOnlyItemMapper =
               fieldItem.readOnlyMapper ||

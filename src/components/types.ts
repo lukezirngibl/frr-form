@@ -46,7 +46,7 @@ export enum FormFieldType {
   FormText = 'FormText',
   InputWithDropdown = 'InputWithDropdown',
   MultiSelect = 'MultiSelect',
-  MultiTextInput = 'MultiTextInput',
+  MultiInput = 'MultiInput',
   NumberInput = 'NumberInput',
   NumberSelect = 'NumberSelect',
   OptionGroup = 'OptionGroup',
@@ -298,7 +298,7 @@ export const fieldMap = {
   [FormFieldType.FormText]: null,
   [FormFieldType.InputWithDropdown]: null as InputWithDropdownField<unknown>,
   [FormFieldType.MultiSelect]: null as MultiSelectField<unknown>,
-  [FormFieldType.MultiTextInput]: null as MultiTextInputField<unknown>,
+  [FormFieldType.MultiInput]: null as MultiInputField<unknown>,
   [FormFieldType.NumberInput]: null as NumberInputField<unknown>,
   [FormFieldType.NumberSelect]: null as NumberSelectField<unknown>,
   [FormFieldType.OptionGroup]: null as OptionGroupField<unknown>,
@@ -344,9 +344,9 @@ export type SingleFormField<FormData> = (
 ) &
   CommonFieldProps<FormData>
 
-export type MultiTextInputField<FormData> = {
+export type MultiInputField<FormData> = {
   label?: LabelProps
-  type: FormFieldType.MultiTextInput
+  type: FormFieldType.MultiInput
   fields: Array<SingleFormField<FormData>>
   itemStyle?: CSSProperties
   isVisible?: (formData: FormData) => boolean
@@ -360,7 +360,7 @@ export type Fields<FormData> = Array<
 
 export type SingleFieldOrRow<FormData> =
   | SingleFormField<FormData>
-  | MultiTextInputField<FormData>
+  | MultiInputField<FormData>
   | FormFieldRow<FormData>
 
 export type GroupFields<FormData> = Array<SingleFieldOrRow<FormData>>
@@ -385,7 +385,7 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
 
 export type FormField<FormData> =
   | SingleFormField<FormData>
-  | MultiTextInputField<FormData>
+  | MultiInputField<FormData>
   | FormFieldRow<FormData>
   | FormFieldGroup<FormData>
   | FormSection<FormData>

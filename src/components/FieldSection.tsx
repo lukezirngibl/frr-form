@@ -3,7 +3,7 @@ import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { useCSSStyle, useInlineStyle } from '../theme/util'
+import { uesCSSStyles, useInlineStyle } from '../theme/util'
 import { createStyled } from 'frr-web/lib/theme/util'
 import { Field } from './Field'
 import { FieldGroup } from './FieldGroup'
@@ -18,12 +18,12 @@ import {
   FormSection,
 } from './types'
 
-export const FormSectionWrapper = createStyled('div')`
+export const FormSectionWrapper = createStyled(styled.div`
   display: flex;
   margin: 16px 0 8px 0;
-`
+`)
 
-export const MainSectionWrapper = createStyled('div')`
+export const MainSectionWrapper = styled.div`
   flex-grow: 1;
 `
 
@@ -65,7 +65,7 @@ export const FieldSection = <FormData extends {}>({
 }: FieldSection<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getSectionStyle = useCSSStyle(theme, 'section')(style?.section || {})
+  const getSectionStyle = uesCSSStyles(theme, 'section')(style?.section || {})
   const getSectionRightStyle = useInlineStyle(
     theme,
     'sectionRight',
@@ -99,13 +99,13 @@ export const FieldSection = <FormData extends {}>({
         ...(fieldSection.style?.wrapper || {}),
       }}
       read-only={formReadOnly}
-      {...getSectionStyle('wrapper')}
+      cssStyles={getSectionStyle('wrapper')}
     >
       <MainSectionWrapper>
         {fieldSection.title && (
           <P
             style={fieldSection.style?.title || {}}
-            styleCSS={getSectionStyle('title')}
+            cssStyles={getSectionStyle('title')}
             readOnly={formReadOnly}
             label={fieldSection.title}
           />
