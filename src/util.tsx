@@ -118,6 +118,8 @@ export const processRepeatGroup = <FormData extends {}>(
     fields: fieldRepeatGroup.fields.map(repeatGroup => {
       if (Array.isArray(repeatGroup)) {
         return <></>
+      } else if (repeatGroup.type === FormFieldType.MultiInput) {
+        return repeatGroup
       } else {
         return {
           ...repeatGroup,
@@ -156,6 +158,8 @@ export const processRepeatSection = <FormData extends {}>(
           fields: fieldRepeatSection.fields.map(repeatSectionField => {
             if (Array.isArray(repeatSectionField)) {
               return <></>
+            } else if (repeatSectionField.type === FormFieldType.MultiInput) {
+              return repeatSectionField
             } else {
               return {
                 ...repeatSectionField,

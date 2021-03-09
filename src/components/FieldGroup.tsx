@@ -1,7 +1,7 @@
 import { P } from 'frr-web/lib/html'
 import React from 'react'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { createGetStyle } from '../theme/util'
+import { useInlineStyle } from '../theme/util'
 import { Field } from './Field'
 import { FieldType, FormFieldGroup } from './types'
 
@@ -20,7 +20,7 @@ export const FieldGroup = <FormData extends {}>({
 }: FieldGroup<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getGroupStyle = createGetStyle(theme, 'group')(style?.group || {})
+  const getGroupStyle = useInlineStyle(theme, 'group')(style?.group || {})
 
   return !fieldGroup.isVisible || fieldGroup.isVisible(data) ? (
     <div

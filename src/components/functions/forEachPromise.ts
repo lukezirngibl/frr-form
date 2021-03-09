@@ -5,11 +5,12 @@ import {
   FormSection,
   SectionFields,
   SingleFormField,
+  MultiInputField,
 } from '../types'
 
 const processFormFieldGroup = <T, U>(
   g: FormFieldGroup<T>,
-  fn: (i: SingleFormField<T>) => Promise<U>,
+  fn: (i: SingleFormField<T> | MultiInputField<T>) => Promise<U>,
 ): Array<Promise<U>> => {
   let acc: Array<Promise<U>> = []
   for (let f of g.fields) {
@@ -25,7 +26,7 @@ const processFormFieldGroup = <T, U>(
 
 const processFormSectionFields = <T, U>(
   fields: SectionFields<T>,
-  fn: (i: SingleFormField<T>) => Promise<U>,
+  fn: (i: SingleFormField<T> | MultiInputField<T>) => Promise<U>,
 ): Array<Promise<U>> => {
   let acc: Array<Promise<U>> = []
   for (let f of fields) {
@@ -47,12 +48,12 @@ const processFormSectionFields = <T, U>(
 
 const processFormSection = <T, U>(
   s: FormSection<T>,
-  fn: (i: SingleFormField<T>) => Promise<U>,
+  fn: (i: SingleFormField<T> | MultiInputField<T>) => Promise<U>,
 ): Array<Promise<U>> => processFormSectionFields(s.fields, fn)
 
 export const forEachPromiseFormFields = async <T, U>(
   formFields: Array<FormField<T>>,
-  fn: (i: SingleFormField<T>) => Promise<U>,
+  fn: (i: SingleFormField<T> | MultiInputField<T>) => Promise<U>,
 ): Promise<unknown> => {
   let groups: Array<Promise<U>> = []
   for (let f of formFields) {

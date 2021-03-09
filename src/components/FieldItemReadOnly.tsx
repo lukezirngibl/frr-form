@@ -1,11 +1,19 @@
+import { findFirst } from 'fp-ts/lib/Array'
 import { P } from 'frr-web/lib/html'
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
+import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
 import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
-import { createGetStyle } from '../theme/util'
-import { FieldType, FormFieldType, SingleFormField, fieldMap } from './types'
-import { findFirst } from 'fp-ts/lib/Array'
+import { useCSSStyles } from '../theme/util'
+import {
+  fieldMap,
+  FieldType,
+  FormFieldType,
+  MultiInputField,
+  SingleFormField,
+} from './types'
+import { MediaQuery } from 'frr-web/lib/theme/theme'
 
 /*
  * Value mapper
@@ -67,18 +75,24 @@ const defaultReadOnlyMappers: {
     },
   ) => string
 } = {
-  [FormFieldType.NumberInput]: defaultStrNumMapper,
-  [FormFieldType.DatePicker]: v => v.value.toDateString(),
-  [FormFieldType.MultiSelect]: defaultOptionArrayMapper,
   [FormFieldType.CheckboxGroup]: defaultOptionArrayMapper,
   [FormFieldType.CodeInput]: defaultStrNumMapper,
   [FormFieldType.CountryDropdown]: defaultStrNumMapper,
   [FormFieldType.CountrySelect]: defaultStrNumMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
+  [FormFieldType.DatePicker]: v => v.value.toDateString(),
   [FormFieldType.Dropdown]: defaultStrNumMapper,
   [FormFieldType.DropdownNumber]: defaultStrNumMapper,
   [FormFieldType.FormattedDatePicker]: defaultStrNumMapper,
+  [FormFieldType.FormFieldGroup]: () => '',
+  [FormFieldType.FormFieldRepeatGroup]: () => '',
+  [FormFieldType.FormFieldRepeatSection]: () => '',
+  [FormFieldType.FormSection]: () => '',
+  [FormFieldType.FormText]: () => '',
   [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
+  [FormFieldType.MultiSelect]: defaultOptionArrayMapper,
+  [FormFieldType.MultiInput]: () => '',
+  [FormFieldType.NumberInput]: defaultStrNumMapper,
   [FormFieldType.NumberSelect]: defaultOptionMapper,
   [FormFieldType.OptionGroup]: defaultOptionMapper,
   [FormFieldType.RadioGroup]: defaultOptionMapper,
@@ -92,58 +106,28 @@ const defaultReadOnlyMappers: {
   [FormFieldType.Toggle]: defaultBooleanMapper,
   [FormFieldType.YesNoOptionGroup]: defaultBooleanMapper,
   [FormFieldType.YesNoRadioGroup]: defaultBooleanMapper,
-  [FormFieldType.FormText]: () => '',
-  [FormFieldType.FormFieldGroup]: () => '',
-  [FormFieldType.FormSection]: () => '',
-  [FormFieldType.FormFieldRepeatGroup]: () => '',
-  [FormFieldType.FormFieldRepeatSection]: () => '',
 }
 
 /*
  * Styled components
  */
 
-export const FormFieldRowWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-  flex-shrink: 0;
-
-  @media (max-width: 768px) {
-    flex-wrap: wrap;
-  }
-
-  & > * {
-    margin-left: 4px;
-    margin-right: 4px;
-
-    &:first-child {
-      margin-left: 0;
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-`
-
-export const FormFieldWrapper = styled.div<{
-  width?: string
-}>`
+const FormFieldWrapper = createStyled(styled.div`
   position: relative;
-  width: ${({ width }) => width || '100%'};
+  width: ${({ width }: { width?: string }) => width || '100%'};
 
-  @media (max-width: 768px) {
-    width: 100% !important;
-    margin-top: 12px;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+  @media ${MediaQuery.Mobile} {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
 
     &:first-of-type {
       margin-top: 0;
     }
   }
-`
+`)
+
+const FieldItemWrapper = createStyled('div')
 
 /*
  * Render field function
@@ -153,7 +137,7 @@ type FieldItemReadOnlyProps<FormData> = Omit<
   FieldType<FormData>,
   'onChange' | 'showValidation' | 'formReadOnly'
 > & {
-  field: SingleFormField<FormData>
+  field: SingleFormField<FormData> | MultiInputField<FormData>
   width?: number
 }
 
@@ -164,38 +148,58 @@ export const FieldItemReadOnly = <FormData extends {}>(
   const translate = getTranslation(language)
 
   const theme = React.useContext(getThemeContext())
-  const getRowStyle = createGetStyle(theme, 'row')(props.style?.row || {})
-  const getFieldStyle = createGetStyle(
-    theme,
-    'fieldReadOnly',
-  )(props.style?.fieldReadOnly || {})
+  const getRowStyle = useCSSStyles(theme, 'row')({})
+  const getFieldStyle = useCSSStyles(theme, 'fieldReadOnly')({})
 
   const readOnlyMapper =
-    props.field.readOnlyMapper || defaultReadOnlyMappers[props.field.type]
+    props.field.type !== FormFieldType.MultiInput &&
+    (props.field.readOnlyMapper || defaultReadOnlyMappers[props.field.type])
 
   return !props.field.isVisible || props.field.isVisible(props.data) ? (
     <FormFieldWrapper
-      className="form-field"
-      style={{ ...getRowStyle('item'), ...getRowStyle('itemReadOnly') }}
+      key={`field-item-${props.fieldIndex}`}
+      className="form-field field-readonly"
+      cssStyles={getRowStyle('item')}
+      readOnly={true}
       width={`${isNaN(props.width) ? 100 : props.width}%`}
     >
-      <div style={getFieldStyle('wrapper')}>
+      <FieldItemWrapper cssStyles={getFieldStyle('wrapper')}>
         {props.field.label && (
           <P
-            style={getFieldStyle('label')}
+            cssStyles={getFieldStyle('label')}
             label={props.field.label.label}
             data={props.field.label.labelData}
           />
         )}
-        <P
-          style={{ ...getFieldStyle('item') }}
-          label={readOnlyMapper({
-            ...props.field,
-            value: props.field.lens.get(props.data),
-            translate,
-          } as any)}
-        />
-      </div>
+        {props.field.type === FormFieldType.MultiInput ? (
+          props.field.fields.map((fieldItem, fieldItemIndex) => {
+            const readOnlyItemMapper =
+              fieldItem.readOnlyMapper ||
+              defaultReadOnlyMappers[props.field.type]
+
+            return (
+              <P
+                key={`field-item-${fieldItemIndex}`}
+                cssStyles={getFieldStyle('item')}
+                label={readOnlyItemMapper({
+                  ...fieldItem,
+                  value: fieldItem.lens.get(props.data),
+                  translate,
+                } as any)}
+              />
+            )
+          })
+        ) : (
+          <P
+            cssStyles={getFieldStyle('item')}
+            label={readOnlyMapper({
+              ...props.field,
+              value: props.field.lens.get(props.data),
+              translate,
+            } as any)}
+          />
+        )}
+      </FieldItemWrapper>
     </FormFieldWrapper>
   ) : (
     <></>

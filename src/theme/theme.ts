@@ -1,13 +1,11 @@
 import * as React from 'react'
-import { CSSProperties } from 'styled-components'
+import { CSSProperties } from 'frr-web/lib/theme/theme'
 import { keys } from 'frr-util/lib/util'
 
 export type FormTheme = {
   row: {
     wrapper: CSSProperties
-    wrapperReadOnly: CSSProperties
     item: CSSProperties
-    itemReadOnly: CSSProperties
   }
   group: {
     title: CSSProperties
@@ -16,9 +14,7 @@ export type FormTheme = {
   }
   section: {
     title: CSSProperties
-    titleReadOnly: CSSProperties
     wrapper: CSSProperties
-    wrapperReadOnly: CSSProperties
     description: CSSProperties
   }
   sectionRight: {
@@ -30,6 +26,10 @@ export type FormTheme = {
     wrapper: CSSProperties
     content: CSSProperties
     buttonContainer: CSSProperties
+  }
+  fieldMultiInput: {
+    wrapper: CSSProperties
+    item: CSSProperties
   }
   fieldReadOnly: {
     wrapper: CSSProperties
@@ -47,9 +47,7 @@ export type FormTheme = {
 export const defaultTheme: FormTheme = {
   section: {
     title: {},
-    titleReadOnly: {},
     wrapper: {},
-    wrapperReadOnly: {},
     description: {},
   },
   sectionRight: {
@@ -59,9 +57,7 @@ export const defaultTheme: FormTheme = {
   },
   row: {
     wrapper: {},
-    wrapperReadOnly: {},
     item: {},
-    itemReadOnly: {},
   },
   group: {
     title: {},
@@ -72,6 +68,10 @@ export const defaultTheme: FormTheme = {
     wrapper: {},
     content: {},
     buttonContainer: {},
+  },
+  fieldMultiInput: {
+    wrapper: {},
+    item: {},
   },
   fieldReadOnly: {
     wrapper: {},

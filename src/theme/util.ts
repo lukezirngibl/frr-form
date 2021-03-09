@@ -1,13 +1,5 @@
 import { FormTheme } from './theme'
+import { getUseInlineStyle, getUseCSSStyles } from 'frr-web/lib/theme/util'
 
-export const createGetStyle = <C extends keyof FormTheme>(
-  theme: FormTheme,
-  componentKey: C,
-) => (override?: Partial<FormTheme[C]>) => <K extends keyof FormTheme[C]>(
-  elementKey: K,
-): FormTheme[C][K] => {
-  return {
-    ...theme[componentKey][elementKey],
-    ...(override && override[elementKey] ? override[elementKey] : {}),
-  }
-}
+export const useInlineStyle = getUseInlineStyle<FormTheme>()
+export const useCSSStyles = getUseCSSStyles<FormTheme>()
