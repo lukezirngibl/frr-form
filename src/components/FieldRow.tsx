@@ -54,7 +54,7 @@ export const FieldRow = <FormData extends {}>({
     <FieldRowWrapper
       key={`row-${fieldIndex}`}
       cssStyles={getRowStyle('wrapper')}
-      read-only={formReadOnly}
+      readOnly={formReadOnly}
     >
       {field.map((fieldItem, fieldItemIndex) =>
         formReadOnly ? (

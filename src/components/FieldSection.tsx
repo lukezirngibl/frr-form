@@ -17,25 +17,21 @@ import {
   FormFieldType,
   FormSection,
 } from './types'
+import { MediaQuery } from 'frr-web/lib/theme/theme'
 
-export const FormSectionWrapper = createStyled(styled.div`
-  display: flex;
-  margin: 16px 0 8px 0;
-`)
+export const FormSectionWrapper = createStyled('div')
 
 export const MainSectionWrapper = styled.div`
   flex-grow: 1;
 `
 
-export const RightSectionWrapper = styled.div`
-  width: auto;
-`
+export const RightSectionWrapper = createStyled('div')
 
-const EditLink = styled.a`
+const EditLink = createStyled(styled.a`
   display: flex;
   cursor: pointer;
-`
-const EditIcon = styled.span`
+`)
+const EditIcon = createStyled(styled.span`
   height: 20px;
   width: 20px;
 
@@ -47,6 +43,12 @@ const EditIcon = styled.span`
     polygon {
       fill: currentColor;
     }
+  }
+`)
+
+const EditText = styled.span`
+  @media ${MediaQuery.Mobile} {
+    display: none;
   }
 `
 
@@ -66,10 +68,7 @@ export const FieldSection = <FormData extends {}>({
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
   const getSectionStyle = useCSSStyles(theme, 'section')(style?.section || {})
-  const getSectionRightStyle = useInlineStyle(
-    theme,
-    'sectionRight',
-  )(style?.section || {})
+  const getSectionRightStyle = useCSSStyles(theme, 'sectionRight')({})
 
   // Translation
   const language = React.useContext(getLanguageContext())
@@ -98,7 +97,7 @@ export const FieldSection = <FormData extends {}>({
       style={{
         ...(fieldSection.style?.wrapper || {}),
       }}
-      read-only={formReadOnly}
+      readOnly={formReadOnly}
       cssStyles={getSectionStyle('wrapper')}
     >
       <MainSectionWrapper>
@@ -149,22 +148,22 @@ export const FieldSection = <FormData extends {}>({
           )
         })}
       </MainSectionWrapper>
-      <RightSectionWrapper style={getSectionRightStyle('wrapper')}>
+      <RightSectionWrapper cssStyles={getSectionRightStyle('wrapper')}>
         {!!fieldSection.onEdit && (
           <EditLink
             onClick={() => {
               console.log('Go to tab', fieldSection.title)
               fieldSection.onEdit()
             }}
-            style={getSectionRightStyle('editLink')}
+            cssStyles={getSectionRightStyle('editLink')}
           >
             {editIcon.svg && (
               <EditIcon
                 dangerouslySetInnerHTML={{ __html: editIcon.svg }}
-                style={getSectionRightStyle('editIcon')}
+                cssStyles={getSectionRightStyle('editIcon')}
               />
             )}
-            {translate('edit')}
+            <EditText>{translate('edit')}</EditText>
           </EditLink>
         )}
       </RightSectionWrapper>

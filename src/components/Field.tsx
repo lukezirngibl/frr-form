@@ -23,10 +23,10 @@ export const Field = <FormData extends {}>({
 }: FieldProps<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getRowStyle = useCSSStyles(theme, 'row')(style?.row || {})
+  const getRowStyle = useCSSStyles(theme, 'row')({})
 
   const commonFieldProps = { data, style }
-
+  
   return Array.isArray(field) ? (
     <FieldRow
       field={field as FormFieldRow<FormData>}
@@ -39,7 +39,8 @@ export const Field = <FormData extends {}>({
   ) : (
     <FieldRowWrapper
       cssStyles={getRowStyle('wrapper')}
-      read-only={formReadOnly}
+      className="form-row-wrapper"
+      readOnly={formReadOnly}
     >
       {formReadOnly ? (
         <FieldItemReadOnly

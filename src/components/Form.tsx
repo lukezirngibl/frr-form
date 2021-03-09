@@ -134,10 +134,12 @@ export const Form = <FormData extends {}>({
     }
   }
 
+  console.log('BUTTONS', buttons)
+
   return !isVisible || isVisible(data) ? (
     <FormWrapper
       style={getFormStyle('wrapper')}
-      className={readOnly ? 'read-only' : ''}
+      className={readOnly ? 'readonly' : ''}
     >
       {renderTopChildren && renderTopChildren(data)}
 
@@ -160,6 +162,7 @@ export const Form = <FormData extends {}>({
 
       {renderBottomChildren && renderBottomChildren(data)}
 
+      
       {buttons && (
         <ButtonContainer style={getFormStyle('buttonContainer')}>
           {buttons.map((b, k) => (

@@ -5,7 +5,7 @@ import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
 import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
-import { useCSSStyles, useInlineStyle } from '../theme/util'
+import { useCSSStyles } from '../theme/util'
 import {
   fieldMap,
   FieldType,
@@ -13,6 +13,7 @@ import {
   MultiInputField,
   SingleFormField,
 } from './types'
+import { MediaQuery } from 'frr-web/lib/theme/theme'
 
 /*
  * Value mapper
@@ -111,21 +112,22 @@ const defaultReadOnlyMappers: {
  * Styled components
  */
 
-export const FormFieldWrapper = createStyled(styled.div`
+const FormFieldWrapper = createStyled(styled.div`
   position: relative;
-  width: ${({ width }: { width?: string }) => width || '100%'};
+  width: ${({ width }: { width?: string }) => width || '100%'};
 
-  @media (max-width: 768px) {
-    width: 100% !important;
-    margin-top: 12px;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+  @media ${MediaQuery.Mobile} {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
 
     &:first-of-type {
       margin-top: 0;
     }
   }
 `)
+
+const FieldItemWrapper = createStyled('div')
 
 /*
  * Render field function
@@ -146,11 +148,8 @@ export const FieldItemReadOnly = <FormData extends {}>(
   const translate = getTranslation(language)
 
   const theme = React.useContext(getThemeContext())
-  const getRowStyle = useCSSStyles(theme, 'row')(props.style?.row || {})
-  const getFieldStyle = useInlineStyle(
-    theme,
-    'fieldReadOnly',
-  )(props.style?.fieldReadOnly || {})
+  const getRowStyle = useCSSStyles(theme, 'row')({})
+  const getFieldStyle = useCSSStyles(theme, 'fieldReadOnly')({})
 
   const readOnlyMapper =
     props.field.type !== FormFieldType.MultiInput &&
@@ -158,28 +157,30 @@ export const FieldItemReadOnly = <FormData extends {}>(
 
   return !props.field.isVisible || props.field.isVisible(props.data) ? (
     <FormFieldWrapper
-      className="form-field"
+      key={`field-item-${props.fieldIndex}`}
+      className="form-field field-readonly"
       cssStyles={getRowStyle('item')}
-      read-only={true}
+      readOnly={true}
       width={`${isNaN(props.width) ? 100 : props.width}%`}
     >
-      <div style={getFieldStyle('wrapper')}>
+      <FieldItemWrapper cssStyles={getFieldStyle('wrapper')}>
         {props.field.label && (
           <P
-            style={getFieldStyle('label')}
+            cssStyles={getFieldStyle('label')}
             label={props.field.label.label}
             data={props.field.label.labelData}
           />
         )}
         {props.field.type === FormFieldType.MultiInput ? (
-          props.field.fields.map(fieldItem => {
+          props.field.fields.map((fieldItem, fieldItemIndex) => {
             const readOnlyItemMapper =
               fieldItem.readOnlyMapper ||
               defaultReadOnlyMappers[props.field.type]
 
             return (
               <P
-                style={{ ...getFieldStyle('item') }}
+                key={`field-item-${fieldItemIndex}`}
+                cssStyles={getFieldStyle('item')}
                 label={readOnlyItemMapper({
                   ...fieldItem,
                   value: fieldItem.lens.get(props.data),
@@ -190,7 +191,7 @@ export const FieldItemReadOnly = <FormData extends {}>(
           })
         ) : (
           <P
-            style={{ ...getFieldStyle('item') }}
+            cssStyles={getFieldStyle('item')}
             label={readOnlyMapper({
               ...props.field,
               value: props.field.lens.get(props.data),
@@ -198,7 +199,7 @@ export const FieldItemReadOnly = <FormData extends {}>(
             } as any)}
           />
         )}
-      </div>
+      </FieldItemWrapper>
     </FormFieldWrapper>
   ) : (
     <></>
