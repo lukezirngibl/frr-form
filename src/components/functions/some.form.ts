@@ -7,17 +7,19 @@ import {
   MultiInputField,
 } from '../types'
 
-type Fn<T> = (i: SingleFormField<T> | MultiInputField<T>) => boolean
+type Fn<T> = (i: SingleFormField<T>) => boolean
 
 const processFormFieldRow = <T>(
-  a: Array<SingleFormField<T> | MultiInputField<T>>,
+  a: Array<SingleFormField<T>>,
   fn: Fn<T>,
-): boolean => a.some(j => fn(j))
+): boolean => a.some((j) => fn(j))
 
 const processFormFieldGroup = <T>(g: FormFieldGroup<T>, fn: Fn<T>): boolean =>
-  g.fields.some(f => {
+  g.fields.some((f) => {
     if (Array.isArray(f)) {
       return processFormFieldRow(f, fn)
+    } else if (f.type === FormFieldType.MultiInput) {
+      return processFormFieldRow(f.fields, fn)
     } else {
       return fn(f)
     }
@@ -27,11 +29,13 @@ const processFormSectionFields = <T>(
   fields: SectionFields<T>,
   fn: Fn<T>,
 ): boolean =>
-  fields.some(f => {
+  fields.some((f) => {
     if (Array.isArray(f)) {
       return processFormFieldRow(f, fn)
     } else if (f.type === FormFieldType.FormFieldGroup) {
       return processFormFieldGroup(f, fn)
+    } else if (f.type === FormFieldType.MultiInput) {
+      return processFormFieldRow(f.fields, fn)
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection
@@ -53,6 +57,8 @@ export const someFormFields = <T>(
       return processFormFieldGroup(f, fn)
     } else if (f.type === FormFieldType.FormSection) {
       return processFormSectionFields(f.fields, fn)
+    } else if (f.type === FormFieldType.MultiInput) {
+      return processFormFieldRow(f.fields, fn)
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection

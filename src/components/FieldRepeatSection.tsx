@@ -1,15 +1,10 @@
 import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
-import { createFakeFormLens, processRepeatSection } from '../util'
+import { processRepeatSection } from '../util'
 import { FieldSection } from './FieldSection'
-import {
-  FieldType,
-  FormFieldRepeatSection,
-  FormFieldType,
-  FormSection,
-} from './types'
+import { CommonThreadProps, FormFieldRepeatSection } from './types'
 
-type FieldRepeatSection<FormData> = FieldType<FormData> & {
+type FieldRepeatSection<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldRepeatSection<FormData>
 }
 // ------------------------------------

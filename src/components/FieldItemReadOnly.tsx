@@ -8,7 +8,7 @@ import { getThemeContext } from '../theme/theme'
 import { useCSSStyles } from '../theme/util'
 import {
   fieldMap,
-  FieldType,
+  CommonThreadProps,
   FormFieldType,
   MultiInputField,
   SingleFormField,
@@ -46,11 +46,11 @@ const defaultOptionArrayMapper = (
 ): string =>
   Array.isArray(params.value)
     ? params.value
-        .map(val =>
+        .map((val) =>
           params.translate(
-            findFirst(params.options, o => o.value === val).fold(
+            findFirst(params.options, (o) => o.value === val).fold(
               'null',
-              o => o.label,
+              (o) => o.label,
             ),
           ),
         )
@@ -62,9 +62,9 @@ const defaultOptionMapper = (
     options: Array<{ label: string; value: string }>
   },
 ): string =>
-  findFirst(params.options, o => o.value === params.value).fold(
+  findFirst(params.options, (o) => o.value === params.value).fold(
     '',
-    o => o.label,
+    (o) => o.label,
   )
 
 const defaultReadOnlyMappers: {
@@ -80,7 +80,7 @@ const defaultReadOnlyMappers: {
   [FormFieldType.CountryDropdown]: defaultStrNumMapper,
   [FormFieldType.CountrySelect]: defaultStrNumMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
-  [FormFieldType.DatePicker]: v => v.value.toDateString(),
+  [FormFieldType.DatePicker]: (v) => v.value.toDateString(),
   [FormFieldType.Dropdown]: defaultStrNumMapper,
   [FormFieldType.DropdownNumber]: defaultStrNumMapper,
   [FormFieldType.FormattedDatePicker]: defaultStrNumMapper,
@@ -134,7 +134,7 @@ const FieldItemWrapper = createStyled('div')
  */
 
 type FieldItemReadOnlyProps<FormData> = Omit<
-  FieldType<FormData>,
+  CommonThreadProps<FormData>,
   'onChange' | 'showValidation' | 'formReadOnly'
 > & {
   field: SingleFormField<FormData> | MultiInputField<FormData>

@@ -8,15 +8,15 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
-import { FormField } from './FormField'
 import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
-import {
-  DisplayType,
-  FormField as FormFieldProps,
-  FormFieldType,
-  SingleFormField,
-} from './types'
+import { DisplayType, FormFieldType, SingleFormField, FormField } from './types'
+import { FieldItem } from './FieldItem'
+import { FieldGroup } from './FieldGroup'
+import { FieldRepeatGroup } from './FieldRepeatGroup'
+import { FieldRepeatSection } from './FieldRepeatSection'
+import { FieldMultiInput } from './FieldMultiInput'
+import { FieldSection } from './FieldSection'
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -41,7 +41,7 @@ export type Props<FormData> = {
   style?: Partial<FormTheme>
   data: FormData
   display?: DisplayType
-  formFields: Array<FormFieldProps<FormData>>
+  formFields: Array<FormField<FormData>>
   onSubmit?: (params: { dispatch: any; formState: FormData }) => void
   onInvalidSubmit?: () => void
   onChange: (formState: FormData) => void
@@ -134,6 +134,92 @@ export const Form = <FormData extends {}>({
     }
   }
 
+  const commonFieldProps = {
+    data,
+    style,
+    showValidation,
+    onChange,
+    formReadOnly: readOnly,
+  }
+
+  const renderField = (field: FormField<FormData>, fieldIndex: number) => {
+    if (Array.isArray(field)) {
+      return field.map((f, i) => (
+        <FieldItem
+          key={`field-section-${fieldIndex}-${i}`}
+          fieldIndex={i}
+          {...commonFieldProps}
+          field={f}
+        />
+      ))
+    }
+
+    switch (field.type) {
+      case FormFieldType.FormFieldGroup: {
+        return (
+          <FieldGroup
+            key={`field-group-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+      }
+
+      case FormFieldType.FormFieldRepeatGroup: {
+        return (
+          <FieldRepeatGroup
+            key={`field-repeat-group-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+      }
+
+      case FormFieldType.FormFieldRepeatSection: {
+        return (
+          <FieldRepeatSection
+            key={`field-repeat-section-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+      }
+
+      case FormFieldType.MultiInput:
+        return (
+          <FieldMultiInput
+            key={`field-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+
+      case FormFieldType.FormSection:
+        return (
+          <FieldSection
+            key={`field-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+
+      default:
+        return (
+          <FieldItem
+            key={`field-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+    }
+  }
+
   return !isVisible || isVisible(data) ? (
     <FormWrapper
       style={getFormStyle('wrapper')}
@@ -144,23 +230,11 @@ export const Form = <FormData extends {}>({
       <FormContent style={getFormStyle('content')}>
         {/* formFields.map(renderFormField) */}
 
-        {formFields.map((field, fieldIndex) => (
-          <FormField
-            key={`field-${fieldIndex}`}
-            data={data}
-            field={field}
-            fieldIndex={fieldIndex}
-            formReadOnly={readOnly}
-            onChange={onChange}
-            showValidation={showValidation}
-            style={style}
-          />
-        ))}
+        {formFields.map(renderField)}
       </FormContent>
 
       {renderBottomChildren && renderBottomChildren(data)}
 
-      
       {buttons && (
         <ButtonContainer style={getFormStyle('buttonContainer')}>
           {buttons.map((b, k) => (
@@ -170,9 +244,9 @@ export const Form = <FormData extends {}>({
               dataTestId={
                 b.type === ButtonType.Primary
                   ? 'form:primary'
-                  : `form:${(
-                      b.type || ButtonType.Secondary
-                    ).toLowerCase()}:${k + 1}`
+                  : `form:${(b.type || ButtonType.Secondary).toLowerCase()}:${
+                      k + 1
+                    }`
               }
               disabled={b.isDisabled ? b.isDisabled(data) : false}
               onClick={() => b.onClick({ submit, dispatch })}

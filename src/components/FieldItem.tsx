@@ -24,16 +24,18 @@ import { Toggle } from 'frr-web/lib/components/Toggle'
 import { YesNoOptionGroup } from 'frr-web/lib/components/YesNoOptionGroup'
 import { YesNoRadioGroup } from 'frr-web/lib/components/YesNoRadioGroup'
 import React, { useEffect } from 'react'
+import { createStyled } from 'frr-web/lib/theme/util'
 import styled from 'styled-components'
 import { getThemeContext } from '../theme/theme'
-import { useInlineStyle } from '../theme/util'
+import { useInlineStyle, useCSSStyles } from '../theme/util'
 import { getComputeFieldError } from './functions/computeFieldError.form'
 import {
-  FieldType,
+  CommonThreadProps,
   FormFieldType,
   MultiInputField,
   SingleFormField,
 } from './types'
+import { FieldItemReadOnly } from './FieldItemReadOnly'
 
 /*
  * Styled components
@@ -63,20 +65,20 @@ export const FormFieldWrapper = styled.div<{
  * Render field function
  */
 
-type FieldItemProps<FormData> = Omit<FieldType<FormData>, 'formReadOnly'> & {
-  field: SingleFormField<FormData> | MultiInputField<FormData>
+type FieldItemProps<FormData> = Omit<
+  CommonThreadProps<FormData>,
+  'formReadOnly'
+> & {
+  field: SingleFormField<FormData>
   width?: number
 }
 
 let scrolled = false
 
-export const FieldItem = <FormData extends {}>(
-  props: FieldItemProps<FormData>,
-) => {
+export const Field = <FormData extends {}>(props: FieldItemProps<FormData>) => {
   /* Styles */
   const theme = React.useContext(getThemeContext())
   const getRowStyle = useInlineStyle(theme, 'row')(props.style?.row || {})
-  const getFieldMultiInputStyle = useInlineStyle(theme, 'fieldMultiInput')({})
 
   /* Error handling */
   const computeFieldError = getComputeFieldError(props.data)
@@ -105,7 +107,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
           dataTestId={dataTestId}
@@ -122,7 +124,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data) || ''}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
           dataTestId={dataTestId}
@@ -139,7 +141,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           label={label}
           dataTestId={dataTestId}
         />
@@ -155,7 +157,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           label={label}
           dataTestId={dataTestId}
         />
@@ -171,7 +173,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           label={label}
           dataTestId={dataTestId}
         />
@@ -206,7 +208,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           // error={hasError}
           label={label}
         />
@@ -222,7 +224,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
         />
@@ -238,7 +240,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           label={label}
           dataTestId={dataTestId}
           error={hasError}
@@ -255,7 +257,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           label={label}
           dataTestId={dataTestId}
           error={hasError}
@@ -272,7 +274,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           label={label}
           error={hasError}
           dataTestId={dataTestId}
@@ -289,7 +291,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           label={label}
           error={hasError}
           dataTestId={dataTestId}
@@ -306,7 +308,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
         />
@@ -322,7 +324,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           label={label}
         />
       )
@@ -337,7 +339,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
         />
@@ -353,7 +355,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
         />
@@ -369,7 +371,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           // error={hasError}
           label={label}
         />
@@ -423,7 +425,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
         />
@@ -439,7 +441,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
         />
@@ -455,7 +457,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
         />
@@ -471,7 +473,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
           dataTestId={dataTestId}
@@ -488,7 +490,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
         />
@@ -504,7 +506,7 @@ export const FieldItem = <FormData extends {}>(
             typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
           }
           value={lens.get(props.data)}
-          onChange={value => props.onChange(lens.set(value)(props.data))}
+          onChange={(value) => props.onChange(lens.set(value)(props.data))}
           error={hasError}
           label={label}
         />
@@ -542,30 +544,6 @@ export const FieldItem = <FormData extends {}>(
 
   /* Render multiple input fields as one input field line  */
 
-  const renderFielMultiInput = (
-    field: MultiInputField<FormData>,
-    fieldIndex: number,
-    onScrollToError: () => void,
-  ) => {
-    return (
-      <>
-        {field.label && <Label {...field.label} />}
-        <div
-          style={getFieldMultiInputStyle('item')}
-          key={`field-mulit-input-${fieldIndex}`}
-        >
-          {field.fields.map((fieldItem, fieldItemIndex) =>
-            renderFieldItemWrapper(
-              fieldItem,
-              `field-${fieldIndex}-${fieldItemIndex}`,
-              onScrollToError,
-            ),
-          )}
-        </div>
-      </>
-    )
-  }
-
   const fieldRef = React.createRef<HTMLDivElement>()
   const onScrollToError = () => {
     scrolled = true
@@ -592,17 +570,71 @@ export const FieldItem = <FormData extends {}>(
         ...(props.field.itemStyle || {}),
       }}
     >
-      {props.field.type === FormFieldType.MultiInput
-        ? renderFielMultiInput(
-            props.field,
-            props.fieldIndex,
-            onScrollToError,
-          )
-        : renderFieldItemWrapper(
-            props.field,
-            props.fieldIndex,
-            onScrollToError,
-          )}
+      {renderFieldItemWrapper(props.field, props.fieldIndex, onScrollToError)}
     </FormFieldWrapper>
+  )
+}
+
+export const FieldRowWrapper = createStyled(styled.div`
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
+
+  & > * {
+    margin-left: 4px;
+    margin-right: 4px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+`)
+
+// ------------------------------------
+export const FieldItem = <FormData extends {}>({
+  data,
+  field,
+  fieldIndex,
+  formReadOnly,
+  onChange,
+  showValidation,
+  style,
+}: CommonThreadProps<FormData> & { field: SingleFormField<FormData> }) => {
+  // Form styles
+  const theme = React.useContext(getThemeContext())
+  const getRowStyle = useCSSStyles(theme, 'row')({})
+
+  const commonFieldProps = { data, style }
+
+  return (
+    <FieldRowWrapper
+      cssStyles={getRowStyle('wrapper')}
+      className="form-row-wrapper"
+      readOnly={formReadOnly}
+    >
+      {formReadOnly ? (
+        <FieldItemReadOnly
+          {...commonFieldProps}
+          field={field as SingleFormField<FormData>}
+          fieldIndex={fieldIndex}
+        />
+      ) : (
+        <Field
+          {...commonFieldProps}
+          field={field as SingleFormField<FormData>}
+          fieldIndex={fieldIndex}
+          onChange={onChange}
+          showValidation={showValidation}
+        />
+      )}
+    </FieldRowWrapper>
   )
 }

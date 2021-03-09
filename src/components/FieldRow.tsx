@@ -3,34 +3,11 @@ import React from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
 import { useCSSStyles } from '../theme/util'
-import { FieldItem } from './FieldItem'
+import { FieldItem, FieldRowWrapper, Field } from './FieldItem'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
-import { FieldType, FormFieldRow } from './types'
+import { CommonThreadProps, FormFieldRow } from './types'
 
-export const FieldRowWrapper = createStyled(styled.div`
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-
-  @media (max-width: 768px) {
-    flex-wrap: wrap;
-  }
-
-  & > * {
-    margin-left: 4px;
-    margin-right: 4px;
-
-    &:first-child {
-      margin-left: 0;
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-`)
-
-type FieldRowProps<FormData> = FieldType<FormData> & {
+type FieldRowProps<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldRow<FormData>
 }
 
@@ -50,7 +27,7 @@ export const FieldRow = <FormData extends {}>({
 
   const commonFieldItemProps = { data, style, width: (1 / field.length) * 100 }
 
-  return field.some(r => !r.isVisible || r.isVisible(data)) ? (
+  return field.some((r) => !r.isVisible || r.isVisible(data)) ? (
     <FieldRowWrapper
       key={`row-${fieldIndex}`}
       cssStyles={getRowStyle('wrapper')}
@@ -65,7 +42,7 @@ export const FieldRow = <FormData extends {}>({
             fieldIndex={fieldItemIndex}
           />
         ) : (
-          <FieldItem
+          <Field
             {...commonFieldItemProps}
             key={`field-item-${fieldItemIndex}`}
             field={fieldItem}

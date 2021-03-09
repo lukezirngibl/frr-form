@@ -2,13 +2,13 @@ import React from 'react'
 import { createFakeFormLens, processRepeatGroup } from '../util'
 import { FieldGroup } from './FieldGroup'
 import {
-  FieldType,
+  CommonThreadProps,
   FormFieldGroup,
   FormFieldRepeatGroup,
   FormFieldType,
 } from './types'
 
-type FieldRepeatGroup<FormData> = FieldType<FormData> & {
+type FieldRepeatGroup<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldRepeatGroup<FormData>
 }
 

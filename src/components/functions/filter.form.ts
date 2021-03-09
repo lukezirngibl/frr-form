@@ -20,15 +20,29 @@ const processFormFieldRow = <T>(
     [],
   )
 
+const processMultiInput = <T>(
+  g: MultiInputField<T>,
+  fn: (i: SingleFormField<T>) => boolean,
+): MultiInputField<T> => ({
+  ...g,
+  fields: g.fields.reduce(
+    (acc: Array<SingleFormField<T>>, j: SingleFormField<T>) =>
+      fn(j) ? [...acc, j] : acc,
+    [],
+  ),
+})
+
 const processFormFieldGroup = <T>(
   g: FormFieldGroup<T>,
-  fn: (i: SingleFormField<T> | MultiInputField<T>) => boolean,
+  fn: (i: SingleFormField<T>) => boolean,
 ): FormFieldGroup<T> => ({
   ...g,
   fields: g.fields.reduce(
     (filteredFields: Array<SingleFieldOrRow<T>>, e: SingleFieldOrRow<T>) => {
       if (Array.isArray(e)) {
         return [...filteredFields, processFormFieldRow(e, fn)]
+      } else if (e.type === FormFieldType.MultiInput) {
+        return [...filteredFields, processMultiInput(e, fn)]
       } else {
         return [...filteredFields, ...(fn(e) ? [e] : [])]
       }
@@ -39,13 +53,15 @@ const processFormFieldGroup = <T>(
 
 const processFormSectionFields = <T>(
   fields: SectionFields<T>,
-  fn: (i: SingleFormField<T> | MultiInputField<T>) => boolean,
+  fn: (i: SingleFormField<T>) => boolean,
 ): SectionFields<T> =>
   fields.reduce((acc: Array<SectionField<T>>, f) => {
     if (Array.isArray(f)) {
       return [...acc, processFormFieldRow(f, fn)]
     } else if (f.type === FormFieldType.FormFieldGroup) {
       return [...acc, processFormFieldGroup(f, fn)]
+    } else if (f.type === FormFieldType.MultiInput) {
+      return [...acc, processMultiInput(f, fn)]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection
@@ -66,13 +82,15 @@ const processFormSection = <T>(
 
 export const filterFormFields = <T>(
   formFields: Array<FormField<T>>,
-  fn: (i: SingleFormField<T> | MultiInputField<T>) => boolean,
+  fn: (i: SingleFormField<T>) => boolean,
 ): Array<FormField<T>> =>
   formFields.reduce((groups: Array<FormField<T>>, f: FormField<T>) => {
     if (Array.isArray(f)) {
       return [...groups, processFormFieldRow(f, fn)]
     } else if (f.type === FormFieldType.FormFieldGroup) {
       return [...groups, processFormFieldGroup(f, fn)]
+    } else if (f.type === FormFieldType.MultiInput) {
+      return [...groups, processMultiInput(f, fn)]
     } else if (f.type === FormFieldType.FormSection) {
       return [...groups, processFormSection(f, fn)]
     } else if (

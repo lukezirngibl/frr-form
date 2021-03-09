@@ -5,20 +5,20 @@ import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { createStyled } from 'frr-web/lib/theme/util'
-import { Field } from './Field'
 import { FieldGroup } from './FieldGroup'
+import { FieldItem } from './FieldItem'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
 import { FieldRepeatSection } from './FieldRepeatSection'
 import {
-  FieldType,
-  FormFieldGroup,
-  FormFieldRepeatGroup,
-  FormFieldRepeatSection,
+  CommonThreadProps,
+  SectionField,
   FormFieldType,
   FormSection,
 } from './types'
 import { MediaQuery } from 'frr-web/lib/theme/theme'
 import { useDispatch } from 'react-redux'
+import { FieldMultiInput } from './FieldMultiInput'
+import { FieldRow } from './FieldRow'
 
 export const FormSectionWrapper = createStyled('div')
 
@@ -53,7 +53,7 @@ const EditText = styled.span`
   }
 `
 
-type FieldSection<FormData> = FieldType<FormData> & {
+type FieldSection<FormData> = CommonThreadProps<FormData> & {
   field: FormSection<FormData>
 }
 
@@ -88,6 +88,77 @@ export const FieldSection = <FormData extends {}>({
     formReadOnly,
   }
 
+  const renderSectionField = (
+    field: SectionField<FormData>,
+    fieldIndex: number,
+  ) => {
+    if (Array.isArray(field)) {
+      return (
+        <FieldRow
+          key={`field-section-${fieldIndex}`}
+          fieldIndex={fieldIndex}
+          {...commonFieldProps}
+          field={field}
+        />
+      )
+    }
+
+    switch (field.type) {
+      case FormFieldType.FormFieldGroup: {
+        return (
+          <FieldGroup
+            key={`field-group-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+      }
+
+      case FormFieldType.FormFieldRepeatGroup: {
+        return (
+          <FieldRepeatGroup
+            key={`field-repeat-group-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+      }
+
+      case FormFieldType.FormFieldRepeatSection: {
+        return (
+          <FieldRepeatSection
+            key={`field-repeat-section-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+      }
+
+      case FormFieldType.MultiInput:
+        return (
+          <FieldMultiInput
+            key={`field-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+
+      default:
+        return (
+          <FieldItem
+            key={`field-${fieldIndex}`}
+            field={field}
+            fieldIndex={fieldIndex}
+            {...commonFieldProps}
+          />
+        )
+    }
+  }
+
   // Render
   return !fieldSection.isVisible || fieldSection.isVisible(data) ? (
     <FormSectionWrapper
@@ -118,43 +189,7 @@ export const FieldSection = <FormData extends {}>({
           />
         )}
 
-        {fieldSection.fields.map((field, fieldIndex) => {
-          const fieldType = !Array.isArray(field) && field.type
-
-          return (
-            (fieldType === FormFieldType.FormFieldGroup && (
-              <FieldGroup
-                key={`field-group-${fieldIndex}`}
-                field={field as FormFieldGroup<FormData>}
-                fieldIndex={fieldIndex}
-                {...commonFieldProps}
-              />
-            )) ||
-            (fieldType === FormFieldType.FormFieldRepeatGroup && (
-              <FieldRepeatGroup
-                key={`field-repeat-group-${fieldIndex}`}
-                field={field as FormFieldRepeatGroup<FormData>}
-                fieldIndex={fieldIndex}
-                {...commonFieldProps}
-              />
-            )) ||
-            (fieldType === FormFieldType.FormFieldRepeatSection && (
-              <FieldRepeatSection
-                key={`field-repeat-section-${fieldIndex}`}
-                field={field as FormFieldRepeatSection<FormData>}
-                fieldIndex={fieldIndex}
-                {...commonFieldProps}
-              />
-            )) || (
-              <Field
-                key={`field-${fieldIndex}`}
-                field={field}
-                fieldIndex={fieldIndex}
-                {...commonFieldProps}
-              />
-            )
-          )
-        })}
+        {fieldSection.fields.map(renderSectionField)}
       </MainSectionWrapper>
       <RightSectionWrapper cssStyles={getSectionRightStyle('wrapper')}>
         {!!fieldSection.onEdit && (

@@ -290,9 +290,7 @@ export const fieldMap = {
   [FormFieldType.DatePicker]: null as DatePickerField<unknown>,
   [FormFieldType.Dropdown]: null as DropdownField<unknown>,
   [FormFieldType.DropdownNumber]: null as DropdownField<unknown>,
-  [FormFieldType.FormattedDatePicker]: null as FormattedDatePickerField<
-    unknown
-  >,
+  [FormFieldType.FormattedDatePicker]: null as FormattedDatePickerField<unknown>,
   [FormFieldType.FormFieldGroup]: null,
   [FormFieldType.FormFieldRepeatGroup]: null,
   [FormFieldType.FormFieldRepeatSection]: null,
@@ -356,23 +354,26 @@ export type MultiInputField<FormData> = {
 
 export type FormFieldRow<FormData> = Array<SingleFormField<FormData>>
 
-export type Fields<FormData> = Array<
-  SingleFormField<FormData> | FormFieldRow<FormData>
->
+// export type Fields<FormData> = Array<
+//   SingleFormField<FormData> | FormFieldRow<FormData>
+// >
 
 export type SingleFieldOrRow<FormData> =
   | SingleFormField<FormData>
   | MultiInputField<FormData>
   | FormFieldRow<FormData>
 
-export type GroupFields<FormData> = Array<SingleFieldOrRow<FormData>>
+export type GroupField<FormData> =
+  | MultiInputField<FormData>
+  | SingleFormField<FormData>
+  | FormFieldRow<FormData>
 
 export type FormFieldGroup<FormData> = {
   title?: string
   description?: string
   style?: Partial<FormTheme['group']>
   type: FormFieldType.FormFieldGroup
-  fields: GroupFields<FormData>
+  fields: Array<GroupField<FormData>>
   isVisible?: (formData: FormData) => boolean
 }
 
@@ -385,16 +386,8 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-export type FormField<FormData> =
-  | SingleFormField<FormData>
-  | MultiInputField<FormData>
-  | FormFieldRow<FormData>
-  | FormFieldGroup<FormData>
-  | FormSection<FormData>
-  | FormFieldRepeatGroup<FormData>
-  | FormFieldRepeatSection<FormData>
-
 export type SectionField<FormData> =
+  | MultiInputField<FormData>
   | SingleFormField<FormData>
   | FormFieldRow<FormData>
   | FormFieldGroup<FormData>
@@ -423,9 +416,17 @@ export type FormSection<FormData> = {
   onEdit?: (params: { dispatch: any }) => void
 }
 
-export type FieldType<FormData> = {
+export type FormField<FormData> =
+  | SingleFormField<FormData>
+  | MultiInputField<FormData>
+  | FormFieldRow<FormData>
+  | FormFieldGroup<FormData>
+  | FormSection<FormData>
+  | FormFieldRepeatGroup<FormData>
+  | FormFieldRepeatSection<FormData>
+
+export type CommonThreadProps<FormData> = {
   data: FormData
-  field: FormField<FormData>
   fieldIndex: number
   formReadOnly: boolean
   onChange: (formState: FormData) => void
