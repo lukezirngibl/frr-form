@@ -114,6 +114,17 @@ export const FieldSection = <FormData extends {}>({
             label={fieldSection.title}
           />
         )}
+        {fieldSection.description && (
+          <P
+            style={{
+              ...getSectionStyle('description'),
+              ...(fieldSection.style
+                ? fieldSection.style.description || {}
+                : {}),
+            }}
+            label={fieldSection.description}
+          />
+        )}
 
         {fieldSection.fields.map((field, fieldIndex) => {
           const fieldType = !Array.isArray(field) && field.type
