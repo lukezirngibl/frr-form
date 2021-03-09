@@ -3,7 +3,8 @@ import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
-import { createGetStyle } from '../theme/util'
+import { useCSSStyles, useInlineStyle } from '../theme/util'
+import { createStyled } from 'frr-web/lib/theme/util'
 import { Field } from './Field'
 import { FieldGroup } from './FieldGroup'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
@@ -16,26 +17,21 @@ import {
   FormFieldType,
   FormSection,
 } from './types'
-import { renderHtml } from './utils/renderHtml'
+import { MediaQuery } from 'frr-web/lib/theme/theme'
 
-export const FormSectionWrapper = styled.div`
-  display: flex;
-  margin: 16px 0 8px 0;
-`
+export const FormSectionWrapper = createStyled('div')
 
 export const MainSectionWrapper = styled.div`
   flex-grow: 1;
 `
 
-export const RightSectionWrapper = styled.div`
-  width: auto;
-`
+export const RightSectionWrapper = createStyled('div')
 
-const EditLink = styled.a`
+const EditLink = createStyled(styled.a`
   display: flex;
   cursor: pointer;
-`
-const EditIcon = styled.span`
+`)
+const EditIcon = createStyled(styled.span`
   height: 20px;
   width: 20px;
 
@@ -47,6 +43,12 @@ const EditIcon = styled.span`
     polygon {
       fill: currentColor;
     }
+  }
+`)
+
+const EditText = styled.span`
+  @media ${MediaQuery.Mobile} {
+    display: none;
   }
 `
 
@@ -65,18 +67,15 @@ export const FieldSection = <FormData extends {}>({
 }: FieldSection<FormData>) => {
   // Form styles
   const theme = React.useContext(getThemeContext()) as FormTheme
-  const getSectionStyle = createGetStyle(theme, 'section')(style?.section || {})
-  const getSectionRightStyle = createGetStyle(
-    theme,
-    'sectionRight',
-  )(style?.section || {})
+  const getSectionStyle = useCSSStyles(theme, 'section')(style?.section || {})
+  const getSectionRightStyle = useCSSStyles(theme, 'sectionRight')({})
 
   // Translation
   const language = React.useContext(getLanguageContext())
   const translate = getTranslation(language)
 
   // Icon
-  const getIcon = createGetStyle(theme, 'icon')({})
+  const getIcon = useInlineStyle(theme, 'icon')({})
   const editIcon = getIcon('edit')
 
   const commonFieldProps = {
@@ -96,19 +95,17 @@ export const FieldSection = <FormData extends {}>({
           : `section-${fieldSectionIndex}`
       }
       style={{
-        ...getSectionStyle('wrapper'),
-        ...(formReadOnly ? getSectionStyle('wrapperReadOnly') : {}),
-        ...(fieldSection.style ? fieldSection.style.wrapper || {} : {}),
+        ...(fieldSection.style?.wrapper || {}),
       }}
+      readOnly={formReadOnly}
+      cssStyles={getSectionStyle('wrapper')}
     >
       <MainSectionWrapper>
         {fieldSection.title && (
           <P
-            style={{
-              ...getSectionStyle('title'),
-              ...(formReadOnly ? getSectionStyle('titleReadOnly') : {}),
-              ...(fieldSection.style ? fieldSection.style.title || {} : {}),
-            }}
+            style={fieldSection.style?.title || {}}
+            cssStyles={getSectionStyle('title')}
+            readOnly={formReadOnly}
             label={fieldSection.title}
           />
         )}
@@ -151,22 +148,22 @@ export const FieldSection = <FormData extends {}>({
           )
         })}
       </MainSectionWrapper>
-      <RightSectionWrapper style={getSectionRightStyle('wrapper')}>
+      <RightSectionWrapper cssStyles={getSectionRightStyle('wrapper')}>
         {!!fieldSection.onEdit && (
           <EditLink
             onClick={() => {
               console.log('Go to tab', fieldSection.title)
               fieldSection.onEdit()
             }}
-            style={getSectionRightStyle('editLink')}
+            cssStyles={getSectionRightStyle('editLink')}
           >
             {editIcon.svg && (
               <EditIcon
                 dangerouslySetInnerHTML={{ __html: editIcon.svg }}
-                style={getSectionRightStyle('editIcon')}
+                cssStyles={getSectionRightStyle('editIcon')}
               />
             )}
-            {translate('edit')}
+            <EditText>{translate('edit')}</EditText>
           </EditLink>
         )}
       </RightSectionWrapper>

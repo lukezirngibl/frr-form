@@ -4,12 +4,13 @@ import {
   FormFieldGroup,
   SectionFields,
   SingleFormField,
+  MultiInputField,
 } from '../types'
 
-type Fn<T> = (i: SingleFormField<T>) => boolean
+type Fn<T> = (i: SingleFormField<T> | MultiInputField<T>) => boolean
 
 const processFormFieldRow = <T>(
-  a: Array<SingleFormField<T>>,
+  a: Array<SingleFormField<T> | MultiInputField<T>>,
   fn: Fn<T>,
 ): boolean => a.some(j => fn(j))
 

@@ -8,6 +8,7 @@ import { Props as DropdownProps } from 'frr-web/lib/components/Dropdown'
 import { Props as DropdownNumberProps } from 'frr-web/lib/components/DropdownNumber'
 import { Props as FormattedDatePickerProps } from 'frr-web/lib/components/FormattedDatePicker'
 import { Props as InputWithDropdownProps } from 'frr-web/lib/components/InputWithDropdown'
+import { LabelProps } from 'frr-web/lib/components/Label'
 import { Props as MultiSelectProps } from 'frr-web/lib/components/MultiSelect'
 import { Props as NumberInputProps } from 'frr-web/lib/components/NumberInput'
 import { Props as OptionGroupProps } from 'frr-web/lib/components/OptionGroup'
@@ -16,10 +17,10 @@ import { Props as SelectProps } from 'frr-web/lib/components/Select'
 import { Props as SingleCheckboxProps } from 'frr-web/lib/components/SingleCheckbox'
 import { Props as SliderProps } from 'frr-web/lib/components/Slider'
 import { Props as SwithProps } from 'frr-web/lib/components/Switch'
+import { Props as TextProps } from 'frr-web/lib/components/Text'
 import { TextAreaProps } from 'frr-web/lib/components/TextArea'
 import { Props as TextInputProps } from 'frr-web/lib/components/TextInput'
 import { Props as TextNumberInputProps } from 'frr-web/lib/components/TextNumberInput'
-import { Text, Props as TextProps } from 'frr-web/lib/components/Text'
 import { Props as ToggleProps } from 'frr-web/lib/components/Toggle'
 import { Props as YesNoOptionGroupProps } from 'frr-web/lib/components/YesNoOptionGroup'
 import { Props as YesNoRadioGroupProps } from 'frr-web/lib/components/YesNoRadioGroup'
@@ -29,37 +30,37 @@ import { FormTheme } from '../theme/theme'
 import { FormLens } from '../util'
 
 export enum FormFieldType {
-  DatePicker = 'DatePicker',
-  FormattedDatePicker = 'FormattedDatePicker',
   CheckboxGroup = 'CheckboxGroup',
-
-  NumberInput = 'NumberInput',
-  RadioGroup = 'RadioGroup',
-  Dropdown = 'Dropdown',
-  CurrencyInput = 'CurrencyInput',
+  CodeInput = 'CodeInput',
   CountryDropdown = 'CountryDropdown',
-  SingleCheckbox = 'SingleCheckbox',
+  CountrySelect = 'CountrySelect',
+  CurrencyInput = 'CurrencyInput',
+  DatePicker = 'DatePicker',
+  Dropdown = 'Dropdown',
   DropdownNumber = 'DropdownNumber',
+  FormattedDatePicker = 'FormattedDatePicker',
+  FormFieldGroup = 'FormFieldGroup',
+  FormFieldRepeatGroup = 'FormFieldRepeatGroup',
+  FormFieldRepeatSection = 'FormFieldRepeatSection',
+  FormSection = 'FormSection',
+  FormText = 'FormText',
+  InputWithDropdown = 'InputWithDropdown',
+  MultiSelect = 'MultiSelect',
+  MultiInput = 'MultiInput',
+  NumberInput = 'NumberInput',
+  NumberSelect = 'NumberSelect',
+  OptionGroup = 'OptionGroup',
+  RadioGroup = 'RadioGroup',
+  SingleCheckbox = 'SingleCheckbox',
+  Slider = 'Slider',
+  Switch = 'Switch',
   TextArea = 'TextArea',
   TextInput = 'TextInput',
   TextNumber = 'TextNumber',
-  InputWithDropdown = 'InputWithDropdown',
-  Switch = 'Switch',
-  MultiSelect = 'MultiSelect',
-  YesNoOptionGroup = 'YesNoOptionGroup',
   TextSelect = 'TextSelect',
-  NumberSelect = 'NumberSelect',
-  CodeInput = 'CodeInput',
   Toggle = 'Toggle',
-  OptionGroup = 'OptionGroup',
-  CountrySelect = 'CountrySelect',
+  YesNoOptionGroup = 'YesNoOptionGroup',
   YesNoRadioGroup = 'YesNoRadioGroup',
-  Slider = 'Slider',
-  FormText = 'FormText',
-  FormFieldGroup = 'FormFieldGroup',
-  FormSection = 'FormSection',
-  FormFieldRepeatGroup = 'FormFieldRepeatGroup',
-  FormFieldRepeatSection = 'FormFieldRepeatSection',
 }
 
 export enum Orientation {
@@ -83,7 +84,9 @@ type FormInput<V, P extends { value: V }, L, T> = Omit<
 > & {
   lens: L
   type: T
-  readOnlyMapper?: (params: Omit<P, 'onChange'>) => string
+  readOnlyMapper?: (
+    params: Omit<P, 'onChange'> & { translate: (v: string) => string },
+  ) => string
   _value?: P['value']
 }
 
@@ -279,21 +282,24 @@ type CommonFieldProps<FormData> = {
 }
 
 export const fieldMap = {
-  [FormFieldType.NumberInput]: null as NumberInputField<unknown>,
-  [FormFieldType.TextInput]: null as TextInputField<unknown>,
-  [FormFieldType.DatePicker]: null as DatePickerField<unknown>,
-  [FormFieldType.MultiSelect]: null as MultiSelectField<unknown>,
   [FormFieldType.CheckboxGroup]: null as CheckboxGroupField<unknown>,
   [FormFieldType.CodeInput]: null as CodeInputField<unknown>,
   [FormFieldType.CountryDropdown]: null as CountryDropdownField<unknown>,
   [FormFieldType.CountrySelect]: null as CountrySelectField<unknown>,
   [FormFieldType.CurrencyInput]: null as CurrencyInputField<unknown>,
+  [FormFieldType.DatePicker]: null as DatePickerField<unknown>,
   [FormFieldType.Dropdown]: null as DropdownField<unknown>,
   [FormFieldType.DropdownNumber]: null as DropdownField<unknown>,
-  [FormFieldType.FormattedDatePicker]: null as FormattedDatePickerField<
-    unknown
-  >,
+  [FormFieldType.FormattedDatePicker]: null as FormattedDatePickerField<unknown>,
+  [FormFieldType.FormFieldGroup]: null,
+  [FormFieldType.FormFieldRepeatGroup]: null,
+  [FormFieldType.FormFieldRepeatSection]: null,
+  [FormFieldType.FormSection]: null,
+  [FormFieldType.FormText]: null,
   [FormFieldType.InputWithDropdown]: null as InputWithDropdownField<unknown>,
+  [FormFieldType.MultiSelect]: null as MultiSelectField<unknown>,
+  [FormFieldType.MultiInput]: null as MultiInputField<unknown>,
+  [FormFieldType.NumberInput]: null as NumberInputField<unknown>,
   [FormFieldType.NumberSelect]: null as NumberSelectField<unknown>,
   [FormFieldType.OptionGroup]: null as OptionGroupField<unknown>,
   [FormFieldType.RadioGroup]: null as RadioGroupField<unknown>,
@@ -301,16 +307,12 @@ export const fieldMap = {
   [FormFieldType.Slider]: null as SliderField<unknown>,
   [FormFieldType.Switch]: null as SwitchField<unknown>,
   [FormFieldType.TextArea]: null as TextAreaField<unknown>,
+  [FormFieldType.TextInput]: null as TextInputField<unknown>,
   [FormFieldType.TextNumber]: null as TextNumberInputField<unknown>,
   [FormFieldType.TextSelect]: null as TextSelectField<unknown>,
   [FormFieldType.Toggle]: null as ToggleField<unknown>,
   [FormFieldType.YesNoOptionGroup]: null as YesNoOptionGroupField<unknown>,
   [FormFieldType.YesNoRadioGroup]: null as YesNoRadioGroupField<unknown>,
-  [FormFieldType.FormFieldGroup]: null,
-  [FormFieldType.FormFieldRepeatGroup]: null,
-  [FormFieldType.FormFieldRepeatSection]: null,
-  [FormFieldType.FormSection]: null,
-  [FormFieldType.FormText]: null,
 } as const
 
 export type SingleFormField<FormData> = (
@@ -342,6 +344,14 @@ export type SingleFormField<FormData> = (
 ) &
   CommonFieldProps<FormData>
 
+export type MultiInputField<FormData> = {
+  label?: LabelProps
+  type: FormFieldType.MultiInput
+  fields: Array<SingleFormField<FormData>>
+  itemStyle?: CSSProperties
+  isVisible?: (formData: FormData) => boolean
+}
+
 export type FormFieldRow<FormData> = Array<SingleFormField<FormData>>
 
 export type Fields<FormData> = Array<
@@ -350,6 +360,7 @@ export type Fields<FormData> = Array<
 
 export type SingleFieldOrRow<FormData> =
   | SingleFormField<FormData>
+  | MultiInputField<FormData>
   | FormFieldRow<FormData>
 
 export type GroupFields<FormData> = Array<SingleFieldOrRow<FormData>>
@@ -374,6 +385,7 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
 
 export type FormField<FormData> =
   | SingleFormField<FormData>
+  | MultiInputField<FormData>
   | FormFieldRow<FormData>
   | FormFieldGroup<FormData>
   | FormSection<FormData>
