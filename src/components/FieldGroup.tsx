@@ -8,7 +8,6 @@ import {
   GroupField,
   FormFieldType,
 } from './types'
-import { FieldItem } from './FieldItem'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldRow } from './FieldRow'
 
@@ -64,9 +63,9 @@ export const FieldGroup = <FormData extends {}>({
         )
       default:
         return (
-          <FieldItem
+          <FieldRow
             key={`field-${fieldIndex}`}
-            field={field}
+            field={[field]}
             fieldIndex={fieldIndex}
             {...commonFieldProps}
           />

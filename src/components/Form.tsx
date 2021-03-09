@@ -11,12 +11,12 @@ import { useInlineStyle } from '../theme/util'
 import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
 import { DisplayType, FormFieldType, SingleFormField, FormField } from './types'
-import { FieldItem } from './FieldItem'
 import { FieldGroup } from './FieldGroup'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
 import { FieldRepeatSection } from './FieldRepeatSection'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldSection } from './FieldSection'
+import { FieldRow } from './FieldRow'
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -144,14 +144,14 @@ export const Form = <FormData extends {}>({
 
   const renderField = (field: FormField<FormData>, fieldIndex: number) => {
     if (Array.isArray(field)) {
-      return field.map((f, i) => (
-        <FieldItem
-          key={`field-section-${fieldIndex}-${i}`}
-          fieldIndex={i}
+      return (
+        <FieldRow
+          key={`field-form`}
+          fieldIndex={0}
           {...commonFieldProps}
-          field={f}
+          field={field}
         />
-      ))
+      )
     }
 
     switch (field.type) {
@@ -210,9 +210,9 @@ export const Form = <FormData extends {}>({
 
       default:
         return (
-          <FieldItem
+          <FieldRow
             key={`field-${fieldIndex}`}
-            field={field}
+            field={[field]}
             fieldIndex={fieldIndex}
             {...commonFieldProps}
           />

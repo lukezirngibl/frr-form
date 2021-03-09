@@ -6,7 +6,6 @@ import { FormTheme, getThemeContext } from '../theme/theme'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { createStyled } from 'frr-web/lib/theme/util'
 import { FieldGroup } from './FieldGroup'
-import { FieldItem } from './FieldItem'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
 import { FieldRepeatSection } from './FieldRepeatSection'
 import {
@@ -149,9 +148,9 @@ export const FieldSection = <FormData extends {}>({
 
       default:
         return (
-          <FieldItem
+          <FieldRow
             key={`field-${fieldIndex}`}
-            field={field}
+            field={[field]}
             fieldIndex={fieldIndex}
             {...commonFieldProps}
           />

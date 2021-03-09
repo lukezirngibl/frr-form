@@ -3,13 +3,35 @@ import React from 'react'
 import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
 import { useCSSStyles } from '../theme/util'
-import { FieldItem, FieldRowWrapper, Field } from './FieldItem'
-import { FieldItemReadOnly } from './FieldItemReadOnly'
+import { FieldRowItem } from './FieldRowItem'
 import { CommonThreadProps, FormFieldRow } from './types'
 
 type FieldRowProps<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldRow<FormData>
 }
+
+export const FieldRowWrapper = createStyled(styled.div`
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
+
+  & > * {
+    margin-left: 4px;
+    margin-right: 4px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+`)
 
 // ------------------------------------
 export const FieldRow = <FormData extends {}>({
@@ -33,25 +55,17 @@ export const FieldRow = <FormData extends {}>({
       cssStyles={getRowStyle('wrapper')}
       readOnly={formReadOnly}
     >
-      {field.map((fieldItem, fieldItemIndex) =>
-        formReadOnly ? (
-          <FieldItemReadOnly
-            {...commonFieldItemProps}
-            key={`field-item-${fieldItemIndex}`}
-            field={fieldItem}
-            fieldIndex={fieldItemIndex}
-          />
-        ) : (
-          <Field
-            {...commonFieldItemProps}
-            key={`field-item-${fieldItemIndex}`}
-            field={fieldItem}
-            fieldIndex={fieldItemIndex}
-            onChange={onChange}
-            showValidation={showValidation}
-          />
-        ),
-      )}
+      {field.map((fieldItem, fieldItemIndex) => (
+        <FieldRowItem
+          {...commonFieldItemProps}
+          key={`field-item-${fieldItemIndex}`}
+          field={fieldItem}
+          fieldIndex={fieldItemIndex}
+          onChange={onChange}
+          showValidation={showValidation}
+          formReadOnly={formReadOnly}
+        />
+      ))}
     </FieldRowWrapper>
   ) : null
 }

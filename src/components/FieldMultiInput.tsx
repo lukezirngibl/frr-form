@@ -1,10 +1,10 @@
-import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
-import styled from 'styled-components'
 import { FormTheme, getThemeContext } from '../theme/theme'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { CommonThreadProps, FormFieldRow, MultiInputField } from './types'
-import { FieldItem } from './FieldItem'
+import { Label } from 'frr-web/lib/components'
+import { FieldScrollableWrapper } from './FieldScrollableWrapper'
+import { FieldRowItem } from './FieldRowItem'
 
 type FieldRowProps<FormData> = CommonThreadProps<FormData> & {
   field: MultiInputField<FormData>
@@ -24,28 +24,38 @@ export const FieldMultiInput = <FormData extends {}>({
   const theme = React.useContext(getThemeContext()) as FormTheme
 
   const getFieldMultiInputStyle = useInlineStyle(theme, 'fieldMultiInput')({})
+  const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
 
   const commonFieldItemProps = {
     data,
     style,
+    showValidation,
+    formReadOnly,
   }
 
   return field.fields.some((r) => !r.isVisible || r.isVisible(data)) ? (
-    <div
-      style={getFieldMultiInputStyle('item')}
-      key={`field-mulit-input-${fieldIndex}`}
+    <FieldScrollableWrapper
+      key={`field-${fieldIndex}`}
+      showValidation={showValidation}
+      hasError={false} // TODO
+      style={getRowStyle('item')}
     >
-      {field.fields.map((fieldItem, fieldItemIndex) => (
-        <FieldItem
-          {...commonFieldItemProps}
-          formReadOnly={formReadOnly}
-          key={`field-item-${fieldItemIndex}`}
-          field={fieldItem}
-          fieldIndex={fieldItemIndex}
-          onChange={onChange}
-          showValidation={showValidation}
-        />
-      ))}
-    </div>
+      {field.label && <Label {...field.label} />}
+      <div
+        style={getFieldMultiInputStyle('item')}
+        key={`field-mulit-input-${fieldIndex}`}
+      >
+        {field.fields.map((fieldItem, fieldItemIndex) => (
+          <FieldRowItem
+            {...commonFieldItemProps}
+            key={`field-item-${fieldItemIndex}`}
+            field={fieldItem}
+            fieldIndex={fieldItemIndex}
+            onChange={onChange}
+            noScrollableWrapper
+          />
+        ))}
+      </div>
+    </FieldScrollableWrapper>
   ) : null
 }
