@@ -134,8 +134,6 @@ export const Form = <FormData extends {}>({
     }
   }
 
-  console.log('BUTTONS', buttons)
-
   return !isVisible || isVisible(data) ? (
     <FormWrapper
       style={getFormStyle('wrapper')}
