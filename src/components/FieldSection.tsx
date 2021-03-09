@@ -113,12 +113,7 @@ export const FieldSection = <FormData extends {}>({
         )}
         {fieldSection.description && (
           <P
-            style={{
-              ...getSectionStyle('description'),
-              ...(fieldSection.style
-                ? fieldSection.style.description || {}
-                : {}),
-            }}
+            cssStyles={getSectionStyle('description')}
             label={fieldSection.description}
           />
         )}
