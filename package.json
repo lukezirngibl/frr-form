@@ -11,7 +11,7 @@
     "link-frr": "yarn link frr-web",
     "start:example": "react-scripts start ./example/index.ts",
     "build": "tsc",
-    "build:watch": "yarn link-frr && yarn build:watch",
+    "build:dev": "yarn && rm -r lib && yarn link-frr && yarn build",
     "babel:build": "yarn clean && yarn link-frr && babel ./src --out-dir lib --extensions '.ts','.tsx','.js','.jsx'",
     "babel:watch": "yarn babel:build --watch",
     "build-types": "install-peers -f && tsc",
