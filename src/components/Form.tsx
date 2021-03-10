@@ -18,25 +18,7 @@ import { FieldMultiInput } from './FieldMultiInput'
 import { FieldSection } from './FieldSection'
 import { FieldRow } from './FieldRow'
 
-const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const FormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-`
-
-export const FormContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-`
-
-export type Props<FormData> = {
+export type FormProps<FormData> = {
   children?: ReactNode
   style?: Partial<FormTheme>
   data: FormData
@@ -57,6 +39,24 @@ export type Props<FormData> = {
   isVisible?: (formData: FormData) => boolean
 }
 
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const FormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`
+
+export const FormContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`
+
 export const Form = <FormData extends {}>({
   children,
   style,
@@ -71,7 +71,7 @@ export const Form = <FormData extends {}>({
   renderBottomChildren,
   readOnly,
   isVisible,
-}: Props<FormData>) => {
+}: FormProps<FormData>) => {
   const dispatch = useDispatch()
   const theme = React.useContext(getThemeContext())
   const getFormStyle = useInlineStyle(theme, 'form')(style?.form || {})
