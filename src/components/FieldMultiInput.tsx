@@ -5,6 +5,8 @@ import { CommonThreadProps, FormFieldRow, MultiInputField } from './types'
 import { Label } from 'frr-web/lib/components'
 import { FieldScrollableWrapper } from './FieldScrollableWrapper'
 import { FieldRowItem } from './FieldRowItem'
+import { FieldItemReadOnly } from './FieldItemReadOnly'
+import { FieldRowWrapper } from './FieldRow'
 
 type FieldRowProps<FormData> = CommonThreadProps<FormData> & {
   field: MultiInputField<FormData>
@@ -25,37 +27,60 @@ export const FieldMultiInput = <FormData extends {}>({
 
   const getFieldMultiInputStyle = useInlineStyle(theme, 'fieldMultiInput')({})
   const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
+  const getCssRowStyle = useCSSStyles(theme, 'row')(style?.row || {})
 
-  const commonFieldItemProps = {
+  const commonFieldProps = {
     data,
     style,
     showValidation,
     formReadOnly,
   }
 
-  return field.fields.some((r) => !r.isVisible || r.isVisible(data)) ? (
-    <FieldScrollableWrapper
-      key={`field-${fieldIndex}`}
-      showValidation={showValidation}
-      hasError={false} // TODO
-      style={getRowStyle('item')}
-    >
-      {field.label && <Label {...field.label} />}
-      <div
-        style={getFieldMultiInputStyle('item')}
-        key={`field-mulit-input-${fieldIndex}`}
+  if (formReadOnly) {
+    return (
+      <FieldRowWrapper
+        key={`row-${fieldIndex}`}
+        cssStyles={getCssRowStyle('wrapper')}
+        readOnly={formReadOnly}
       >
-        {field.fields.map((fieldItem, fieldItemIndex) => (
-          <FieldRowItem
-            {...commonFieldItemProps}
-            key={`field-item-${fieldItemIndex}`}
-            field={fieldItem}
-            fieldIndex={fieldItemIndex}
-            onChange={onChange}
-            noScrollableWrapper
-          />
-        ))}
-      </div>
-    </FieldScrollableWrapper>
+        <FieldItemReadOnly
+          {...commonFieldProps}
+          field={field as MultiInputField<FormData>}
+          fieldIndex={fieldIndex}
+        />
+      </FieldRowWrapper>
+    )
+  }
+
+  return field.fields.some((r) => !r.isVisible || r.isVisible(data)) ? (
+    <FieldRowWrapper
+      key={`row-${fieldIndex}`}
+      cssStyles={getCssRowStyle('wrapper')}
+      readOnly={formReadOnly}
+    >
+      <FieldScrollableWrapper
+        key={`field-${fieldIndex}`}
+        showValidation={showValidation}
+        hasError={false} // TODO
+        style={getRowStyle('item')}
+      >
+        {field.label && <Label {...field.label} />}
+        <div
+          style={getFieldMultiInputStyle('item')}
+          key={`field-mulit-input-${fieldIndex}`}
+        >
+          {field.fields.map((fieldItem, fieldItemIndex) => (
+            <FieldRowItem
+              {...commonFieldProps}
+              key={`field-item-${fieldItemIndex}`}
+              field={fieldItem}
+              fieldIndex={fieldItemIndex}
+              onChange={onChange}
+              noScrollableWrapper
+            />
+          ))}
+        </div>
+      </FieldScrollableWrapper>
+    </FieldRowWrapper>
   ) : null
 }

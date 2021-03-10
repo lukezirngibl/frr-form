@@ -128,6 +128,7 @@ const FormFieldWrapper = createStyled(styled.div`
 `)
 
 const FieldItemWrapper = createStyled('div')
+const FieldItemValueWrapper = createStyled('div')
 
 /*
  * Render field function
@@ -171,34 +172,36 @@ export const FieldItemReadOnly = <FormData extends {}>(
             data={props.field.label.labelData}
           />
         )}
-        {props.field.type === FormFieldType.MultiInput ? (
-          props.field.fields.map((fieldItem, fieldItemIndex) => {
-            const readOnlyItemMapper =
-              fieldItem.readOnlyMapper ||
-              defaultReadOnlyMappers[props.field.type]
+        <FieldItemValueWrapper cssStyles={getFieldStyle('item')}>
+          {props.field.type === FormFieldType.MultiInput ? (
+            props.field.fields.map((fieldItem, fieldItemIndex) => {
+              const readOnlyItemMapper =
+                fieldItem.readOnlyMapper ||
+                defaultReadOnlyMappers[fieldItem.type]
 
-            return (
-              <P
-                key={`field-item-${fieldItemIndex}`}
-                cssStyles={getFieldStyle('item')}
-                label={readOnlyItemMapper({
-                  ...fieldItem,
-                  value: fieldItem.lens.get(props.data),
-                  translate,
-                } as any)}
-              />
-            )
-          })
-        ) : (
-          <P
-            cssStyles={getFieldStyle('item')}
-            label={readOnlyMapper({
-              ...props.field,
-              value: props.field.lens.get(props.data),
-              translate,
-            } as any)}
-          />
-        )}
+              return (
+                <P
+                  cssStyles={getFieldStyle('value')}
+                  key={`field-item-${fieldItemIndex}`}
+                  label={readOnlyItemMapper({
+                    ...fieldItem,
+                    value: fieldItem.lens.get(props.data),
+                    translate,
+                  } as any)}
+                />
+              )
+            })
+          ) : (
+            <P
+              cssStyles={getFieldStyle('value')}
+              label={readOnlyMapper({
+                ...props.field,
+                value: props.field.lens.get(props.data),
+                translate,
+              } as any)}
+            />
+          )}
+        </FieldItemValueWrapper>
       </FieldItemWrapper>
     </FormFieldWrapper>
   ) : (

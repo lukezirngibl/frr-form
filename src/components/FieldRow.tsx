@@ -11,14 +11,6 @@ type FieldRowProps<FormData> = CommonThreadProps<FormData> & {
 }
 
 export const FieldRowWrapper = createStyled(styled.div`
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-
-  @media (max-width: 768px) {
-    flex-wrap: wrap;
-  }
-
   & > * {
     margin-left: 4px;
     margin-right: 4px;

@@ -38,7 +38,6 @@ export const FieldRowItem = <FormData extends {}>({
     return (
       <FieldItemReadOnly
         {...commonFieldProps}
-        {...commonFieldProps}
         field={field as SingleFormField<FormData>}
         fieldIndex={fieldIndex}
       />

@@ -22,7 +22,7 @@ import { TextNumberInput } from 'frr-web/lib/components/TextNumberInput'
 import { Toggle } from 'frr-web/lib/components/Toggle'
 import { YesNoOptionGroup } from 'frr-web/lib/components/YesNoOptionGroup'
 import { YesNoRadioGroup } from 'frr-web/lib/components/YesNoRadioGroup'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { FormFieldType, SingleFormField } from './types'
 
 /*

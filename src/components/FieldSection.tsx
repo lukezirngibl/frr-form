@@ -181,7 +181,7 @@ export const FieldSection = <FormData extends {}>({
             label={fieldSection.title}
           />
         )}
-        {fieldSection.description && (
+        {!formReadOnly && fieldSection.description && (
           <P
             cssStyles={getSectionStyle('description')}
             label={fieldSection.description}
@@ -190,7 +190,7 @@ export const FieldSection = <FormData extends {}>({
 
         {fieldSection.fields.map(renderSectionField)}
       </MainSectionWrapper>
-      <RightSectionWrapper cssStyles={getSectionRightStyle('wrapper')}>
+      <RightSectionWrapper cssStyles={getSectionRightStyle('wrapper')} readOnly={formReadOnly}>
         {!!fieldSection.onEdit && (
           <EditLink
             onClick={() => {

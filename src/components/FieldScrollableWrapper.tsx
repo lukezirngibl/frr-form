@@ -1,8 +1,7 @@
-import React, { useEffect, ReactNode } from 'react'
-import { createStyled } from 'frr-web/lib/theme/util'
+import React, { ReactNode, useEffect } from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import { getThemeContext } from '../theme/theme'
-import { useInlineStyle, useCSSStyles } from '../theme/util'
+import { useInlineStyle } from '../theme/util'
 
 /*
  * Styled components

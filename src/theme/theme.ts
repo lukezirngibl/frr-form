@@ -34,6 +34,7 @@ export type FormTheme = {
   fieldReadOnly: {
     wrapper: CSSProperties
     item: CSSProperties
+    value: CSSProperties
     label: CSSProperties
   }
   icon: {
@@ -76,6 +77,7 @@ export const defaultTheme: FormTheme = {
   fieldReadOnly: {
     wrapper: {},
     item: {},
+    value: {},
     label: {},
   },
   icon: {
