@@ -281,6 +281,7 @@ type CommonFieldProps<FormData> = {
   required?: boolean | ((formData: FormData) => boolean)
 }
 
+// @ts-ignore
 export const fieldMap = {
   [FormFieldType.CheckboxGroup]: null as CheckboxGroupField<unknown>,
   [FormFieldType.CodeInput]: null as CodeInputField<unknown>,
