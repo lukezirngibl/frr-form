@@ -146,7 +146,7 @@ export const Form = <FormData extends {}>({
     if (Array.isArray(field)) {
       return (
         <FieldRow
-          key={`field-form`}
+          key={`field-form-${fieldIndex}`}
           fieldIndex={0}
           {...commonFieldProps}
           field={field}
