@@ -19,13 +19,13 @@ import { useDispatch } from 'react-redux'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldRow } from './FieldRow'
 
-export const FormSectionWrapper = createStyled('div')
+const FormSectionWrapper = createStyled('div')
 
-export const MainSectionWrapper = styled.div`
+const MainSectionWrapper = styled.div`
   flex-grow: 1;
 `
 
-export const RightSectionWrapper = createStyled('div')
+const RightSectionWrapper = createStyled('div')
 
 const EditLink = createStyled(styled.a`
   display: flex;
