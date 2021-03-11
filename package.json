@@ -11,11 +11,10 @@
     "link-frr": "yarn link frr-web",
     "start:example": "react-scripts start ./example/index.ts",
     "build": "tsc",
-    "build:dev": "yarn link-frr && rm -r lib && yarn build",
+    "build:watch": "yarn link-frr && && yarn build --watch",
     "babel:build": "yarn clean && yarn link-frr && babel ./src --out-dir lib --extensions '.ts','.tsx','.js','.jsx'",
     "babel:watch": "yarn babel:build --watch",
     "build-types": "install-peers -f && tsc",
-    "build-types:dev": "install-peers -f && yarn link-frr && tsc",
     "patch": "yarn run build-types && git add -A && git commit -m 'patch' && npm version patch",
     "prepare": "install-peers",
     "sync-frr-web": "rm -rf ./node_modules/frr-web/lib  && cp -r ../frr-web/lib ./node_modules/frr-web/lib"
