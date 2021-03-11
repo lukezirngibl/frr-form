@@ -7,7 +7,7 @@ import { useInlineStyle } from '../theme/util'
  * Styled components
  */
 
-export const FormScrollToWrapper = styled.div<{
+const FormScrollToWrapper = styled.div<{
   width?: string
   maxwidth?: number
 }>`

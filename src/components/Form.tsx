@@ -51,7 +51,7 @@ const FormWrapper = styled.div`
   flex-grow: 1;
 `
 
-export const FormContent = styled.div`
+const FormContent = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
