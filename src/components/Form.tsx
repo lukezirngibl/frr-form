@@ -78,9 +78,9 @@ export const Form = <FormData extends {}>({
 
   const [showValidation, setShowValidation] = React.useState(false)
 
-  useEffect(() => {
-    setShowValidation(false)
-  }, [formFields, data])
+  // useEffect(() => {
+  //   setShowValidation(false)
+  // }, [formFields, data])
 
   const computeFieldError = (f: SingleFormField<FormData>): string | null => {
     const isRequired =
