@@ -87,6 +87,10 @@ type FormInput<V, P extends { value: V }, L, T> = Omit<
   readOnlyMapper?: (
     params: Omit<P, 'onChange'> & { translate: (v: string) => string },
   ) => string
+  readOnlyOptions?: {
+    isHighlighted?: boolean
+    image?: string
+  }
   _value?: P['value']
 }
 

@@ -35,6 +35,8 @@ export type FormTheme = {
     wrapper: CSSProperties
     item: CSSProperties
     value: CSSProperties
+    valueHighlighted: CSSProperties
+    image: CSSProperties
     label: CSSProperties
   }
   icon: {
@@ -78,6 +80,8 @@ export const defaultTheme: FormTheme = {
     wrapper: {},
     item: {},
     value: {},
+    valueHighlighted: {},
+    image: {},
     label: {},
   },
   icon: {
