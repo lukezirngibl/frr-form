@@ -170,38 +170,41 @@ export const FieldSection = <FormData extends {}>({
         ...(fieldSection.style?.wrapper || {}),
       }}
       readOnly={formReadOnly}
-      cssStyles={getSectionStyle('wrapper')}
+      {...getSectionStyle('wrapper')}
     >
       <MainSectionWrapper>
         {fieldSection.title && (
           <P
             style={fieldSection.style?.title || {}}
-            cssStyles={getSectionStyle('title')}
+            {...getSectionStyle('title')}
             readOnly={formReadOnly}
             label={fieldSection.title}
           />
         )}
         {!formReadOnly && fieldSection.description && (
           <P
-            cssStyles={getSectionStyle('description')}
+            {...getSectionStyle('description')}
             label={fieldSection.description}
           />
         )}
 
         {fieldSection.fields.map(renderSectionField)}
       </MainSectionWrapper>
-      <RightSectionWrapper cssStyles={getSectionRightStyle('wrapper')} readOnly={formReadOnly}>
+      <RightSectionWrapper
+        {...getSectionRightStyle('wrapper')}
+        readOnly={formReadOnly}
+      >
         {!!fieldSection.onEdit && (
           <EditLink
             onClick={() => {
               fieldSection.onEdit({ dispatch })
             }}
-            cssStyles={getSectionRightStyle('editLink')}
+            {...getSectionRightStyle('editLink')}
           >
-            {editIcon.svg && (
+            {editIcon.style.svg && (
               <EditIcon
-                dangerouslySetInnerHTML={{ __html: editIcon.svg }}
-                cssStyles={getSectionRightStyle('editIcon')}
+                dangerouslySetInnerHTML={{ __html: editIcon.style.svg }}
+                {...getSectionRightStyle('editIcon')}
               />
             )}
             <EditText>{translate('edit')}</EditText>

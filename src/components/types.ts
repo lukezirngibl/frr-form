@@ -1,13 +1,8 @@
-import { CheckboxGroupProps } from 'frr-web/lib/components/CheckboxGroup'
 import { Props as CodeInputProps } from 'frr-web/lib/components/CodeInput'
-import { Props as CountryDropdownProps } from 'frr-web/lib/components/CountryDropdown'
 import { Props as CountrySelectProps } from 'frr-web/lib/components/CountrySelect'
 import { Props as CurrencyInputProps } from 'frr-web/lib/components/CurrencyInput'
 import { Props as DatePickerProps } from 'frr-web/lib/components/DatePicker'
-import { Props as DropdownProps } from 'frr-web/lib/components/Dropdown'
-import { Props as DropdownNumberProps } from 'frr-web/lib/components/DropdownNumber'
 import { Props as FormattedDatePickerProps } from 'frr-web/lib/components/FormattedDatePicker'
-import { Props as InputWithDropdownProps } from 'frr-web/lib/components/InputWithDropdown'
 import { LabelProps } from 'frr-web/lib/components/Label'
 import { Props as MultiSelectProps } from 'frr-web/lib/components/MultiSelect'
 import { Props as NumberInputProps } from 'frr-web/lib/components/NumberInput'
@@ -29,22 +24,29 @@ import { CSSProperties } from 'styled-components'
 import { FormTheme } from '../theme/theme'
 import { FormLens } from '../util'
 
+// import { CheckboxGroupProps } from 'frr-web/lib/components/CheckboxGroup'
+// import { Props as DropdownProps } from 'frr-web/lib/components/Dropdown'
+// import { Props as DropdownNumberProps } from 'frr-web/lib/components/DropdownNumber'
+// import { Props as InputWithDropdownProps } from 'frr-web/lib/components/InputWithDropdown'
+// import { Props as CountryDropdownProps } from 'frr-web/lib/components/CountryDropdown'
+
 export enum FormFieldType {
-  CheckboxGroup = 'CheckboxGroup',
+  // CountryDropdown = 'CountryDropdown',
+  // CheckboxGroup = 'CheckboxGroup',
+  // Dropdown = 'Dropdown',
+  // DropdownNumber = 'DropdownNumber',
+  // InputWithDropdown = 'InputWithDropdown',
+
   CodeInput = 'CodeInput',
-  CountryDropdown = 'CountryDropdown',
   CountrySelect = 'CountrySelect',
   CurrencyInput = 'CurrencyInput',
   DatePicker = 'DatePicker',
-  Dropdown = 'Dropdown',
-  DropdownNumber = 'DropdownNumber',
   FormattedDatePicker = 'FormattedDatePicker',
   FormFieldGroup = 'FormFieldGroup',
   FormFieldRepeatGroup = 'FormFieldRepeatGroup',
   FormFieldRepeatSection = 'FormFieldRepeatSection',
   FormSection = 'FormSection',
   FormText = 'FormText',
-  InputWithDropdown = 'InputWithDropdown',
   MultiSelect = 'MultiSelect',
   MultiInput = 'MultiInput',
   NumberInput = 'NumberInput',
@@ -171,13 +173,6 @@ export type SwitchField<FormData> = FormInput<
   FormFieldType.Switch
 >
 
-export type CountryDropdownField<FormData> = FormInput<
-  string | null,
-  CountryDropdownProps,
-  FormLens<FormData, string> | FormLens<FormData, string | null>,
-  FormFieldType.CountryDropdown
->
-
 export type CountrySelectField<FormData> = FormInput<
   string | number | null,
   CountrySelectProps,
@@ -185,19 +180,39 @@ export type CountrySelectField<FormData> = FormInput<
   FormFieldType.CountrySelect
 >
 
-export type InputWithDropdownField<FormData> = FormInput<
-  string | null,
-  InputWithDropdownProps,
-  FormLens<FormData, string> | FormLens<FormData, string | null>,
-  FormFieldType.InputWithDropdown
->
+// export type CountryDropdownField<FormData> = FormInput<
+//   string | null,
+//   CountryDropdownProps,
+//   FormLens<FormData, string> | FormLens<FormData, string | null>,
+//   FormFieldType.CountryDropdown
+// >
 
-export type DropdownNumberField<FormData> = FormInput<
-  number | null,
-  DropdownNumberProps,
-  FormLens<FormData, number> | FormLens<FormData, number | null>,
-  FormFieldType.DropdownNumber
->
+// export type InputWithDropdownField<FormData> = FormInput<
+//   string | null,
+//   InputWithDropdownProps,
+//   FormLens<FormData, string> | FormLens<FormData, string | null>,
+//   FormFieldType.InputWithDropdown
+// >
+
+// export type DropdownNumberField<FormData> = FormInput<
+//   number | null,
+//   DropdownNumberProps,
+//   FormLens<FormData, number> | FormLens<FormData, number | null>,
+//   FormFieldType.DropdownNumber
+// >
+// export type DropdownField<FormData> = FormInput<
+//   string | null,
+//   DropdownProps,
+//   FormLens<FormData, string> | FormLens<FormData, string | null>,
+//   FormFieldType.Dropdown
+// >
+
+// export type CheckboxGroupField<FormData> = FormInput<
+//   Array<string>,
+//   CheckboxGroupProps,
+//   FormLens<FormData, Array<string>>,
+//   FormFieldType.CheckboxGroup
+// >
 
 export type TextAreaField<FormData> = FormInput<
   string | null,
@@ -248,20 +263,6 @@ export type FormattedDatePickerField<FormData> = FormInput<
   FormFieldType.FormattedDatePicker
 >
 
-export type DropdownField<FormData> = FormInput<
-  string | null,
-  DropdownProps,
-  FormLens<FormData, string> | FormLens<FormData, string | null>,
-  FormFieldType.Dropdown
->
-
-export type CheckboxGroupField<FormData> = FormInput<
-  Array<string>,
-  CheckboxGroupProps,
-  FormLens<FormData, Array<string>>,
-  FormFieldType.CheckboxGroup
->
-
 export type NumberInputField<FormData> = FormInput<
   number | null,
   NumberInputProps,
@@ -287,21 +288,22 @@ type CommonFieldProps<FormData> = {
 
 // @ts-ignore
 export const fieldMap = {
-  [FormFieldType.CheckboxGroup]: null as CheckboxGroupField<unknown>,
+  // [FormFieldType.CheckboxGroup]: null as CheckboxGroupField<unknown>,
+  // [FormFieldType.InputWithDropdown]: null as InputWithDropdownField<unknown>,
+  // [FormFieldType.CountryDropdown]: null as CountryDropdownField<unknown>,
+  // [FormFieldType.Dropdown]: null as DropdownField<unknown>,
+  // [FormFieldType.DropdownNumber]: null as DropdownField<unknown>,
+
   [FormFieldType.CodeInput]: null as CodeInputField<unknown>,
-  [FormFieldType.CountryDropdown]: null as CountryDropdownField<unknown>,
   [FormFieldType.CountrySelect]: null as CountrySelectField<unknown>,
   [FormFieldType.CurrencyInput]: null as CurrencyInputField<unknown>,
   [FormFieldType.DatePicker]: null as DatePickerField<unknown>,
-  [FormFieldType.Dropdown]: null as DropdownField<unknown>,
-  [FormFieldType.DropdownNumber]: null as DropdownField<unknown>,
   [FormFieldType.FormattedDatePicker]: null as FormattedDatePickerField<unknown>,
   [FormFieldType.FormFieldGroup]: null,
   [FormFieldType.FormFieldRepeatGroup]: null,
   [FormFieldType.FormFieldRepeatSection]: null,
   [FormFieldType.FormSection]: null,
   [FormFieldType.FormText]: null,
-  [FormFieldType.InputWithDropdown]: null as InputWithDropdownField<unknown>,
   [FormFieldType.MultiSelect]: null as MultiSelectField<unknown>,
   [FormFieldType.MultiInput]: null as MultiInputField<unknown>,
   [FormFieldType.NumberInput]: null as NumberInputField<unknown>,
@@ -321,16 +323,17 @@ export const fieldMap = {
 } as const
 
 export type SingleFormField<FormData> = (
-  | CheckboxGroupField<FormData>
-  | CodeInputField<FormData>
-  | CountryDropdownField<FormData>
+  | // | CheckboxGroupField<FormData>
+  // | CountryDropdownField<FormData>
+  // | DropdownField<FormData>
+  // | DropdownNumberField<FormData>
+  // | InputWithDropdownField<FormData>
+
+  CodeInputField<FormData>
   | CountrySelectField<FormData>
   | CurrencyInputField<FormData>
   | DatePickerField<FormData>
-  | DropdownField<FormData>
-  | DropdownNumberField<FormData>
   | FormattedDatePickerField<FormData>
-  | InputWithDropdownField<FormData>
   | MultiSelectField<FormData>
   | NumberInputField<FormData>
   | NumberSelectField<FormData>

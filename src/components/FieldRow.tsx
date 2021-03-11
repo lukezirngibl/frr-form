@@ -44,7 +44,7 @@ export const FieldRow = <FormData extends {}>({
   return field.some((r) => !r.isVisible || r.isVisible(data)) ? (
     <FieldRowWrapper
       key={`row-${fieldIndex}`}
-      cssStyles={getRowStyle('wrapper')}
+      {...getRowStyle('wrapper')}
       readOnly={formReadOnly}
     >
       {field.map((fieldItem, fieldItemIndex) => (

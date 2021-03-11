@@ -39,6 +39,13 @@ type FieldScrollableWrapperProps<FormData> = {
   hasError: boolean
 }
 
+const x = {
+  person: {
+    name: 'asd',
+    eyeColor: 'blue',
+  },
+}
+
 let scrolled = false
 
 export const FieldScrollableWrapper = <FormData extends {}>(
@@ -76,10 +83,7 @@ export const FieldScrollableWrapper = <FormData extends {}>(
       ref={fieldRef}
       width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
       className="form-field"
-      style={{
-        ...getRowStyle('item'),
-        ...(props.style || {}),
-      }}
+      {...getRowStyle('item', props.style || {})}
     >
       {props.children}
     </FormScrollToWrapper>

@@ -1,13 +1,8 @@
-import { CheckboxGroup } from 'frr-web/lib/components/CheckboxGroup'
 import { CodeInput } from 'frr-web/lib/components/CodeInput'
-import { CountryDropdown } from 'frr-web/lib/components/CountryDropdown'
 import { CountrySelect } from 'frr-web/lib/components/CountrySelect'
 import { CurrencyInput } from 'frr-web/lib/components/CurrencyInput'
 import { DatePicker } from 'frr-web/lib/components/DatePicker'
-import { Dropdown } from 'frr-web/lib/components/Dropdown'
-import { DropdownNumber } from 'frr-web/lib/components/DropdownNumber'
 import { FormattedDatePicker } from 'frr-web/lib/components/FormattedDatePicker'
-import { InputWithDropdown } from 'frr-web/lib/components/InputWithDropdown'
 import { MultiSelect } from 'frr-web/lib/components/MultiSelect'
 import { NumberInput } from 'frr-web/lib/components/NumberInput'
 import { OptionGroup } from 'frr-web/lib/components/OptionGroup'
@@ -24,6 +19,12 @@ import { YesNoOptionGroup } from 'frr-web/lib/components/YesNoOptionGroup'
 import { YesNoRadioGroup } from 'frr-web/lib/components/YesNoRadioGroup'
 import React from 'react'
 import { FormFieldType, SingleFormField } from './types'
+
+// import { CheckboxGroup } from 'frr-web/lib/components/CheckboxGroup'
+// import { Dropdown } from 'frr-web/lib/components/Dropdown'
+// import { DropdownNumber } from 'frr-web/lib/components/DropdownNumber'
+// import { InputWithDropdown } from 'frr-web/lib/components/InputWithDropdown'
+// import { CountryDropdown } from 'frr-web/lib/components/CountryDropdown'
 
 /*
  * Render field function
@@ -163,22 +164,6 @@ export const Field = <FormData extends {}>({
         value={lens.get(data)}
         onChange={(value) => onChange(lens.set(value)(data))}
         // error={hasError}
-        label={label}
-      />
-    )
-  }
-
-  if (field.type === FormFieldType.CheckboxGroup) {
-    const { lens, validate, ...fieldProps } = field
-    return (
-      <CheckboxGroup
-        {...fieldProps}
-        key={
-          typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
-        }
-        value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
-        error={hasError}
         label={label}
       />
     )
@@ -381,38 +366,6 @@ export const Field = <FormData extends {}>({
     )
   }
 
-  if (field.type === FormFieldType.InputWithDropdown) {
-    const { lens, validate, required, ...fieldProps } = field
-    return (
-      <InputWithDropdown
-        {...fieldProps}
-        key={
-          typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
-        }
-        value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
-        error={hasError}
-        label={label}
-      />
-    )
-  }
-
-  if (field.type === FormFieldType.CountryDropdown) {
-    const { lens, validate, required, ...fieldProps } = field
-    return (
-      <CountryDropdown
-        {...fieldProps}
-        key={
-          typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
-        }
-        value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
-        error={hasError}
-        label={label}
-      />
-    )
-  }
-
   if (field.type === FormFieldType.CurrencyInput) {
     const { lens, validate, required, ...fieldProps } = field
     return (
@@ -430,37 +383,85 @@ export const Field = <FormData extends {}>({
     )
   }
 
-  if (field.type === FormFieldType.Dropdown) {
-    const { lens, validate, required, ...fieldProps } = field
-    return (
-      <Dropdown
-        {...fieldProps}
-        key={
-          typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
-        }
-        value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
-        error={hasError}
-        label={label}
-      />
-    )
-  }
+  // if (field.type === FormFieldType.InputWithDropdown) {
+  //   const { lens, validate, required, ...fieldProps } = field
+  //   return (
+  //     <InputWithDropdown
+  //       {...fieldProps}
+  //       key={
+  //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
+  //       }
+  //       value={lens.get(data)}
+  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //       error={hasError}
+  //       label={label}
+  //     />
+  //   )
+  // }
 
-  if (field.type === FormFieldType.DropdownNumber) {
-    const { lens, validate, required, ...fieldProps } = field
-    return (
-      <DropdownNumber
-        {...fieldProps}
-        key={
-          typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
-        }
-        value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
-        error={hasError}
-        label={label}
-      />
-    )
-  }
+  // if (field.type === FormFieldType.CountryDropdown) {
+  //   const { lens, validate, required, ...fieldProps } = field
+  //   return (
+  //     <CountryDropdown
+  //       {...fieldProps}
+  //       key={
+  //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
+  //       }
+  //       value={lens.get(data)}
+  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //       error={hasError}
+  //       label={label}
+  //     />
+  //   )
+  // }
+
+  // if (field.type === FormFieldType.CheckboxGroup) {
+  //   const { lens, validate, ...fieldProps } = field
+  //   return (
+  //     <CheckboxGroup
+  //       {...fieldProps}
+  //       key={
+  //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
+  //       }
+  //       value={lens.get(data)}
+  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //       error={hasError}
+  //       label={label}
+  //     />
+  //   )
+  // }
+
+  // if (field.type === FormFieldType.Dropdown) {
+  //   const { lens, validate, required, ...fieldProps } = field
+  //   return (
+  //     <Dropdown
+  //       {...fieldProps}
+  //       key={
+  //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
+  //       }
+  //       value={lens.get(data)}
+  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //       error={hasError}
+  //       label={label}
+  //     />
+  //   )
+  // }
+
+  // if (field.type === FormFieldType.DropdownNumber) {
+  //   const { lens, validate, required, ...fieldProps } = field
+  //   return (
+  //     <DropdownNumber
+  //       {...fieldProps}
+  //       key={
+  //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
+  //       }
+  //       value={lens.get(data)}
+  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //       error={hasError}
+  //       label={label}
+  //     />
+  //   )
+  // }
 
   return <div />
 }

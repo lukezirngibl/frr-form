@@ -222,12 +222,12 @@ export const Form = <FormData extends {}>({
 
   return !isVisible || isVisible(data) ? (
     <FormWrapper
-      style={getFormStyle('wrapper')}
+      {...getFormStyle('wrapper')}
       className={readOnly ? 'readonly' : ''}
     >
       {renderTopChildren && renderTopChildren(data)}
 
-      <FormContent style={getFormStyle('content')}>
+      <FormContent {...getFormStyle('content')}>
         {/* formFields.map(renderFormField) */}
 
         {formFields.map(renderField)}
@@ -236,7 +236,7 @@ export const Form = <FormData extends {}>({
       {renderBottomChildren && renderBottomChildren(data)}
 
       {buttons && (
-        <ButtonContainer style={getFormStyle('buttonContainer')}>
+        <ButtonContainer {...getFormStyle('buttonContainer')}>
           {buttons.map((b, k) => (
             <Button
               {...b}

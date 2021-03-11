@@ -75,21 +75,22 @@ const defaultReadOnlyMappers: {
     },
   ) => string
 } = {
-  [FormFieldType.CheckboxGroup]: defaultOptionArrayMapper,
+  // [FormFieldType.CheckboxGroup]: defaultOptionArrayMapper,
+  // [FormFieldType.CountryDropdown]: defaultStrNumMapper,
+  // [FormFieldType.Dropdown]: defaultStrNumMapper,
+  // [FormFieldType.DropdownNumber]: defaultStrNumMapper,
+  // [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
+
   [FormFieldType.CodeInput]: defaultStrNumMapper,
-  [FormFieldType.CountryDropdown]: defaultStrNumMapper,
   [FormFieldType.CountrySelect]: defaultStrNumMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
   [FormFieldType.DatePicker]: (v) => v.value.toDateString(),
-  [FormFieldType.Dropdown]: defaultStrNumMapper,
-  [FormFieldType.DropdownNumber]: defaultStrNumMapper,
   [FormFieldType.FormattedDatePicker]: defaultStrNumMapper,
   [FormFieldType.FormFieldGroup]: () => '',
   [FormFieldType.FormFieldRepeatGroup]: () => '',
   [FormFieldType.FormFieldRepeatSection]: () => '',
   [FormFieldType.FormSection]: () => '',
   [FormFieldType.FormText]: () => '',
-  [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
   [FormFieldType.MultiSelect]: defaultOptionArrayMapper,
   [FormFieldType.MultiInput]: () => '',
   [FormFieldType.NumberInput]: defaultStrNumMapper,
@@ -139,7 +140,7 @@ const Image = createStyled('img')
 type FieldItemReadOnlyValueProps<FormData> = {
   field: SingleFormField<FormData>
   data: FormData
-  getFieldStyle: (value: string | string[]) => string
+  getFieldStyle: any //
 }
 
 const FieldItemReadOnlyValue = <FormData extends {}>(
@@ -160,11 +161,11 @@ const FieldItemReadOnlyValue = <FormData extends {}>(
     <Image
       src={props.field.readOnlyOptions.image}
       alt="value image"
-      cssStyles={props.getFieldStyle('image')}
+      {...props.getFieldStyle('image')}
     />
   ) : (
     <P
-      cssStyles={props.getFieldStyle(readOnlyStyle)}
+      {...props.getFieldStyle(readOnlyStyle)}
       label={readOnlyMapper({
         ...props.field,
         value: props.field.lens.get(props.data),
@@ -197,19 +198,19 @@ export const FieldItemReadOnly = <FormData extends {}>(
     <FormFieldWrapper
       key={`field-item-${props.fieldIndex}`}
       className="form-field field-readonly"
-      cssStyles={getRowStyle('item')}
+      {...getRowStyle('item')}
       readOnly={true}
       width={`${isNaN(props.width) ? 100 : props.width}%`}
     >
-      <FieldItemWrapper cssStyles={getFieldStyle('wrapper')}>
+      <FieldItemWrapper {...getFieldStyle('wrapper')}>
         {props.field.label && (
           <P
-            cssStyles={getFieldStyle('label')}
+            {...getFieldStyle('label')}
             label={props.field.label.label}
             data={props.field.label.labelData}
           />
         )}
-        <FieldItemValueWrapper cssStyles={getFieldStyle('item')}>
+        <FieldItemValueWrapper {...getFieldStyle('item')}>
           {props.field.type === FormFieldType.MultiInput ? (
             props.field.fields.map((fieldItem, fieldItemIndex) => {
               return (

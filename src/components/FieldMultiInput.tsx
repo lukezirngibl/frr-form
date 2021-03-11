@@ -40,7 +40,7 @@ export const FieldMultiInput = <FormData extends {}>({
     return (
       <FieldRowWrapper
         key={`row-${fieldIndex}`}
-        cssStyles={getCssRowStyle('wrapper')}
+        {...getCssRowStyle('wrapper')}
         readOnly={formReadOnly}
       >
         <FieldItemReadOnly
@@ -55,18 +55,18 @@ export const FieldMultiInput = <FormData extends {}>({
   return field.fields.some((r) => !r.isVisible || r.isVisible(data)) ? (
     <FieldRowWrapper
       key={`row-${fieldIndex}`}
-      cssStyles={getCssRowStyle('wrapper')}
+      {...getCssRowStyle('wrapper')}
       readOnly={formReadOnly}
     >
       <FieldScrollableWrapper
         key={`field-${fieldIndex}`}
         showValidation={showValidation}
         hasError={false} // TODO
-        style={getRowStyle('item')}
+        {...getRowStyle('item')}
       >
         {field.label && <Label {...field.label} />}
         <div
-          style={getFieldMultiInputStyle('item')}
+          {...getFieldMultiInputStyle('item')}
           key={`field-mulit-input-${fieldIndex}`}
         >
           {field.fields.map((fieldItem, fieldItemIndex) => (
