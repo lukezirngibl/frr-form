@@ -1,6 +1,8 @@
-import { FormFieldType, SingleFormField } from "../types"
+import { FormFieldType, SingleFormField } from '../types'
 
-export const getComputeFieldError = <FormData>(data: FormData) => (f: SingleFormField<FormData>): string | null => {
+export const getComputeFieldError = <FormData>(data: FormData) => (
+  f: SingleFormField<FormData>,
+): string | null => {
   const isRequired =
     'required' in f
       ? typeof f.required === 'function'
@@ -13,7 +15,14 @@ export const getComputeFieldError = <FormData>(data: FormData) => (f: SingleForm
 
   if (isRequired) {
     if (val === '' || val === null || val === undefined) {
-      return 'fieldRequired' as string
+      if (
+        f.type === FormFieldType.FormattedDatePicker ||
+        f.type === FormFieldType.DatePicker
+      ) {
+        return 'invalidDate'
+      } else {
+        return 'fieldRequired' as string
+      }
     }
   }
 
