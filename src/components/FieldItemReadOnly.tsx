@@ -139,22 +139,22 @@ const Image = createStyled('img')
 type FieldItemReadOnlyValueProps<FormData> = {
   field: SingleFormField<FormData>
   data: FormData
-  getFieldStyle: (value: string | string[]) => string
+  getFieldStyle: (value: string | string[]) => string
 }
 
-const FieldItemReadOnlyValue = <FormData extends {}>(props: FieldItemReadOnlyValueProps<FormData>) => {
+const FieldItemReadOnlyValue = <FormData extends {}>(
+  props: FieldItemReadOnlyValueProps<FormData>,
+) => {
   const language = React.useContext(getLanguageContext())
   const translate = getTranslation(language)
 
-  const readOnlyStyle: Array<'value' | 'valueHighlighted'> = ['value'] 
+  const readOnlyStyle: Array<'value' | 'valueHighlighted'> = ['value']
 
   const readOnlyMapper =
-      props.field.readOnlyMapper || defaultReadOnlyMappers[props.field.type]
+    props.field.readOnlyMapper || defaultReadOnlyMappers[props.field.type]
 
-    console.log('READONLY OPTIONS', props.field.readOnlyOptions)
-    props.field.readOnlyOptions?.isHighlighted &&
-      readOnlyStyle.push('valueHighlighted')
-  
+  props.field.readOnlyOptions?.isHighlighted &&
+    readOnlyStyle.push('valueHighlighted')
 
   return props.field.readOnlyOptions?.image ? (
     <Image
@@ -172,7 +172,7 @@ const FieldItemReadOnlyValue = <FormData extends {}>(props: FieldItemReadOnlyVal
       } as any)}
     />
   )
-} 
+}
 
 /*
  * Field readonly component
@@ -185,7 +185,6 @@ type FieldItemReadOnlyProps<FormData> = Omit<
   field: SingleFormField<FormData> | MultiInputField<FormData>
   width?: number
 }
-
 
 export const FieldItemReadOnly = <FormData extends {}>(
   props: FieldItemReadOnlyProps<FormData>,

@@ -69,7 +69,6 @@ export const flatten = <T>(
   formFields: Array<FormField<T>>,
   data: T,
 ): Array<SingleFormField<T>> => {
-  console.log('flatten...')
   let array: Array<SingleFormField<T>> = []
   for (let f of formFields) {
     if (Array.isArray(f)) {
