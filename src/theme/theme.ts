@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { CSSProperties } from 'frr-web/lib/theme/theme'
-import { keys } from 'frr-util/lib/util'
+import { CSSProperties, createThemeConfigure } from 'frr-web/lib/theme/theme'
 
 export type FormTheme = {
   row: {
@@ -47,7 +46,7 @@ export type FormTheme = {
   }
 }
 
-export const defaultTheme: FormTheme = {
+export const defaultFormTheme: FormTheme = {
   section: {
     title: {},
     wrapper: {},
@@ -91,33 +90,21 @@ export const defaultTheme: FormTheme = {
 
 export type FormThemeConfig = { [k in keyof FormTheme]?: Partial<FormTheme[k]> }
 
-let ThemeVal = defaultTheme
-let ThemeContext = React.createContext(defaultTheme)
-
-export const configureTheme = (userTheme: FormThemeConfig) => {
-  ThemeVal = keys(defaultTheme).reduce(
-    (acc1, k1) => ({
-      ...acc1,
-      [k1]: keys(defaultTheme[k1]).reduce(
-        (acc2, k2) => ({
-          ...acc2,
-          [k2]: {
-            ...((defaultTheme[k1][k2] as unknown) as any),
-            ...(userTheme[k1] && ((userTheme[k1] as unknown) as any)[k2]
-              ? ((userTheme[k1] as unknown) as any)[k2]
-              : {}),
-          },
-        }),
-        {},
-      ),
-    }),
-    {},
-  ) as FormTheme
-
-  ThemeContext = React.createContext(ThemeVal)
-
-  return ThemeContext
+export const useFormTheme = (): FormTheme => {
+  const theme = React.useContext(FormThemeContext)
+  if (!theme) {
+    throw new Error(`FormTheme not found`)
+  }
+  return theme
 }
 
-export const getThemeContext = () => ThemeContext
-export const getTheme = () => ThemeVal
+export const FormThemeContext = React.createContext<FormTheme>(
+  undefined as FormTheme,
+)
+
+FormThemeContext.displayName = 'FormThemeContext'
+
+export const configureFormTheme = createThemeConfigure<
+  FormThemeConfig,
+  FormTheme
+>(defaultFormTheme)

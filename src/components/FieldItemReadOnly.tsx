@@ -1,10 +1,8 @@
 import { findFirst } from 'fp-ts/lib/Array'
 import { P } from 'frr-web/lib/html'
-import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
 import styled from 'styled-components'
-import { getThemeContext } from '../theme/theme'
 import { useCSSStyles } from '../theme/util'
 import {
   fieldMap,
@@ -14,6 +12,8 @@ import {
   SingleFormField,
 } from './types'
 import { MediaQuery } from 'frr-web/lib/theme/theme'
+import { useLanguage, useTranslate } from 'frr-web/lib/theme/language'
+import { useFormTheme } from '../theme/theme'
 
 /*
  * Value mapper
@@ -146,8 +146,8 @@ type FieldItemReadOnlyValueProps<FormData> = {
 const FieldItemReadOnlyValue = <FormData extends {}>(
   props: FieldItemReadOnlyValueProps<FormData>,
 ) => {
-  const language = React.useContext(getLanguageContext())
-  const translate = getTranslation(language)
+  const language = useLanguage()
+  const translate = useTranslate(language)
 
   const readOnlyStyle: Array<'value' | 'valueHighlighted'> = ['value']
 
@@ -190,7 +190,7 @@ type FieldItemReadOnlyProps<FormData> = Omit<
 export const FieldItemReadOnly = <FormData extends {}>(
   props: FieldItemReadOnlyProps<FormData>,
 ) => {
-  const theme = React.useContext(getThemeContext())
+  const theme = useFormTheme()
   const getRowStyle = useCSSStyles(theme, 'row')({})
   const getFieldStyle = useCSSStyles(theme, 'fieldReadOnly')({})
 

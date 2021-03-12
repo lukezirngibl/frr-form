@@ -1,8 +1,8 @@
-import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import { processRepeatSection } from '../util'
 import { FieldSection } from './FieldSection'
 import { CommonThreadProps, FormFieldRepeatSection } from './types'
+import { useLanguage, useTranslate } from 'frr-web/lib/theme/language'
 
 type FieldRepeatSection<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldRepeatSection<FormData>
@@ -18,8 +18,8 @@ export const FieldRepeatSection = <FormData extends {}>({
   style,
 }: FieldRepeatSection<FormData>) => {
   // Translation
-  const language = React.useContext(getLanguageContext())
-  const translate = getTranslation(language)
+  const language = useLanguage()
+  const translate = useTranslate(language)
 
   if (fieldRepeatSection.isVisible && !fieldRepeatSection.isVisible(data)) {
     return <></>

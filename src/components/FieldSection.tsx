@@ -1,10 +1,10 @@
 import { P } from 'frr-web/lib/html'
-import { getLanguageContext, getTranslation } from 'frr-web/lib/theme/language'
 import React from 'react'
 import styled from 'styled-components'
-import { FormTheme, getThemeContext } from '../theme/theme'
+import { useFormTheme } from '../theme/theme'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { createStyled } from 'frr-web/lib/theme/util'
+import { useLanguage, useTranslate } from 'frr-web/lib/theme/language'
 import { FieldGroup } from './FieldGroup'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
 import { FieldRepeatSection } from './FieldRepeatSection'
@@ -67,13 +67,13 @@ export const FieldSection = <FormData extends {}>({
 }: FieldSection<FormData>) => {
   const dispatch = useDispatch()
   // Form styles
-  const theme = React.useContext(getThemeContext()) as FormTheme
+  const theme = useFormTheme()
   const getSectionStyle = useCSSStyles(theme, 'section')(style?.section || {})
   const getSectionRightStyle = useCSSStyles(theme, 'sectionRight')({})
 
   // Translation
-  const language = React.useContext(getLanguageContext())
-  const translate = getTranslation(language)
+  const language = useLanguage()
+  const translate = useTranslate(language)
 
   // Icon
   const getIcon = useInlineStyle(theme, 'icon')({})

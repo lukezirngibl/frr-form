@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormTheme, getThemeContext } from '../theme/theme'
+import { useFormTheme } from '../theme/theme'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { CommonThreadProps, FormFieldRow, MultiInputField } from './types'
 import { Label } from 'frr-web/lib/components'
@@ -23,7 +23,7 @@ export const FieldMultiInput = <FormData extends {}>({
   style,
 }: FieldRowProps<FormData>) => {
   // Form styles
-  const theme = React.useContext(getThemeContext()) as FormTheme
+  const theme = useFormTheme()
 
   const getFieldMultiInputStyle = useInlineStyle(theme, 'fieldMultiInput')({})
   const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})

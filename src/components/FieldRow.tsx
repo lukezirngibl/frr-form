@@ -1,7 +1,7 @@
 import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
 import styled from 'styled-components'
-import { FormTheme, getThemeContext } from '../theme/theme'
+import { useFormTheme } from '../theme/theme'
 import { useCSSStyles } from '../theme/util'
 import { FieldRowItem } from './FieldRowItem'
 import { CommonThreadProps, FormFieldRow } from './types'
@@ -36,7 +36,7 @@ export const FieldRow = <FormData extends {}>({
   style,
 }: FieldRowProps<FormData>) => {
   // Form styles
-  const theme = React.useContext(getThemeContext()) as FormTheme
+  const theme = useFormTheme()
   const getRowStyle = useCSSStyles(theme, 'row')(style?.row || {})
 
   const commonFieldItemProps = { data, style, width: (1 / field.length) * 100 }

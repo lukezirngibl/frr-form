@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react'
 import styled, { CSSProperties } from 'styled-components'
-import { getThemeContext } from '../theme/theme'
+import { useFormTheme } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
 
 /*
@@ -52,7 +52,7 @@ export const FieldScrollableWrapper = <FormData extends {}>(
   props: FieldScrollableWrapperProps<FormData>,
 ) => {
   /* Styles */
-  const theme = React.useContext(getThemeContext())
+  const theme = useFormTheme()
   const getRowStyle = useInlineStyle(theme, 'row')()
 
   const width = !isNaN(props.width) ? props.width : 100

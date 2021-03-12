@@ -1,6 +1,6 @@
 import { P } from 'frr-web/lib/html'
 import React from 'react'
-import { FormTheme, getThemeContext } from '../theme/theme'
+import { useFormTheme } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
 import {
   CommonThreadProps,
@@ -25,7 +25,7 @@ export const FieldGroup = <FormData extends {}>({
   style,
 }: FieldGroup<FormData>) => {
   // Form styles
-  const theme = React.useContext(getThemeContext()) as FormTheme
+  const theme = useFormTheme()
   const getGroupStyle = useInlineStyle(theme, 'group')(style?.group || {})
 
   const commonFieldProps = {

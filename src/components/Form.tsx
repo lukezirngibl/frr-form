@@ -6,7 +6,7 @@ import {
 import React, { ReactNode, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { FormTheme, getThemeContext } from '../theme/theme'
+import { FormTheme, useFormTheme } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
 import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
@@ -22,6 +22,7 @@ export type FormProps<FormData> = {
   children?: ReactNode
   style?: Partial<FormTheme>
   data: FormData
+  dataTestId?: string
   display?: DisplayType
   formFields: Array<FormField<FormData>>
   onSubmit?: (params: { dispatch: any; formState: FormData }) => void
@@ -70,10 +71,11 @@ export const Form = <FormData extends {}>({
   renderTopChildren,
   renderBottomChildren,
   readOnly,
+  dataTestId,
   isVisible,
 }: FormProps<FormData>) => {
   const dispatch = useDispatch()
-  const theme = React.useContext(getThemeContext())
+  const theme = useFormTheme()
   const getFormStyle = useInlineStyle(theme, 'form')(style?.form || {})
 
   const [showValidation, setShowValidation] = React.useState(false)
@@ -224,6 +226,7 @@ export const Form = <FormData extends {}>({
     <FormWrapper
       {...getFormStyle('wrapper')}
       className={readOnly ? 'readonly' : ''}
+      data-test-id={dataTestId}
     >
       {renderTopChildren && renderTopChildren(data)}
 
