@@ -4,7 +4,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "author": "Luke Zirngibl",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "keywords": [],
   "scripts": {
     "clean": "rm -rf node_modules/@material-ui/core node_modules/@material-ui/styles node_modules/react node_modules/react-dom node_modules/react-redux node_modules/styled-components node_modules/frr-web",
