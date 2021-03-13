@@ -23,6 +23,7 @@ export type FormProps<FormData> = {
   children?: ReactNode
   style?: Partial<FormTheme>
   data: FormData
+  disableValidation?: boolean
   dataTestId?: string
   display?: DisplayType
   formFields: Array<FormField<FormData>>
@@ -69,6 +70,7 @@ export const Form = <FormData extends {}>({
   onInvalidSubmit,
   onChange,
   buttons,
+  disableValidation,
   renderTopChildren,
   renderBottomChildren,
   readOnly,
@@ -125,16 +127,20 @@ export const Form = <FormData extends {}>({
     computeFieldError(f) !== null
 
   const submit = () => {
-    const visibleFormFields = filterByVisibility(formFields, data)
-    const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
-
-    if (isNotValid) {
-      setShowValidation(true)
-      if (onInvalidSubmit) {
-        onInvalidSubmit()
-      }
-    } else if (typeof onSubmit === 'function') {
+    if (disableValidation) {
       onSubmit({ dispatch, formState: data })
+    } else {
+      const visibleFormFields = filterByVisibility(formFields, data)
+      const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
+
+      if (isNotValid) {
+        setShowValidation(true)
+        if (onInvalidSubmit) {
+          onInvalidSubmit()
+        }
+      } else if (typeof onSubmit === 'function') {
+        onSubmit({ dispatch, formState: data })
+      }
     }
   }
 
