@@ -17,7 +17,7 @@ import { FieldRepeatSection } from './FieldRepeatSection'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldSection } from './FieldSection'
 import { FieldRow } from './FieldRow'
-import { setScrolled } from '../util'
+import { setScrolled, FormLens } from '../util'
 
 export type FormProps<FormData> = {
   children?: ReactNode
@@ -29,6 +29,7 @@ export type FormProps<FormData> = {
   formFields: Array<FormField<FormData>>
   onSubmit?: (params: { dispatch: any; formState: FormData }) => void
   onInvalidSubmit?: () => void
+  onChangeWithLens?: (lens: FormLens<FormData, any>, value: any) => void
   onChange: (formState: FormData) => void
   buttons?: Array<
     Omit<ButtonProps, 'onClick'> & {
@@ -73,6 +74,7 @@ export const Form = <FormData extends {}>({
   disableValidation,
   renderTopChildren,
   renderBottomChildren,
+  onChangeWithLens,
   readOnly,
   dataTestId,
   isVisible,
@@ -144,11 +146,21 @@ export const Form = <FormData extends {}>({
     }
   }
 
+  const internalOnChange = (lens: FormLens<FormData, any>, value: any) => {
+    if (onChangeWithLens) {
+      onChangeWithLens(lens, value)
+    } else {
+      onChange(lens.set(value)(data))
+    }
+  }
+
+  // console.log('formData: ', data)
+
   const commonFieldProps = {
     data,
     style,
     showValidation,
-    onChange,
+    onChange: internalOnChange,
     formReadOnly: readOnly,
   }
 
