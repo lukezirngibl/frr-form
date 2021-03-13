@@ -17,6 +17,7 @@ import { FieldRepeatSection } from './FieldRepeatSection'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldSection } from './FieldSection'
 import { FieldRow } from './FieldRow'
+import { setScrolled } from '../util'
 
 export type FormProps<FormData> = {
   children?: ReactNode
@@ -80,9 +81,10 @@ export const Form = <FormData extends {}>({
 
   const [showValidation, setShowValidation] = React.useState(false)
 
-  // useEffect(() => {
-  //   setShowValidation(false)
-  // }, [formFields, data])
+  useEffect(() => {
+    setShowValidation(false)
+    setScrolled(false)
+  }, [formFields])
 
   const computeFieldError = (f: SingleFormField<FormData>): string | null => {
     const isRequired =
