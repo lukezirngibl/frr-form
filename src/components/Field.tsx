@@ -113,6 +113,7 @@ export const Field = <FormData extends {}>({
         key={
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
+        error={hasError}
         value={lens.get(data)}
         onChange={(value) => onChange(lens, value)}
         label={label}
