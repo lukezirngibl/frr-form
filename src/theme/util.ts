@@ -11,7 +11,10 @@ export const useInlineStyle: <C extends keyof FormTheme>(
   elementKeys: Array<K> | K,
   internalOverride?: CSSProperties,
   className?: string,
-) => { style: FormTheme[C][K]; id: string } = getUseInlineStyle<FormTheme>()
+) => {
+  style: FormTheme[C][K]
+  dataThemeId: string
+} = getUseInlineStyle<FormTheme>()
 
 export const useCSSStyles: <C extends keyof FormTheme>(
   theme: FormTheme,
@@ -21,4 +24,4 @@ export const useCSSStyles: <C extends keyof FormTheme>(
 ) => <K extends keyof FormTheme[C]>(
   elementKeys: Array<K> | K,
   internalOverride?: CSSProperties,
-) => { cssStyles: string; id: string } = getUseCSSStyles<FormTheme>()
+) => { cssStyles: string; dataThemeId: string } = getUseCSSStyles<FormTheme>()
