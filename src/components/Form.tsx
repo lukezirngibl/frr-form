@@ -17,16 +17,19 @@ import { FieldRepeatSection } from './FieldRepeatSection'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldSection } from './FieldSection'
 import { FieldRow } from './FieldRow'
+import { setScrolled, FormLens } from '../util'
 
 export type FormProps<FormData> = {
   children?: ReactNode
   style?: Partial<FormTheme>
   data: FormData
+  disableValidation?: boolean
   dataTestId?: string
   display?: DisplayType
   formFields: Array<FormField<FormData>>
   onSubmit?: (params: { dispatch: any; formState: FormData }) => void
   onInvalidSubmit?: () => void
+  onChangeWithLens?: (lens: FormLens<FormData, any>, value: any) => void
   onChange: (formState: FormData) => void
   buttons?: Array<
     Omit<ButtonProps, 'onClick'> & {
@@ -68,8 +71,10 @@ export const Form = <FormData extends {}>({
   onInvalidSubmit,
   onChange,
   buttons,
+  disableValidation,
   renderTopChildren,
   renderBottomChildren,
+  onChangeWithLens,
   readOnly,
   dataTestId,
   isVisible,
@@ -80,9 +85,10 @@ export const Form = <FormData extends {}>({
 
   const [showValidation, setShowValidation] = React.useState(false)
 
-  // useEffect(() => {
-  //   setShowValidation(false)
-  // }, [formFields, data])
+  useEffect(() => {
+    setShowValidation(false)
+    setScrolled(false)
+  }, [formFields])
 
   const computeFieldError = (f: SingleFormField<FormData>): string | null => {
     const isRequired =
@@ -123,24 +129,38 @@ export const Form = <FormData extends {}>({
     computeFieldError(f) !== null
 
   const submit = () => {
-    const visibleFormFields = filterByVisibility(formFields, data)
-    const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
-
-    if (isNotValid) {
-      setShowValidation(true)
-      if (onInvalidSubmit) {
-        onInvalidSubmit()
-      }
-    } else if (typeof onSubmit === 'function') {
+    if (disableValidation) {
       onSubmit({ dispatch, formState: data })
+    } else {
+      const visibleFormFields = filterByVisibility(formFields, data)
+      const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
+
+      if (isNotValid) {
+        setShowValidation(true)
+        if (onInvalidSubmit) {
+          onInvalidSubmit()
+        }
+      } else if (typeof onSubmit === 'function') {
+        onSubmit({ dispatch, formState: data })
+      }
     }
   }
+
+  const internalOnChange = (lens: FormLens<FormData, any>, value: any) => {
+    if (onChangeWithLens) {
+      onChangeWithLens(lens, value)
+    } else {
+      onChange(lens.set(value)(data))
+    }
+  }
+
+  // console.log('formData: ', data)
 
   const commonFieldProps = {
     data,
     style,
     showValidation,
-    onChange,
+    onChange: internalOnChange,
     formReadOnly: readOnly,
   }
 

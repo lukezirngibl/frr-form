@@ -19,6 +19,7 @@ import { YesNoOptionGroup } from 'frr-web/lib/components/YesNoOptionGroup'
 import { YesNoRadioGroup } from 'frr-web/lib/components/YesNoRadioGroup'
 import React from 'react'
 import { FormFieldType, SingleFormField } from './types'
+import { FormLens } from '../util'
 
 // import { CheckboxGroup } from 'frr-web/lib/components/CheckboxGroup'
 // import { Dropdown } from 'frr-web/lib/components/Dropdown'
@@ -33,7 +34,7 @@ import { FormFieldType, SingleFormField } from './types'
 type FieldItemProps<FormData> = {
   field: SingleFormField<FormData>
   fieldIndex: number
-  onChange: (v: FormData) => void
+  onChange: (lens: FormLens<FormData, any>, value: any) => void
   data: FormData
   errorLabel: string
   hasError: boolean
@@ -63,7 +64,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         error={hasError}
         label={label}
         dataTestId={dataTestId}
@@ -80,7 +81,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data) || ''}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         error={hasError}
         label={label}
         dataTestId={dataTestId}
@@ -97,7 +98,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
         dataTestId={dataTestId}
       />
@@ -113,7 +114,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
         dataTestId={dataTestId}
       />
@@ -129,7 +130,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
         dataTestId={dataTestId}
       />
@@ -145,7 +146,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value: string) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         error={hasError}
         label={label}
         dataTestId={dataTestId}
@@ -162,7 +163,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         dataTestId={dataTestId}
         label={label}
       />
@@ -178,7 +179,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
         dataTestId={dataTestId}
         error={hasError}
@@ -195,7 +196,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
         dataTestId={dataTestId}
         error={hasError}
@@ -212,7 +213,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
         error={hasError}
         dataTestId={dataTestId}
@@ -229,7 +230,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
         error={hasError}
         dataTestId={dataTestId}
@@ -246,7 +247,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         error={hasError}
         label={label}
       />
@@ -262,7 +263,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
       />
     )
@@ -277,7 +278,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         error={hasError}
         label={label}
       />
@@ -293,7 +294,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         error={hasError}
         label={label}
       />
@@ -309,7 +310,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         // error={hasError}
         label={label}
       />
@@ -325,7 +326,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value: string) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
         error={hasError}
         dataTestId={dataTestId}
@@ -342,7 +343,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value: number) => onChange(lens.set(Number(value))(data))}
+        onChange={(value) => onChange(lens, value)}
         label={label}
         error={hasError}
         dataTestId={dataTestId}
@@ -359,7 +360,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         error={hasError}
         label={label}
       />
@@ -375,7 +376,7 @@ export const Field = <FormData extends {}>({
           typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
         }
         value={lens.get(data)}
-        onChange={(value) => onChange(lens.set(value)(data))}
+        onChange={(value) => onChange(lens, value)}
         error={hasError}
         label={label}
         dataTestId={dataTestId}
@@ -392,7 +393,7 @@ export const Field = <FormData extends {}>({
   //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
   //       }
   //       value={lens.get(data)}
-  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //        onChange={(value) => onChange(lens, value)}
   //       error={hasError}
   //       label={label}
   //     />
@@ -408,7 +409,7 @@ export const Field = <FormData extends {}>({
   //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
   //       }
   //       value={lens.get(data)}
-  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //        onChange={(value) => onChange(lens, value)}
   //       error={hasError}
   //       label={label}
   //     />
@@ -424,7 +425,7 @@ export const Field = <FormData extends {}>({
   //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
   //       }
   //       value={lens.get(data)}
-  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //        onChange={(value) => onChange(lens, value)}
   //       error={hasError}
   //       label={label}
   //     />
@@ -440,7 +441,7 @@ export const Field = <FormData extends {}>({
   //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
   //       }
   //       value={lens.get(data)}
-  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //        onChange={(value) => onChange(lens, value)}
   //       error={hasError}
   //       label={label}
   //     />
@@ -456,7 +457,7 @@ export const Field = <FormData extends {}>({
   //         typeof fieldIndex === 'string' ? fieldIndex : `field-${fieldIndex}`
   //       }
   //       value={lens.get(data)}
-  //       onChange={(value) => onChange(lens.set(value)(data))}
+  //        onChange={(value) => onChange(lens, value)}
   //       error={hasError}
   //       label={label}
   //     />

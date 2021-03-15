@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect } from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import { useFormTheme } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
+import { setScrolled, getScrolled } from '../util'
 
 /*
  * Styled components
@@ -46,8 +47,6 @@ const x = {
   },
 }
 
-let scrolled = false
-
 export const FieldScrollableWrapper = <FormData extends {}>(
   props: FieldScrollableWrapperProps<FormData>,
 ) => {
@@ -57,12 +56,14 @@ export const FieldScrollableWrapper = <FormData extends {}>(
 
   const width = !isNaN(props.width) ? props.width : 100
 
+  const scrolled = getScrolled()
+
   const fieldRef = React.createRef<HTMLDivElement>()
   const onScrollToError = () => {
-    scrolled = true
+    setScrolled(true)
     setTimeout(() => {
       if (fieldRef.current) {
-        scrolled = false
+        setScrolled(false)
         fieldRef.current.scrollIntoView({
           behavior: 'smooth',
         })

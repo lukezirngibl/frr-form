@@ -437,7 +437,7 @@ export type CommonThreadProps<FormData> = {
   data: FormData
   fieldIndex: number
   formReadOnly: boolean
-  onChange: (formState: FormData) => void
+  onChange: (lens: FormLens<FormData, any>, value: any) => void
   showValidation: boolean
   style: Partial<FormTheme> | undefined
 }
