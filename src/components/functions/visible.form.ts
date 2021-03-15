@@ -49,7 +49,8 @@ const processFormSectionFields = <T>(
       return [...acc, ...processGroupFields(f.fields, fn)]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
-      f.type === FormFieldType.FormFieldRepeatSection
+      f.type === FormFieldType.FormFieldRepeatSection ||
+      f.type === FormFieldType.Static
     ) {
       return acc
     } else {
@@ -88,7 +89,8 @@ export const filterByVisibility = <T>(
       return [...groups, ...processFormFieldRow(f.fields, fn)]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
-      f.type === FormFieldType.FormFieldRepeatSection
+      f.type === FormFieldType.FormFieldRepeatSection ||
+      f.type === FormFieldType.Static
     ) {
       return groups
     } else {

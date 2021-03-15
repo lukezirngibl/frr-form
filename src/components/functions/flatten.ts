@@ -44,6 +44,8 @@ const processFormSectionFields = <T>(
       ]
     } else if (f.type === FormFieldType.MultiInput) {
       acc = [...acc, ...f.fields]
+    } else if (f.type === FormFieldType.Static) {
+      acc = acc
     } else if (f.type === FormFieldType.FormFieldRepeatSection) {
       const sections = processRepeatSection(f, data, (v) => v)
       acc = [
@@ -79,6 +81,8 @@ export const flatten = <T>(
       array = [...array, ...processFormSection(f, data)]
     } else if (f.type === FormFieldType.MultiInput) {
       array = [...array, ...f.fields]
+    } else if (f.type === FormFieldType.Static) {
+      array = array
     } else if (f.type === FormFieldType.FormFieldRepeatGroup) {
       const groups = processRepeatGroup(f, data)
       array = [

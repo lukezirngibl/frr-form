@@ -17,6 +17,7 @@ import { FieldRepeatSection } from './FieldRepeatSection'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldSection } from './FieldSection'
 import { FieldRow } from './FieldRow'
+import { StaticChecklist } from 'frr-web/lib/components/StaticChecklist'
 import { setScrolled, FormLens } from '../util'
 
 export type FormProps<FormData> = {
@@ -228,6 +229,10 @@ export const Form = <FormData extends {}>({
             fieldIndex={fieldIndex}
             {...commonFieldProps}
           />
+        )
+      case FormFieldType.Static:
+        return (
+          <StaticChecklist key={`field-${fieldIndex}`} {...field.checklist} />
         )
 
       default:

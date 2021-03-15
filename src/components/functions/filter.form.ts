@@ -64,7 +64,8 @@ const processFormSectionFields = <T>(
       return [...acc, processMultiInput(f, fn)]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
-      f.type === FormFieldType.FormFieldRepeatSection
+      f.type === FormFieldType.FormFieldRepeatSection ||
+      f.type === FormFieldType.Static
     ) {
       return acc
     } else {
@@ -95,7 +96,8 @@ export const filterFormFields = <T>(
       return [...groups, processFormSection(f, fn)]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
-      f.type === FormFieldType.FormFieldRepeatSection
+      f.type === FormFieldType.FormFieldRepeatSection ||
+      f.type === FormFieldType.Static
     ) {
       return groups
     } else {

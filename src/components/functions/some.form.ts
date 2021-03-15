@@ -38,7 +38,8 @@ const processFormSectionFields = <T>(
       return processFormFieldRow(f.fields, fn)
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
-      f.type === FormFieldType.FormFieldRepeatSection
+      f.type === FormFieldType.FormFieldRepeatSection ||
+      f.type === FormFieldType.Static
     ) {
       return false
     } else {
@@ -61,7 +62,8 @@ export const someFormFields = <T>(
       return processFormFieldRow(f.fields, fn)
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
-      f.type === FormFieldType.FormFieldRepeatSection
+      f.type === FormFieldType.FormFieldRepeatSection ||
+      f.type === FormFieldType.Static
     ) {
       return false
     } else {

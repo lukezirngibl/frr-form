@@ -19,6 +19,7 @@ import { Props as TextNumberInputProps } from 'frr-web/lib/components/TextNumber
 import { Props as ToggleProps } from 'frr-web/lib/components/Toggle'
 import { Props as YesNoOptionGroupProps } from 'frr-web/lib/components/YesNoOptionGroup'
 import { Props as YesNoRadioGroupProps } from 'frr-web/lib/components/YesNoRadioGroup'
+import { Props as StaticChecklistProps } from 'frr-web/lib/components/StaticChecklist'
 import { ReactNode } from 'react'
 import { CSSProperties } from 'styled-components'
 import { FormTheme } from '../theme/theme'
@@ -63,6 +64,7 @@ export enum FormFieldType {
   Toggle = 'Toggle',
   YesNoOptionGroup = 'YesNoOptionGroup',
   YesNoRadioGroup = 'YesNoRadioGroup',
+  Static = 'Static',
 }
 
 export enum Orientation {
@@ -304,6 +306,7 @@ export const fieldMap = {
   [FormFieldType.FormFieldRepeatSection]: null,
   [FormFieldType.FormSection]: null,
   [FormFieldType.FormText]: null,
+  [FormFieldType.Static]: null,
   [FormFieldType.MultiSelect]: null as MultiSelectField<unknown>,
   [FormFieldType.MultiInput]: null as MultiInputField<unknown>,
   [FormFieldType.NumberInput]: null as NumberInputField<unknown>,
@@ -394,6 +397,14 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
   isVisible?: (formData: FormData) => boolean
 }
 
+export type StaticSection = {
+  title?: string
+  description?: string
+  style?: Partial<FormTheme['section']>
+  type: FormFieldType.Static
+  checklist: StaticChecklistProps
+}
+
 export type SectionField<FormData> =
   | MultiInputField<FormData>
   | SingleFormField<FormData>
@@ -401,6 +412,7 @@ export type SectionField<FormData> =
   | FormFieldGroup<FormData>
   | FormFieldRepeatGroup<FormData>
   | FormFieldRepeatSection<FormData>
+  | StaticSection
 
 export type SectionFields<FormData> = Array<SectionField<FormData>>
 
@@ -432,6 +444,7 @@ export type FormField<FormData> =
   | FormSection<FormData>
   | FormFieldRepeatGroup<FormData>
   | FormFieldRepeatSection<FormData>
+  | StaticSection
 
 export type CommonThreadProps<FormData> = {
   data: FormData

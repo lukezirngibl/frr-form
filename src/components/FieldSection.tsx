@@ -18,6 +18,7 @@ import { MediaQuery } from 'frr-web/lib/theme/theme'
 import { useDispatch } from 'react-redux'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldRow } from './FieldRow'
+import { StaticChecklist } from 'frr-web/lib/components/StaticChecklist'
 
 const FormSectionWrapper = createStyled('div')
 
@@ -144,6 +145,11 @@ export const FieldSection = <FormData extends {}>({
             fieldIndex={fieldIndex}
             {...commonFieldProps}
           />
+        )
+
+      case FormFieldType.Static:
+        return (
+          <StaticChecklist key={`field-${fieldIndex}`} {...field.checklist} />
         )
 
       default:
