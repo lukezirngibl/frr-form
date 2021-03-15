@@ -1,10 +1,10 @@
 # Configurable React + TS Form
 
-### Motivation
+## Motivation
 
 It seems like 90% of a frontend developer's life is implementing forms. Forms, forms, forms. They're boring and styling them is a pain. You usually end up with way too much code for something that seems so boilerplate. For this reason, I've been using a configurable typesafe form instead. You provide the styling & layout once via a context hook and BOOM, you can crank out tons of forms throughout your app with just a configuration array. NO STYLING. NO JSX. Of course there are limitiations, but for your standard day-to-day forms, this library should be suitable. 
 
-### Getting started:
+## Getting started:
 
 ##### Yarn
 ```
@@ -15,34 +15,6 @@ It seems like 90% of a frontend developer's life is implementing forms. Forms, f
 ```
  yarn add frr-form
 ```
-
-#### Build library
-
-To build the library, run the build script and clean up afterwards
-1. Build library with types: ```yarn build-types```
-2. (Clean node_modules: ```yarn clean```)
-
-#### Watch mode for local development
-
-In the locale environment you might want to link this library to the consuming application and keep it in watch mode. Follow these steps to prepare the library for the watch mode
-
-0. (One time only) Link package: ```yarn link```
-1. Build the types first: ```yarn build-types```
-2. Remove the (critical) peer dependencies: ```yarn clean```
-3. Start the build in watch mode (babel): ```yarn build:watch```
-
-*IMPORTANT NOTE* Types are not transpiled by Babel. As a consequence, changes of types require a rebuild of the types with the TypeScript compiler in order for consuming applications to receive them.
-As the TypeScript compiler requires all dependencies, we first have to install those as well. Unfortunately libraries like React or Style-Components cannot handle duplicate installations of the same package and will crash in the browser during rendering.
-That is why we have to clean the _node_modules_ from all peerDependencies before using it.
-
-#### Using local frr-web in development
-
-Follow these steps to run the library with the frr-web package locally in watch mode:
-  1. Follow the instructions in the README of the _frr-web_ package to install it and run it locally in watch mode [README](https://github.com/lukezirngibl/frr-web/blob/master/README.md#linking-local-frr-web-library)
-  2. Run the _devevlopment watch_ script: ```yarn dev:watch```. This links the web-frr package and start the babel transpiler in watch mode
-
-To create the types with typescript using the local _frr-web_ package, you can run:
-```yarn dev:build-types```
 
 ### Example
 
@@ -156,3 +128,61 @@ export const App = () => (
 )
 
 ```
+
+
+## Development
+
+### Build library
+
+To build the library, run the build script.
+1. Install packages: `yarn`
+2. Build library with types: `yarn build`
+
+### Develop in watch-mode
+
+Follow these steps to run the library build in watch mode using the local _frr-web_ package:
+
+0. (Follow the instructions in the [README](https://github.com/lukezirngibl/frr-web/blob/master/README.md#linking-local-frr-web-library) of the _frr-web_ package to install it, build it locally and create a symlink)
+1. Link the local _frr-web_ package: `yarn link-frr`
+2. Build the types first: `yarn build`
+3. Start the build in watch mode (babel): `yarn babel:watch` (The script cleans the peerDependencies, links the _frr-web_ package and starts the babel transpiler in watch mode)
+
+To rebuild the types the following actions are required (for the why see **IMPORTANT NOTE** below):
+1. (Quit watch mode: `ctrl c`).
+2. Run: `yarn build-types`
+3. Start babel again: `yarn babel:watch`
+
+### Use package in linked (watch-)mode
+You might want to link this library to the consuming application and keep it in watch mode to develop in parallel.
+
+- Create a symlink: `yarn link` (This you have to **do only once**)
+- Run build with babel: `yarn babel:watch` 
+
+**IMPORTANT NOTE**
+Types are not transpiled by Babel. As a consequence, changes of types require a rebuild of the types with the TypeScript compiler in order for consuming applications to receive them.
+
+As the TypeScript compiler requires all dependencies including peerDependencies, we first have to install those as well. Unfortunately libraries like React or Style-Components cannot handle duplicate installations of the same package in one application and will crash in the browser during rendering.
+
+That is why we have to clean the _node_modules_ from all peerDependencies before using it. And that is also why we cannot really use the TypeScript compiler to develop in watch-mode with linked modules.
+
+
+### Pitfalls
+Building types fails with the error message: 
+> The inferred type of 'MainSectionWrapper' cannot be named without a reference to 'frr-web/node_modules/@types/styled-components'. This is likely not portable. A type annotation is necessary.
+
+**Solution**: Do not export styled components directly from a file. The error above is thrown because of the following statement:
+```
+export const MainSectionWrapper = styled.div`
+  flex-grow: 1;
+`
+```
+
+Remove `export` and the compiler will pass
+```
+const MainSectionWrapper = styled.div`
+  flex-grow: 1;
+`
+```
+
+
+
