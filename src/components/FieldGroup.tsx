@@ -1,7 +1,7 @@
 import { P } from 'frr-web/lib/html'
 import React from 'react'
 import { useFormTheme } from '../theme/theme'
-import { useInlineStyle } from '../theme/util'
+import { useInlineStyle, useCSSStyles } from '../theme/util'
 import {
   CommonThreadProps,
   FormFieldGroup,
@@ -26,7 +26,8 @@ export const FieldGroup = <FormData extends {}>({
 }: FieldGroup<FormData>) => {
   // Form styles
   const theme = useFormTheme()
-  const getGroupStyle = useInlineStyle(theme, 'group')(style?.group || {})
+  const getInlineStyle = useInlineStyle(theme, 'group')(style?.group || {})
+  const getCSSStyle = useCSSStyles(theme, 'group')(style?.group || {})
 
   const commonFieldProps = {
     data,
@@ -79,26 +80,26 @@ export const FieldGroup = <FormData extends {}>({
           ? fieldGroupIndex
           : `group-${fieldGroupIndex}`
       }
-      style={{
-        ...getGroupStyle('wrapper'),
-        ...(fieldGroup.style ? fieldGroup.style.wrapper || {} : {}),
-      }}
+      {...getInlineStyle(
+        'wrapper',
+        fieldGroup.style ? fieldGroup.style.wrapper || {} : {},
+      )}
     >
       {fieldGroup.title && (
         <P
-          style={{
-            ...getGroupStyle('title'),
-            ...(fieldGroup.style ? fieldGroup.style.title || {} : {}),
-          }}
+          {...getCSSStyle(
+            'title',
+            fieldGroup.style ? fieldGroup.style.title || {} : {},
+          )}
           label={fieldGroup.title}
         />
       )}
       {fieldGroup.description && (
         <P
-          style={{
-            ...getGroupStyle('description'),
-            ...(fieldGroup.style ? fieldGroup.style.description || {} : {}),
-          }}
+          {...getCSSStyle(
+            'description',
+            fieldGroup.style ? fieldGroup.style.description || {} : {},
+          )}
           label={fieldGroup.description}
         />
       )}
