@@ -36,7 +36,7 @@ type FieldItemProps<FormData> = {
   fieldIndex: number
   onChange: (lens: FormLens<FormData, any>, value: any) => void
   data: FormData
-  errorLabel: string
+  errorLabel: string | string[]
   hasError: boolean
 }
 

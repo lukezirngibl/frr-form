@@ -38,12 +38,6 @@ export type FormTheme = {
     image: CSSProperties
     label: CSSProperties
   }
-  icon: {
-    edit: {
-      svg?: string
-      viewBox?: string
-    }
-  }
 }
 
 export const defaultFormTheme: FormTheme = {
@@ -82,10 +76,7 @@ export const defaultFormTheme: FormTheme = {
     valueHighlighted: {},
     image: {},
     label: {},
-  },
-  icon: {
-    edit: {},
-  },
+  }
 }
 
 export type FormThemeConfig = { [k in keyof FormTheme]?: Partial<FormTheme[k]> }
