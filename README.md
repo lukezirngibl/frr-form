@@ -2,16 +2,18 @@
 
 ## Motivation
 
-It seems like 90% of a frontend developer's life is implementing forms. Forms, forms, forms. They're boring and styling them is a pain. You usually end up with way too much code for something that seems so boilerplate. For this reason, I've been using a configurable typesafe form instead. You provide the styling & layout once via a context hook and BOOM, you can crank out tons of forms throughout your app with just a configuration array. NO STYLING. NO JSX. Of course there are limitiations, but for your standard day-to-day forms, this library should be suitable. 
+It seems like 90% of a frontend developer's life is implementing forms. Forms, forms, forms. They're boring and styling them is a pain. You usually end up with way too much code for something that seems so boilerplate. For this reason, I've been using a configurable typesafe form instead. You provide the styling & layout once via a context hook and BOOM, you can crank out tons of forms throughout your app with just a configuration array. NO STYLING. NO JSX. Of course there are limitiations, but for your standard day-to-day forms, this library should be suitable.
 
 ## Getting started:
 
 ##### Yarn
+
 ```
  yarn add frr-form
 ```
 
 ##### NPM
+
 ```
  yarn add frr-form
 ```
@@ -19,13 +21,11 @@ It seems like 90% of a frontend developer's life is implementing forms. Forms, f
 ### Example
 
 ```ts
-
 import * as React from 'react'
 import { Lens } from 'monocle-ts'
-import { getTheme, configureTheme } from '../src/theme/theme'
-
-import { FormField, Form } from '../src/components/Form'
-import { FormFieldType } from '../src/components/types'
+import { FormThemeContext, configureFormTheme } from 'frr-form/lib/theme/theme'
+import { FormField, Form } from 'frr-form/lib/components/Form'
+import { FormFieldType } from 'frr-form/lib/components/types'
 
 type Person = {
   name: string
@@ -99,42 +99,37 @@ export const personFormFields: Array<FormField<Person, any>> = [
   },
 ]
 
-const PersonForm = (props: { person: Person }) => (
-  <Form<Person, any>
-    formFields={personFormFields}
-    data={props.person}
-    onChange={p => {
-      // add update function
-    }}
-  />
-)
+const personData = {
+  name: 'Luke',
+  hairColor: 'brown',
+  age: 23,
+  height: 194,
+  description: 'average height',
+  email: 'luke@google.com',
+  website: 'www.foronered.com',
+}
 
-export const FormThemeContext = configureTheme({})
+const FormTheme = configureFormTheme({})
 
 export const App = () => (
-  <FormThemeContext.Provider value={getTheme()}>
-    <PersonForm
-      person={{
-        name: 'Luke',
-        hairColor: 'brown',
-        age: 23,
-        height: 194,
-        description: 'average height',
-        email: 'luke@google.com',
-        website: 'www.foronered.com',
+  <FormThemeContext.Provider value={FormTheme}>
+    <Form<Person>
+      formFields={personFormFields}
+      data={personData}
+      onChange={(p) => {
+        // add update function
       }}
     />
   </FormThemeContext.Provider>
 )
-
 ```
-
 
 ## Development
 
 ### Build library
 
 To build the library, run the build script.
+
 1. Install packages: `yarn`
 2. Build library with types: `yarn build`
 
@@ -148,15 +143,17 @@ Follow these steps to run the library build in watch mode using the local _frr-w
 3. Start the build in watch mode (babel): `yarn babel:watch` (The script cleans the peerDependencies, links the _frr-web_ package and starts the babel transpiler in watch mode)
 
 To rebuild the types the following actions are required (for the why see **IMPORTANT NOTE** below):
+
 1. (Quit watch mode: `ctrl c`).
 2. Run: `yarn build-types`
 3. Start babel again: `yarn babel:watch`
 
 ### Use package in linked (watch-)mode
+
 You might want to link this library to the consuming application and keep it in watch mode to develop in parallel.
 
 - Create a symlink: `yarn link` (This you have to **do only once**)
-- Run build with babel: `yarn babel:watch` 
+- Run build with babel: `yarn babel:watch`
 
 **IMPORTANT NOTE**
 Types are not transpiled by Babel. As a consequence, changes of types require a rebuild of the types with the TypeScript compiler in order for consuming applications to receive them.
@@ -165,12 +162,14 @@ As the TypeScript compiler requires all dependencies including peerDependencies,
 
 That is why we have to clean the _node_modules_ from all peerDependencies before using it. And that is also why we cannot really use the TypeScript compiler to develop in watch-mode with linked modules.
 
-
 ### Pitfalls
-Building types fails with the error message: 
+
+Building types fails with the error message:
+
 > The inferred type of 'MainSectionWrapper' cannot be named without a reference to 'frr-web/node_modules/@types/styled-components'. This is likely not portable. A type annotation is necessary.
 
 **Solution**: Do not export styled components directly from a file. The error above is thrown because of the following statement:
+
 ```
 export const MainSectionWrapper = styled.div`
   flex-grow: 1;
@@ -178,11 +177,9 @@ export const MainSectionWrapper = styled.div`
 ```
 
 Remove `export` and the compiler will pass
+
 ```
 const MainSectionWrapper = styled.div`
   flex-grow: 1;
 `
 ```
-
-
-
