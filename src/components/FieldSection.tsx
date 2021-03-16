@@ -1,24 +1,23 @@
+import { Link } from 'frr-web/lib/components/Link'
+import { StaticChecklist } from 'frr-web/lib/components/StaticChecklist'
 import { P } from 'frr-web/lib/html'
+import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { useFormTheme } from '../theme/theme'
-import { useCSSStyles, useInlineStyle } from '../theme/util'
-import { createStyled } from 'frr-web/lib/theme/util'
-import { useLanguage, useTranslate } from 'frr-web/lib/theme/language'
+import { useCSSStyles } from '../theme/util'
 import { FieldGroup } from './FieldGroup'
+import { FieldMultiInput } from './FieldMultiInput'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
 import { FieldRepeatSection } from './FieldRepeatSection'
+import { FieldRow } from './FieldRow'
 import {
   CommonThreadProps,
-  SectionField,
   FormFieldType,
   FormSection,
+  SectionField,
 } from './types'
-import { MediaQuery } from 'frr-web/lib/theme/theme'
-import { useDispatch } from 'react-redux'
-import { FieldMultiInput } from './FieldMultiInput'
-import { FieldRow } from './FieldRow'
-import { StaticChecklist } from 'frr-web/lib/components/StaticChecklist'
 
 const FormSectionWrapper = createStyled('div')
 
@@ -27,31 +26,6 @@ const MainSectionWrapper = styled.div`
 `
 
 const RightSectionWrapper = createStyled('div')
-
-const EditLink = createStyled(styled.a`
-  display: flex;
-  cursor: pointer;
-`)
-const EditIcon = createStyled(styled.span`
-  height: 20px;
-  width: 20px;
-
-  & svg {
-    color: currentColor;
-
-    & path,
-    circle,
-    polygon {
-      fill: currentColor;
-    }
-  }
-`)
-
-const EditText = styled.span`
-  @media ${MediaQuery.Mobile} {
-    display: none;
-  }
-`
 
 type FieldSection<FormData> = CommonThreadProps<FormData> & {
   field: FormSection<FormData>
@@ -71,14 +45,6 @@ export const FieldSection = <FormData extends {}>({
   const theme = useFormTheme()
   const getSectionStyle = useCSSStyles(theme, 'section')(style?.section || {})
   const getSectionRightStyle = useCSSStyles(theme, 'sectionRight')({})
-
-  // Translation
-  const language = useLanguage()
-  const translate = useTranslate(language)
-
-  // Icon
-  const getIcon = useInlineStyle(theme, 'icon')({})
-  const editIcon = getIcon('edit')
 
   const commonFieldProps = {
     data,
@@ -201,20 +167,12 @@ export const FieldSection = <FormData extends {}>({
         readOnly={formReadOnly}
       >
         {!!fieldSection.onEdit && (
-          <EditLink
-            onClick={() => {
-              fieldSection.onEdit({ dispatch })
-            }}
-            {...getSectionRightStyle('editLink')}
-          >
-            {editIcon.style.svg && (
-              <EditIcon
-                dangerouslySetInnerHTML={{ __html: editIcon.style.svg }}
-                {...getSectionRightStyle('editIcon')}
-              />
-            )}
-            <EditText>{translate('edit')}</EditText>
-          </EditLink>
+          <Link
+            icon={{ type: 'edit', style: getSectionRightStyle('editIcon') }}
+            label="edit"
+            onClick={() => fieldSection.onEdit({ dispatch })}
+            style={getSectionRightStyle('editLink')}
+          />
         )}
       </RightSectionWrapper>
     </FormSectionWrapper>
