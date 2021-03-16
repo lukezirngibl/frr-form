@@ -1,12 +1,13 @@
+import { Label } from 'frr-web/lib/components'
 import React from 'react'
 import { useFormTheme } from '../theme/theme'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
-import { CommonThreadProps, FormFieldRow, MultiInputField } from './types'
-import { Label } from 'frr-web/lib/components'
-import { FieldScrollableWrapper } from './FieldScrollableWrapper'
-import { FieldRowItem } from './FieldRowItem'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldRowWrapper } from './FieldRow'
+import { FieldRowItem } from './FieldRowItem'
+import { FieldScrollableWrapper } from './FieldScrollableWrapper'
+import { getComputeFieldError } from './functions/computeFieldError.form'
+import { CommonThreadProps, MultiInputField } from './types'
 
 type FieldRowProps<FormData> = CommonThreadProps<FormData> & {
   field: MultiInputField<FormData>
@@ -28,6 +29,17 @@ export const FieldMultiInput = <FormData extends {}>({
   const getFieldMultiInputStyle = useInlineStyle(theme, 'fieldMultiInput')({})
   const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
   const getCssRowStyle = useCSSStyles(theme, 'row')(style?.row || {})
+
+  // Error labels
+  const computeFieldError = getComputeFieldError(data)
+  const errorLabels = new Set(
+    showValidation
+      ? field.fields
+          .map((field) => computeFieldError(field))
+          .filter((label) => !!label)
+      : [],
+  )
+  const errorLabel: string[] = Array.from(errorLabels)
 
   const commonFieldProps = {
     data,
@@ -64,7 +76,8 @@ export const FieldMultiInput = <FormData extends {}>({
         hasError={false} // TODO
         {...getRowStyle('item')}
       >
-        {field.label && <Label {...field.label} />}
+        {field.label && <Label {...field.label} error={errorLabel.length > 0} errorLabel={errorLabel} />}
+
         <div
           {...getFieldMultiInputStyle('item')}
           key={`field-mulit-input-${fieldIndex}`}
