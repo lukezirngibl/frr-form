@@ -128,6 +128,8 @@ export const processRepeatGroup = <FormData extends {}>(
         return <></>
       } else if (repeatGroup.type === FormFieldType.MultiInput) {
         return repeatGroup
+      } else if (repeatGroup.type === FormFieldType.TextInputDescription) {
+        return repeatGroup
       } else {
         return {
           ...repeatGroup,
@@ -167,6 +169,10 @@ export const processRepeatSection = <FormData extends {}>(
             if (Array.isArray(repeatSectionField)) {
               return <></>
             } else if (repeatSectionField.type === FormFieldType.MultiInput) {
+              return repeatSectionField
+            } else if (
+              repeatSectionField.type === FormFieldType.TextInputDescription
+            ) {
               return repeatSectionField
             } else {
               return {

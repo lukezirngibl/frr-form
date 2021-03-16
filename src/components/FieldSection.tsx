@@ -1,5 +1,6 @@
 import { Link } from 'frr-web/lib/components/Link'
 import { StaticChecklist } from 'frr-web/lib/components/StaticChecklist'
+import { TextInputDescription } from 'frr-web/lib/components/TextInputDescription'
 import { P } from 'frr-web/lib/html'
 import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
@@ -7,6 +8,7 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { useFormTheme } from '../theme/theme'
 import { useCSSStyles } from '../theme/util'
+import { FieldDescription } from './FieldDescription'
 import { FieldGroup } from './FieldGroup'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
@@ -110,6 +112,16 @@ export const FieldSection = <FormData extends {}>({
             field={field}
             fieldIndex={fieldIndex}
             {...commonFieldProps}
+          />
+        )
+
+      case FormFieldType.TextInputDescription:
+        return (
+          <FieldDescription
+            field={field}
+            fieldIndex={fieldIndex}
+            key={`field-${fieldIndex}`}
+            formReadOnly={formReadOnly}
           />
         )
 

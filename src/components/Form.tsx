@@ -3,6 +3,7 @@ import {
   ButtonType,
   Props as ButtonProps,
 } from 'frr-web/lib/components/Button'
+
 import React, { ReactNode, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -19,6 +20,8 @@ import { FieldSection } from './FieldSection'
 import { FieldRow } from './FieldRow'
 import { StaticChecklist } from 'frr-web/lib/components/StaticChecklist'
 import { setScrolled, FormLens } from '../util'
+import { TextInputDescription } from 'frr-web/lib/components/TextInputDescription'
+import { FieldDescription } from './FieldDescription'
 
 export type FormProps<FormData> = {
   children?: ReactNode
@@ -220,6 +223,16 @@ export const Form = <FormData extends {}>({
             {...commonFieldProps}
           />
         )
+
+      case FormFieldType.TextInputDescription:
+        return (
+          <FieldDescription
+            field={field}
+            fieldIndex={fieldIndex}
+            key={`field-${fieldIndex}`}
+            formReadOnly={readOnly}
+          />
+        ) 
 
       case FormFieldType.FormSection:
         return (
