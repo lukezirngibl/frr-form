@@ -64,15 +64,6 @@ export const FieldGroup = <FormData extends {}>({
             {...commonFieldProps}
           />
         )
-      case FormFieldType.TextInputDescription:
-        return (
-          <FieldDescription
-            field={field}
-            fieldIndex={fieldIndex}
-            key={`field-${fieldIndex}`}
-            formReadOnly={formReadOnly}
-          />
-        )
 
       default:
         return (

@@ -20,8 +20,6 @@ const processFormFieldGroup = <T>(g: FormFieldGroup<T>, fn: Fn<T>): boolean =>
       return processFormFieldRow(f, fn)
     } else if (f.type === FormFieldType.MultiInput) {
       return processFormFieldRow(f.fields, fn)
-    } else if (f.type === FormFieldType.TextInputDescription) {
-      return false
     } else {
       return fn(f)
     }

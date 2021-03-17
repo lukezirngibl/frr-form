@@ -18,8 +18,6 @@ const processFormFieldGroup = <T>(
       acc = [...acc, ...f]
     } else if (f.type === FormFieldType.MultiInput) {
       acc = [...acc, ...f.fields]
-    } else if (f.type === FormFieldType.TextInputDescription) {
-      acc = [...acc]
     } else {
       acc = [...acc, f]
     }

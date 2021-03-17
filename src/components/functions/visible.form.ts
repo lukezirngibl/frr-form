@@ -31,8 +31,6 @@ const processGroupFields = <T>(
       return [...acc, ...processFormFieldRow(f, fn)]
     } else if (f.type === FormFieldType.MultiInput) {
       return [...acc, ...processFormFieldRow(f.fields, fn)]
-    } else if (f.type === FormFieldType.TextInputDescription) {
-      return acc
     } else {
       return [...acc, ...(fn(f) ? [f] : [])]
     }

@@ -379,14 +379,12 @@ export type FormFieldRow<FormData> = Array<SingleFormField<FormData>>
 
 export type SingleFieldOrRow<FormData> =
   | SingleFormField<FormData>
-  | TextInputDescriptionField<FormData>
   | MultiInputField<FormData>
   | FormFieldRow<FormData>
 
 export type GroupField<FormData> =
   | MultiInputField<FormData>
   | SingleFormField<FormData>
-  | TextInputDescriptionField<FormData>
   | FormFieldRow<FormData>
 
 export type FormFieldGroup<FormData> = {
