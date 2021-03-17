@@ -34,7 +34,7 @@ export const FieldRowItem = <FormData extends {}>({
     showValidation,
   }
 
-  if (formReadOnly) {
+  if (formReadOnly || field.readOnly) {
     return (
       <FieldItemReadOnly
         {...commonFieldProps}
