@@ -13,6 +13,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": false,
     "preserveWatchOutput": true,
+    "preserveSymlinks": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "target": "es5",
