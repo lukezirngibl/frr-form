@@ -12,7 +12,7 @@ import {
   SingleFormField,
 } from './types'
 import { MediaQuery } from 'frr-web/lib/theme/theme'
-import { useLanguage, useTranslate } from 'frr-web/lib/theme/language'
+import { Language, useLanguage, useTranslate, mapLanguageToLocale } from 'frr-web/lib/theme/language'
 import { useFormTheme } from '../theme/theme'
 import { format, isMatch, isValid } from 'date-fns'
 
@@ -28,7 +28,7 @@ var formatter = {
   short: new Intl.NumberFormat('de-CH'),
 }
 
-type MapperParams<T> = { value: T; translate: (str: string) => string }
+type MapperParams<T> = { value: T; translate: (str: string) => string, language?: Language }
 
 const defaultStringNumberMapper = ({
   value,
@@ -36,8 +36,10 @@ const defaultStringNumberMapper = ({
 
 const defaultDateStringMapper = ({
   value,
+  language,
 }: MapperParams<string | null>): string => {
-  return value && isValid(new Date(value)) ? format(new Date(value), 'P') : ''
+  const locale = mapLanguageToLocale[language]
+  return value && isValid(new Date(value)) ? format(new Date(value), 'P', { locale }) : ''
 }
 
 const defaultBooleanMapper = ({ value }: MapperParams<boolean>): string =>
@@ -79,6 +81,7 @@ const defaultReadOnlyMappers: {
     params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
       value: typeof fieldMap[K]['_value']
       translate: (str: string) => string
+      language?: Language 
     },
   ) => string
 } = {
@@ -91,7 +94,7 @@ const defaultReadOnlyMappers: {
   [FormFieldType.CodeInput]: defaultStringNumberMapper,
   [FormFieldType.CountrySelect]: defaultStringNumberMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
-  [FormFieldType.DatePicker]: (v) => (!!v ? format(v.value, 'P') : ''),
+  [FormFieldType.DatePicker]: (v) => (!!v ? format(v.value, 'P', { locale: mapLanguageToLocale[v.language] }) : ''),
   [FormFieldType.FormattedDatePicker]: defaultDateStringMapper,
   [FormFieldType.FormFieldGroup]: () => '',
   [FormFieldType.FormFieldRepeatGroup]: () => '',
@@ -179,6 +182,7 @@ const FieldItemReadOnlyValue = <FormData extends {}>(
         ...props.field,
         value: props.field.lens.get(props.data),
         translate,
+        language,
       } as any)}
     />
   )
