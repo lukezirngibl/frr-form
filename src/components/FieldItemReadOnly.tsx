@@ -12,8 +12,9 @@ import {
   SingleFormField,
 } from './types'
 import { MediaQuery } from 'frr-web/lib/theme/theme'
-import { useLanguage, useTranslate } from 'frr-web/lib/theme/language'
+import { Language, useLanguage, useTranslate, mapLanguageToLocale } from 'frr-web/lib/theme/language'
 import { useFormTheme } from '../theme/theme'
+import { format, isMatch, isValid } from 'date-fns'
 
 /*
  * Value mapper
@@ -27,11 +28,19 @@ var formatter = {
   short: new Intl.NumberFormat('de-CH'),
 }
 
-type MapperParams<T> = { value: T; translate: (str: string) => string }
+type MapperParams<T> = { value: T; translate: (str: string) => string, language?: Language }
 
-const defaultStrNumMapper = ({
+const defaultStringNumberMapper = ({
   value,
 }: MapperParams<string | number | null>): string => (value ? `${value}` : '')
+
+const defaultDateStringMapper = ({
+  value,
+  language,
+}: MapperParams<string | null>): string => {
+  const locale = mapLanguageToLocale[language]
+  return value && isValid(new Date(value)) ? format(new Date(value), 'P', { locale }) : ''
+}
 
 const defaultBooleanMapper = ({ value }: MapperParams<boolean>): string =>
   value ? 'yes' : 'no'
@@ -72,6 +81,7 @@ const defaultReadOnlyMappers: {
     params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
       value: typeof fieldMap[K]['_value']
       translate: (str: string) => string
+      language?: Language 
     },
   ) => string
 } = {
@@ -81,11 +91,11 @@ const defaultReadOnlyMappers: {
   // [FormFieldType.DropdownNumber]: defaultStrNumMapper,
   // [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
 
-  [FormFieldType.CodeInput]: defaultStrNumMapper,
-  [FormFieldType.CountrySelect]: defaultStrNumMapper,
+  [FormFieldType.CodeInput]: defaultStringNumberMapper,
+  [FormFieldType.CountrySelect]: defaultStringNumberMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
-  [FormFieldType.DatePicker]: (v) => v.value.toDateString(),
-  [FormFieldType.FormattedDatePicker]: defaultStrNumMapper,
+  [FormFieldType.DatePicker]: (v) => (!!v ? format(v.value, 'P', { locale: mapLanguageToLocale[v.language] }) : ''),
+  [FormFieldType.FormattedDatePicker]: defaultDateStringMapper,
   [FormFieldType.FormFieldGroup]: () => '',
   [FormFieldType.FormFieldRepeatGroup]: () => '',
   [FormFieldType.FormFieldRepeatSection]: () => '',
@@ -93,17 +103,17 @@ const defaultReadOnlyMappers: {
   [FormFieldType.FormText]: () => '',
   [FormFieldType.MultiSelect]: defaultOptionArrayMapper,
   [FormFieldType.MultiInput]: () => '',
-  [FormFieldType.NumberInput]: defaultStrNumMapper,
+  [FormFieldType.NumberInput]: defaultStringNumberMapper,
   [FormFieldType.NumberSelect]: defaultOptionMapper,
   [FormFieldType.OptionGroup]: defaultOptionMapper,
   [FormFieldType.RadioGroup]: defaultOptionMapper,
   [FormFieldType.SingleCheckbox]: defaultBooleanMapper,
-  [FormFieldType.Slider]: defaultStrNumMapper,
+  [FormFieldType.Slider]: defaultStringNumberMapper,
   [FormFieldType.Switch]: defaultBooleanMapper,
-  [FormFieldType.TextArea]: defaultStrNumMapper,
-  [FormFieldType.TextInput]: defaultStrNumMapper,
+  [FormFieldType.TextArea]: defaultStringNumberMapper,
+  [FormFieldType.TextInput]: defaultStringNumberMapper,
   [FormFieldType.TextInputDescription]: () => '',
-  [FormFieldType.TextNumber]: defaultStrNumMapper,
+  [FormFieldType.TextNumber]: defaultStringNumberMapper,
   [FormFieldType.TextSelect]: defaultOptionMapper,
   [FormFieldType.Toggle]: defaultBooleanMapper,
   [FormFieldType.YesNoOptionGroup]: defaultBooleanMapper,
@@ -172,6 +182,7 @@ const FieldItemReadOnlyValue = <FormData extends {}>(
         ...props.field,
         value: props.field.lens.get(props.data),
         translate,
+        language,
       } as any)}
     />
   )

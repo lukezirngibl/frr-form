@@ -19,13 +19,14 @@ import {
   SectionField,
 } from './types'
 
-const FormSectionWrapper = createStyled('div')
-
-const MainSectionWrapper = styled.div`
+const WrapperFormSection = createStyled('div')
+const WrapperSectionRight = createStyled('div')
+const WrapperContainers = styled.div`
+  display: flex;
+`
+const WrapperSectionMain = styled.div`
   flex-grow: 1;
 `
-
-const RightSectionWrapper = createStyled('div')
 
 type FieldSection<FormData> = CommonThreadProps<FormData> & {
   field: FormSection<FormData>
@@ -137,50 +138,64 @@ export const FieldSection = <FormData extends {}>({
 
   // Render
   return !fieldSection.isVisible || fieldSection.isVisible(data) ? (
-    <FormSectionWrapper
-      key={
-        typeof fieldSectionIndex === 'string'
-          ? fieldSectionIndex
-          : `section-${fieldSectionIndex}`
-      }
-      style={{
-        ...(fieldSection.style?.wrapper || {}),
-      }}
-      readOnly={formReadOnly}
-      {...getSectionStyle('wrapper')}
-    >
-      <MainSectionWrapper>
-        {fieldSection.title && (
+    <>
+      <WrapperFormSection
+        key={
+          typeof fieldSectionIndex === 'string'
+            ? fieldSectionIndex
+            : `section-${fieldSectionIndex}`
+        }
+        style={{
+          ...(fieldSection.style?.wrapper || {}),
+        }}
+        readOnly={formReadOnly}
+        {...getSectionStyle('wrapper')}
+      >
+        {fieldSection.introduction && (
           <P
-            style={fieldSection.style?.title || {}}
-            {...getSectionStyle('title')}
+            style={fieldSection.style?.introduction || {}}
+            {...getSectionStyle('introduction')}
             readOnly={formReadOnly}
-            label={fieldSection.title}
-          />
-        )}
-        {!formReadOnly && fieldSection.description && (
-          <P
-            {...getSectionStyle('description')}
-            label={fieldSection.description}
+            label={fieldSection.introduction}
           />
         )}
 
-        {fieldSection.fields.map(renderSectionField)}
-      </MainSectionWrapper>
-      <RightSectionWrapper
-        {...getSectionRightStyle('wrapper')}
-        readOnly={formReadOnly}
-      >
-        {!!fieldSection.onEdit && (
-          <Link
-            icon={{ type: 'edit', style: getSectionRightStyle('editIcon') }}
-            label="edit"
-            onClick={() => fieldSection.onEdit({ dispatch })}
-            style={getSectionRightStyle('editLink')}
-          />
-        )}
-      </RightSectionWrapper>
-    </FormSectionWrapper>
+        <WrapperContainers>
+          <WrapperSectionMain>
+            {fieldSection.title && (
+              <P
+                style={fieldSection.style?.title || {}}
+                {...getSectionStyle('title')}
+                readOnly={formReadOnly}
+                label={fieldSection.title}
+              />
+            )}
+            {!formReadOnly && fieldSection.description && (
+              <P
+                {...getSectionStyle('description')}
+                label={fieldSection.description}
+              />
+            )}
+
+            {fieldSection.fields.map(renderSectionField)}
+          </WrapperSectionMain>
+
+          <WrapperSectionRight
+            {...getSectionRightStyle('wrapper')}
+            readOnly={formReadOnly}
+          >
+            {!!fieldSection.onEdit && (
+              <Link
+                icon={{ type: 'edit', style: getSectionRightStyle('editIcon') }}
+                label="edit"
+                onClick={() => fieldSection.onEdit({ dispatch })}
+                style={getSectionRightStyle('editLink')}
+              />
+            )}
+          </WrapperSectionRight>
+        </WrapperContainers>
+      </WrapperFormSection>
+    </>
   ) : (
     <></>
   )
