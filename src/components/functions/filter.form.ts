@@ -65,7 +65,7 @@ const processFormSectionFields = <T>(
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection ||
-      f.type === FormFieldType.Static
+      f.type === FormFieldType.TextInputDescription
     ) {
       return acc
     } else {
@@ -97,7 +97,7 @@ export const filterFormFields = <T>(
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection ||
-      f.type === FormFieldType.Static
+      f.type === FormFieldType.TextInputDescription
     ) {
       return groups
     } else {

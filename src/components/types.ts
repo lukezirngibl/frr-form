@@ -15,11 +15,11 @@ import { Props as SwithProps } from 'frr-web/lib/components/Switch'
 import { Props as TextProps } from 'frr-web/lib/components/Text'
 import { TextAreaProps } from 'frr-web/lib/components/TextArea'
 import { Props as TextInputProps } from 'frr-web/lib/components/TextInput'
+import { Props as TextInputDescriptionProps } from 'frr-web/lib/components/TextInputDescription'
 import { Props as TextNumberInputProps } from 'frr-web/lib/components/TextNumberInput'
 import { Props as ToggleProps } from 'frr-web/lib/components/Toggle'
 import { Props as YesNoOptionGroupProps } from 'frr-web/lib/components/YesNoOptionGroup'
 import { Props as YesNoRadioGroupProps } from 'frr-web/lib/components/YesNoRadioGroup'
-import { Props as StaticChecklistProps } from 'frr-web/lib/components/StaticChecklist'
 import { ReactNode } from 'react'
 import { CSSProperties } from 'styled-components'
 import { FormTheme } from '../theme/theme'
@@ -59,6 +59,7 @@ export enum FormFieldType {
   Switch = 'Switch',
   TextArea = 'TextArea',
   TextInput = 'TextInput',
+  TextInputDescription = 'TextInputDescription',
   TextNumber = 'TextNumber',
   TextSelect = 'TextSelect',
   Toggle = 'Toggle',
@@ -238,6 +239,11 @@ export type TextInputField<FormData> = FormInput<
   FormFieldType.TextInput
 >
 
+export type TextInputDescriptionField<FormData> = TextInputDescriptionProps & {
+  type: FormFieldType.TextInputDescription
+  isVisible?: (formData: FormData) => boolean
+}
+
 export type YesNoOptionGroupField<FormData> = FormInput<
   boolean | null,
   YesNoOptionGroupProps,
@@ -319,6 +325,7 @@ export const fieldMap = {
   [FormFieldType.Switch]: null as SwitchField<unknown>,
   [FormFieldType.TextArea]: null as TextAreaField<unknown>,
   [FormFieldType.TextInput]: null as TextInputField<unknown>,
+  [FormFieldType.TextInputDescription]: null as TextInputDescriptionField<unknown>,
   [FormFieldType.TextNumber]: null as TextNumberInputField<unknown>,
   [FormFieldType.TextSelect]: null as TextSelectField<unknown>,
   [FormFieldType.Toggle]: null as ToggleField<unknown>,
@@ -327,13 +334,13 @@ export const fieldMap = {
 } as const
 
 export type SingleFormField<FormData> = (
-  | // | CheckboxGroupField<FormData>
+  // | CheckboxGroupField<FormData>
   // | CountryDropdownField<FormData>
   // | DropdownField<FormData>
   // | DropdownNumberField<FormData>
   // | InputWithDropdownField<FormData>
 
-  CodeInputField<FormData>
+  | CodeInputField<FormData>
   | CountrySelectField<FormData>
   | CurrencyInputField<FormData>
   | DatePickerField<FormData>
@@ -398,22 +405,14 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-export type StaticSection = {
-  title?: string
-  description?: string
-  style?: Partial<FormTheme['section']>
-  type: FormFieldType.Static
-  checklist: StaticChecklistProps
-}
-
 export type SectionField<FormData> =
   | MultiInputField<FormData>
   | SingleFormField<FormData>
+  | TextInputDescriptionField<FormData>
   | FormFieldRow<FormData>
   | FormFieldGroup<FormData>
   | FormFieldRepeatGroup<FormData>
   | FormFieldRepeatSection<FormData>
-  | StaticSection
 
 export type SectionFields<FormData> = Array<SectionField<FormData>>
 
@@ -439,13 +438,13 @@ export type FormSection<FormData> = {
 
 export type FormField<FormData> =
   | SingleFormField<FormData>
+  | TextInputDescriptionField<FormData>
   | MultiInputField<FormData>
   | FormFieldRow<FormData>
   | FormFieldGroup<FormData>
   | FormSection<FormData>
   | FormFieldRepeatGroup<FormData>
   | FormFieldRepeatSection<FormData>
-  | StaticSection
 
 export type CommonThreadProps<FormData> = {
   data: FormData

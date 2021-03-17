@@ -10,6 +10,8 @@ import {
 } from './types'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldRow } from './FieldRow'
+import { TextInputDescription } from 'frr-web/lib/components/TextInputDescription'
+import { FieldDescription } from './FieldDescription'
 
 type FieldGroup<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldGroup<FormData>
@@ -62,6 +64,7 @@ export const FieldGroup = <FormData extends {}>({
             {...commonFieldProps}
           />
         )
+
       default:
         return (
           <FieldRow

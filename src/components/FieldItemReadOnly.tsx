@@ -102,6 +102,7 @@ const defaultReadOnlyMappers: {
   [FormFieldType.Switch]: defaultBooleanMapper,
   [FormFieldType.TextArea]: defaultStrNumMapper,
   [FormFieldType.TextInput]: defaultStrNumMapper,
+  [FormFieldType.TextInputDescription]: () => '',
   [FormFieldType.TextNumber]: defaultStrNumMapper,
   [FormFieldType.TextSelect]: defaultOptionMapper,
   [FormFieldType.Toggle]: defaultBooleanMapper,
