@@ -113,10 +113,15 @@ export const FieldSection = <FormData extends {}>({
           />
         )
 
-      case FormFieldType.Static:
+      case FormFieldType.Static: {
+        if (commonFieldProps.formReadOnly) {
+          return null
+        }
+
         return (
           <StaticChecklist key={`field-${fieldIndex}`} {...field.checklist} />
         )
+      }
 
       default:
         return (
