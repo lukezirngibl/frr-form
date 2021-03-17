@@ -11,7 +11,6 @@ import { Props as RadioGroupProps } from 'frr-web/lib/components/RadioGroup'
 import { Props as SelectProps } from 'frr-web/lib/components/Select'
 import { Props as SingleCheckboxProps } from 'frr-web/lib/components/SingleCheckbox'
 import { Props as SliderProps } from 'frr-web/lib/components/Slider'
-import { Props as StaticChecklistProps } from 'frr-web/lib/components/StaticChecklist'
 import { Props as SwithProps } from 'frr-web/lib/components/Switch'
 import { Props as TextProps } from 'frr-web/lib/components/Text'
 import { TextAreaProps } from 'frr-web/lib/components/TextArea'
@@ -408,14 +407,6 @@ export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-export type StaticSection = {
-  title?: string
-  description?: string
-  style?: Partial<FormTheme['section']>
-  type: FormFieldType.Static
-  checklist: StaticChecklistProps
-}
-
 export type SectionField<FormData> =
   | MultiInputField<FormData>
   | SingleFormField<FormData>
@@ -424,7 +415,6 @@ export type SectionField<FormData> =
   | FormFieldGroup<FormData>
   | FormFieldRepeatGroup<FormData>
   | FormFieldRepeatSection<FormData>
-  | StaticSection
 
 export type SectionFields<FormData> = Array<SectionField<FormData>>
 
@@ -457,7 +447,6 @@ export type FormField<FormData> =
   | FormSection<FormData>
   | FormFieldRepeatGroup<FormData>
   | FormFieldRepeatSection<FormData>
-  | StaticSection
 
 export type CommonThreadProps<FormData> = {
   data: FormData
