@@ -1,21 +1,23 @@
 import { P } from 'frr-web/lib/html'
+import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
 import { useFormTheme } from '../theme/theme'
-import { useInlineStyle, useCSSStyles } from '../theme/util'
+import { useCSSStyles, useInlineStyle } from '../theme/util'
+import { FieldMultiInput } from './FieldMultiInput'
+import { FieldRow } from './FieldRow'
 import {
   CommonThreadProps,
   FormFieldGroup,
-  GroupField,
   FormFieldType,
+  GroupField,
 } from './types'
-import { FieldMultiInput } from './FieldMultiInput'
-import { FieldRow } from './FieldRow'
-import { TextInputDescription } from 'frr-web/lib/components/TextInputDescription'
-import { FieldDescription } from './FieldDescription'
+
+const GroupWrapper = createStyled('div')
 
 type FieldGroup<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldGroup<FormData>
 }
+
 // ------------------------------------
 export const FieldGroup = <FormData extends {}>({
   data,
@@ -77,13 +79,13 @@ export const FieldGroup = <FormData extends {}>({
     }
   }
   return !fieldGroup.isVisible || fieldGroup.isVisible(data) ? (
-    <div
+    <GroupWrapper
       key={
         typeof fieldGroupIndex === 'string'
           ? fieldGroupIndex
           : `group-${fieldGroupIndex}`
       }
-      {...getInlineStyle(
+      {...getCSSStyle(
         'wrapper',
         fieldGroup.style ? fieldGroup.style.wrapper || {} : {},
       )}
@@ -107,7 +109,7 @@ export const FieldGroup = <FormData extends {}>({
         />
       )}
       {fieldGroup.fields.map(renderGroupField)}
-    </div>
+    </GroupWrapper>
   ) : (
     <></>
   )

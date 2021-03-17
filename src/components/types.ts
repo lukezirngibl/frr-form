@@ -426,14 +426,15 @@ export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
 }
 
 export type FormSection<FormData> = {
-  title?: string
   description?: string
-  style?: Partial<FormTheme['section']>
-  type: FormFieldType.FormSection
-  fields: SectionFields<FormData>
-  isVisible?: (formData: FormData) => boolean
   fieldComponent?: ReactNode
+  fields: SectionFields<FormData>
+  introduction?: string
+  isVisible?: (formData: FormData) => boolean
   onEdit?: (params: { dispatch: any }) => void
+  style?: Partial<FormTheme['section']>
+  title?: string
+  type: FormFieldType.FormSection
 }
 
 export type FormField<FormData> =
