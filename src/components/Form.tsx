@@ -1,27 +1,25 @@
 import {
   Button,
   ButtonType,
-  Props as ButtonProps,
+  Props as ButtonProps
 } from 'frr-web/lib/components/Button'
-
 import React, { ReactNode, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { FormTheme, useFormTheme } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
-import { someFormFields } from './functions/some.form'
-import { filterByVisibility } from './functions/visible.form'
-import { DisplayType, FormFieldType, SingleFormField, FormField } from './types'
+import { FormLens, setScrolled } from '../util'
+import { FieldDescription } from './FieldDescription'
 import { FieldGroup } from './FieldGroup'
+import { FieldMultiInput } from './FieldMultiInput'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
 import { FieldRepeatSection } from './FieldRepeatSection'
-import { FieldMultiInput } from './FieldMultiInput'
-import { FieldSection } from './FieldSection'
 import { FieldRow } from './FieldRow'
-import { StaticChecklist } from 'frr-web/lib/components/StaticChecklist'
-import { setScrolled, FormLens } from '../util'
-import { TextInputDescription } from 'frr-web/lib/components/TextInputDescription'
-import { FieldDescription } from './FieldDescription'
+import { FieldSection } from './FieldSection'
+import { someFormFields } from './functions/some.form'
+import { filterByVisibility } from './functions/visible.form'
+import { DisplayType, FormField, FormFieldType, SingleFormField } from './types'
+
 
 export type FormProps<FormData> = {
   children?: ReactNode

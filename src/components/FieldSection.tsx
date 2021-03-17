@@ -16,7 +16,7 @@ import {
   CommonThreadProps,
   FormFieldType,
   FormSection,
-  SectionField
+  SectionField,
 } from './types'
 
 const FormSectionWrapper = createStyled('div')
