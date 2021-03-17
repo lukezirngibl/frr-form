@@ -1,24 +1,25 @@
 import {
   Button,
   ButtonType,
-  Props as ButtonProps,
+  Props as ButtonProps
 } from 'frr-web/lib/components/Button'
 import React, { ReactNode, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { FormTheme, useFormTheme } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
-import { someFormFields } from './functions/some.form'
-import { filterByVisibility } from './functions/visible.form'
-import { DisplayType, FormFieldType, SingleFormField, FormField } from './types'
+import { FormLens, setScrolled } from '../util'
+import { FieldDescription } from './FieldDescription'
 import { FieldGroup } from './FieldGroup'
+import { FieldMultiInput } from './FieldMultiInput'
 import { FieldRepeatGroup } from './FieldRepeatGroup'
 import { FieldRepeatSection } from './FieldRepeatSection'
-import { FieldMultiInput } from './FieldMultiInput'
-import { FieldSection } from './FieldSection'
 import { FieldRow } from './FieldRow'
-import { StaticChecklist } from 'frr-web/lib/components/StaticChecklist'
-import { setScrolled, FormLens } from '../util'
+import { FieldSection } from './FieldSection'
+import { someFormFields } from './functions/some.form'
+import { filterByVisibility } from './functions/visible.form'
+import { DisplayType, FormField, FormFieldType, SingleFormField } from './types'
+
 
 export type FormProps<FormData> = {
   children?: ReactNode
@@ -221,6 +222,16 @@ export const Form = <FormData extends {}>({
           />
         )
 
+      case FormFieldType.TextInputDescription:
+        return (
+          <FieldDescription
+            field={field}
+            fieldIndex={fieldIndex}
+            key={`field-${fieldIndex}`}
+            formReadOnly={readOnly}
+          />
+        ) 
+
       case FormFieldType.FormSection:
         return (
           <FieldSection
@@ -230,15 +241,6 @@ export const Form = <FormData extends {}>({
             {...commonFieldProps}
           />
         )
-      case FormFieldType.Static: {
-        if (commonFieldProps.formReadOnly) {
-          return null
-        }
-
-        return (
-          <StaticChecklist key={`field-${fieldIndex}`} {...field.checklist} />
-        )
-      }
 
       default:
         return (
