@@ -41,7 +41,6 @@ const processFormSectionFields = <T>(
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection ||
-      f.type === FormFieldType.Static ||
       f.type === FormFieldType.TextInputDescription
     ) {
       return false
@@ -66,7 +65,6 @@ export const someFormFields = <T>(
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection ||
-      f.type === FormFieldType.Static ||
       f.type === FormFieldType.TextInputDescription
     ) {
       return false

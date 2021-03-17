@@ -64,12 +64,10 @@ const processFormSectionFields = <T>(
       return [...acc, processFormFieldGroup(f, fn)]
     } else if (f.type === FormFieldType.MultiInput) {
       return [...acc, processMultiInput(f, fn)]
-    } else if (f.type === FormFieldType.TextInputDescription) {
-      return [...acc]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection ||
-      f.type === FormFieldType.Static
+      f.type === FormFieldType.TextInputDescription
     ) {
       return acc
     } else {
@@ -96,14 +94,12 @@ export const filterFormFields = <T>(
       return [...groups, processFormFieldGroup(f, fn)]
     } else if (f.type === FormFieldType.MultiInput) {
       return [...groups, processMultiInput(f, fn)]
-    } else if (f.type === FormFieldType.TextInputDescription) {
-      return [...groups]
     } else if (f.type === FormFieldType.FormSection) {
       return [...groups, processFormSection(f, fn)]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
       f.type === FormFieldType.FormFieldRepeatSection ||
-      f.type === FormFieldType.Static
+      f.type === FormFieldType.TextInputDescription
     ) {
       return groups
     } else {

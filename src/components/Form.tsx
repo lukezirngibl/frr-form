@@ -243,10 +243,6 @@ export const Form = <FormData extends {}>({
             {...commonFieldProps}
           />
         )
-      case FormFieldType.Static:
-        return (
-          <StaticChecklist key={`field-${fieldIndex}`} {...field.checklist} />
-        )
 
       default:
         return (

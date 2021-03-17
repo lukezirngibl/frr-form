@@ -37,10 +37,9 @@ export const FieldDescription = <FormData extends {}>({
   const theme = useFormTheme()
   const getRowStyle = useCSSStyles(theme, 'row')({})
 
-  console.log('FIELD', field)
   return formReadOnly ? null : (
     <FieldRowWrapper key={`row-${fieldIndex}`} {...getRowStyle('wrapper')}>
-      <TextInputDescription descriptionLabel={field.descriptionLabel} />
+      <TextInputDescription description={field.description} list={field.list}/>
     </FieldRowWrapper>
   )
 }

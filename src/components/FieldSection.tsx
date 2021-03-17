@@ -1,6 +1,4 @@
 import { Link } from 'frr-web/lib/components/Link'
-import { StaticChecklist } from 'frr-web/lib/components/StaticChecklist'
-import { TextInputDescription } from 'frr-web/lib/components/TextInputDescription'
 import { P } from 'frr-web/lib/html'
 import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
@@ -18,7 +16,7 @@ import {
   CommonThreadProps,
   FormFieldType,
   FormSection,
-  SectionField,
+  SectionField
 } from './types'
 
 const FormSectionWrapper = createStyled('div')
@@ -123,11 +121,6 @@ export const FieldSection = <FormData extends {}>({
             key={`field-${fieldIndex}`}
             formReadOnly={formReadOnly}
           />
-        )
-
-      case FormFieldType.Static:
-        return (
-          <StaticChecklist key={`field-${fieldIndex}`} {...field.checklist} />
         )
 
       default:
