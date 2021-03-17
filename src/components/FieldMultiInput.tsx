@@ -1,4 +1,5 @@
-import { Label } from 'frr-web/lib/components'
+import { Label } from 'frr-web/lib/components/Label'
+import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
 import { useFormTheme } from '../theme/theme'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
@@ -12,6 +13,8 @@ import { CommonThreadProps, MultiInputField } from './types'
 type FieldRowProps<FormData> = CommonThreadProps<FormData> & {
   field: MultiInputField<FormData>
 }
+
+const WrapperItem = createStyled('div')
 
 // ------------------------------------
 export const FieldMultiInput = <FormData extends {}>({
@@ -78,7 +81,7 @@ export const FieldMultiInput = <FormData extends {}>({
       >
         {field.label && <Label {...field.label} error={errorLabel.length > 0} errorLabel={errorLabel} />}
 
-        <div
+        <WrapperItem
           {...getFieldMultiInputStyle('item')}
           key={`field-mulit-input-${fieldIndex}`}
         >
@@ -92,7 +95,7 @@ export const FieldMultiInput = <FormData extends {}>({
               noScrollableWrapper
             />
           ))}
-        </div>
+        </WrapperItem>
       </FieldScrollableWrapper>
     </FieldRowWrapper>
   ) : null
