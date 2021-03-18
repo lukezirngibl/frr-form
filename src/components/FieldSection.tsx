@@ -145,16 +145,15 @@ export const FieldSection = <FormData extends {}>({
             ? fieldSectionIndex
             : `section-${fieldSectionIndex}`
         }
-        style={{
-          ...(fieldSection.style?.wrapper || {}),
-        }}
         readOnly={formReadOnly}
-        {...getSectionStyle('wrapper')}
+        {...getSectionStyle('wrapper', fieldSection.style?.wrapper || {})}
       >
         {fieldSection.introduction && (
           <P
-            style={fieldSection.style?.introduction || {}}
-            {...getSectionStyle('introduction')}
+            {...getSectionStyle(
+              'introduction',
+              fieldSection.style?.introduction || {},
+            )}
             readOnly={formReadOnly}
             label={fieldSection.introduction}
           />
@@ -164,8 +163,7 @@ export const FieldSection = <FormData extends {}>({
           <WrapperSectionMain>
             {fieldSection.title && (
               <P
-                style={fieldSection.style?.title || {}}
-                {...getSectionStyle('title')}
+                {...getSectionStyle('title', fieldSection.style?.title || {})}
                 readOnly={formReadOnly}
                 label={fieldSection.title}
               />
