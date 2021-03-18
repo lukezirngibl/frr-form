@@ -67,7 +67,7 @@ export const FieldMultiInput = <FormData extends {}>({
     )
   }
 
-  return field.fields.some((r) => !r.isVisible || r.isVisible(data)) ? (
+  return !field.isVisible || field.isVisible(data) || !field.isVisible && field.fields.some((r) => !r.isVisible || r.isVisible(data)) ? (
     <FieldRowWrapper
       key={`row-${fieldIndex}`}
       {...getCssRowStyle('wrapper')}
