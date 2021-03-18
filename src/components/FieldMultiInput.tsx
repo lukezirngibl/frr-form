@@ -7,7 +7,7 @@ import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldRowWrapper } from './FieldRow'
 import { FieldRowItem } from './FieldRowItem'
 import { FieldScrollableWrapper } from './FieldScrollableWrapper'
-import { getComputeFieldError } from './functions/computeFieldError.form'
+import { useFormFieldError, useFormFieldErrors } from './hooks/useFormFieldError'
 import { CommonThreadProps, MultiInputField } from './types'
 
 type FieldRowProps<FormData> = CommonThreadProps<FormData> & {
@@ -33,16 +33,8 @@ export const FieldMultiInput = <FormData extends {}>({
   const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
   const getCssRowStyle = useCSSStyles(theme, 'row')(style?.row || {})
 
-  // Error labels
-  const computeFieldError = getComputeFieldError(data)
-  const errorLabels = new Set(
-    showValidation
-      ? field.fields
-          .map((field) => computeFieldError(field))
-          .filter((label) => !!label)
-      : [],
-  )
-  const errorLabel: string[] = Array.from(errorLabels)
+  // Error 
+  const errorLabel = useFormFieldErrors({ data, field, showValidation })
 
   const commonFieldProps = {
     data,
@@ -92,7 +84,7 @@ export const FieldMultiInput = <FormData extends {}>({
               field={fieldItem}
               fieldIndex={fieldItemIndex}
               onChange={onChange}
-              noScrollableWrapper
+              isNotScrollable
             />
           ))}
         </WrapperItem>

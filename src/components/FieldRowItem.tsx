@@ -3,26 +3,28 @@ import React, { useEffect } from 'react'
 import { CommonThreadProps, FormFieldType, SingleFormField } from './types'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldScrollableWrapper } from './FieldScrollableWrapper'
-import { getComputeFieldError } from './functions/computeFieldError.form'
+import { useFormFieldError } from './hooks/useFormFieldError'
 import { Field } from './Field'
 
+type Props<FormData> = CommonThreadProps<FormData> & {
+  field: SingleFormField<FormData>
+  isNotScrollable?: boolean
+}
 // ------------------------------------
+
 export const FieldRowItem = <FormData extends {}>({
   data,
   field,
   fieldIndex,
   formReadOnly,
+  isNotScrollable,
   onChange,
   showValidation,
   style,
-  noScrollableWrapper,
-}: CommonThreadProps<FormData> & {
-  field: SingleFormField<FormData>
-  noScrollableWrapper?: boolean
-}) => {
+}: Props<FormData>) => {
   /* Error handling */
-  const computeFieldError = getComputeFieldError(data)
-  const errorLabel = showValidation ? computeFieldError(field) : null
+
+  const errorLabel = useFormFieldError({ data, field, showValidation })
   const hasError = errorLabel !== null
 
   const commonFieldProps = {
@@ -45,7 +47,7 @@ export const FieldRowItem = <FormData extends {}>({
   }
 
   return !field.isVisible || field.isVisible(data) ? (
-    !noScrollableWrapper ? (
+    !isNotScrollable ? (
       <FieldScrollableWrapper
         key={`field-${fieldIndex}`}
         showValidation={showValidation}
