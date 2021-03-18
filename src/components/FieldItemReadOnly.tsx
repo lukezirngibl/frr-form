@@ -61,7 +61,7 @@ const defaultCurrencyMapper = ({ value }: MapperParams<number>): string =>
 
 const defaultOptionArrayMapper = (
   params: MapperParams<Array<string>> & {
-    options: Array<{ label: string; value: string }>
+    options: Array<{ label?: string; value: string }>
   },
 ): string =>
   Array.isArray(params.value)
@@ -79,7 +79,7 @@ const defaultOptionArrayMapper = (
 
 const defaultOptionMapper = (
   params: MapperParams<string | number> & {
-    options: Array<{ label: string; value: string }>
+    options: Array<{ label?: string; value: string }>
   },
 ): string => {
   return findFirst(

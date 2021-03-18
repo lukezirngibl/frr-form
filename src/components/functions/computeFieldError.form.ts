@@ -1,39 +1,53 @@
 import { FormFieldType, SingleFormField } from '../types'
 
 export const getComputeFieldError = <FormData>(data: FormData) => (
-  f: SingleFormField<FormData>,
+  field: SingleFormField<FormData>,
 ): string | null => {
   let error = null
   const isRequired =
-    'required' in f
-      ? typeof f.required === 'function'
-        ? f.required(data)
-        : f.required
+    'required' in field
+      ? typeof field.required === 'function'
+        ? field.required(data)
+        : field.required
       : false
 
-  let val = f.lens.get(data)
+  let val = field.lens.get(data)
   val = typeof val === 'string' ? val.trim() : val
 
   if (isRequired && (val === '' || val === null || val === undefined)) {
     if (
-      f.type === FormFieldType.FormattedDatePicker ||
-      f.type === FormFieldType.DatePicker
+      field.type === FormFieldType.FormattedDatePicker ||
+      field.type === FormFieldType.DatePicker
     ) {
       error = 'invalidDate'
     } else {
-      error = 'fieldRequired' as string
+      error = 'fieldRequired'
     }
   }
 
-  if (!error && !!f.validate) {
-    error = f.validate(data)
+  if (!error && !!field.validate) {
+    error = field.validate(data)
   }
 
-  if (!error && f.type === FormFieldType.NumberInput) {
-    if ('min' in f && val < f.min) {
-      error = 'fieldErrorMin' as string
-    } else if ('max' in f && val > f.max) {
-      error = 'fieldErrorMax' as string
+  if (!error && field.type === FormFieldType.CurrencyInput) {
+    if (!!val && isNaN(val as any)) {
+      error = 'invalidAmount'
+    }
+
+    const min = 'min' in field ? field.min : 0
+    const max = 'max' in field ? field.max : 1000000
+    if (val < min) {
+      error = 'fieldErrorMin'
+    } else if (val > max) {
+      error = 'fieldErrorMax'
+    }
+  }
+
+  if (!error && field.type === FormFieldType.NumberInput) {
+    if ('min' in field && val < field.min) {
+      error = 'fieldErrorMin'
+    } else if ('max' in field && val > field.max) {
+      error = 'fieldErrorMax'
     }
   }
 
