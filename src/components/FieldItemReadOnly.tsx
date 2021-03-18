@@ -12,7 +12,12 @@ import {
   SingleFormField,
 } from './types'
 import { MediaQuery } from 'frr-web/lib/theme/theme'
-import { Language, useLanguage, useTranslate, mapLanguageToLocale } from 'frr-web/lib/theme/language'
+import {
+  Language,
+  useLanguage,
+  useTranslate,
+  mapLanguageToLocale,
+} from 'frr-web/lib/theme/language'
 import { useFormTheme } from '../theme/theme'
 import { format, isMatch, isValid } from 'date-fns'
 
@@ -28,7 +33,11 @@ var formatter = {
   short: new Intl.NumberFormat('de-CH'),
 }
 
-type MapperParams<T> = { value: T; translate: (str: string) => string, language?: Language }
+type MapperParams<T> = {
+  value: T
+  translate: (str: string) => string
+  language?: Language
+}
 
 const defaultStringNumberMapper = ({
   value,
@@ -39,14 +48,16 @@ const defaultDateStringMapper = ({
   language,
 }: MapperParams<string | null>): string => {
   const locale = mapLanguageToLocale[language]
-  return value && isValid(new Date(value)) ? format(new Date(value), 'P', { locale }) : ''
+  return value && isValid(new Date(value))
+    ? format(new Date(value), 'P', { locale })
+    : ''
 }
 
 const defaultBooleanMapper = ({ value }: MapperParams<boolean>): string =>
   value ? 'yes' : 'no'
 
 const defaultCurrencyMapper = ({ value }: MapperParams<number>): string =>
-  value ? formatter.long.format(value) : ''
+  formatter.long.format(value || 0)
 
 const defaultOptionArrayMapper = (
   params: MapperParams<Array<string>> & {
@@ -57,9 +68,9 @@ const defaultOptionArrayMapper = (
     ? params.value
         .map((val) =>
           params.translate(
-            findFirst(params.options, (o) => o.value === val).fold(
+            findFirst(params.options, (option) => option.value === val).fold(
               'null',
-              (o) => o.label,
+              (option) => option.label,
             ),
           ),
         )
@@ -67,21 +78,22 @@ const defaultOptionArrayMapper = (
     : ''
 
 const defaultOptionMapper = (
-  params: MapperParams<string> & {
+  params: MapperParams<string | number> & {
     options: Array<{ label: string; value: string }>
   },
-): string =>
-  findFirst(params.options, (o) => o.value === params.value).fold(
-    '',
-    (o) => o.label,
-  )
+): string => {
+  return findFirst(
+    params.options,
+    (option) => option.value === params.value,
+  ).fold('', (option) => option.label)
+}
 
 const defaultReadOnlyMappers: {
   [K in FormFieldType]: (
     params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
       value: typeof fieldMap[K]['_value']
       translate: (str: string) => string
-      language?: Language 
+      language?: Language
     },
   ) => string
 } = {
@@ -94,7 +106,10 @@ const defaultReadOnlyMappers: {
   [FormFieldType.CodeInput]: defaultStringNumberMapper,
   [FormFieldType.CountrySelect]: defaultStringNumberMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
-  [FormFieldType.DatePicker]: (v) => (!!v ? format(v.value, 'P', { locale: mapLanguageToLocale[v.language] }) : ''),
+  [FormFieldType.DatePicker]: (v) =>
+    !!v
+      ? format(v.value, 'P', { locale: mapLanguageToLocale[v.language] })
+      : '',
   [FormFieldType.FormattedDatePicker]: defaultDateStringMapper,
   [FormFieldType.FormFieldGroup]: () => '',
   [FormFieldType.FormFieldRepeatGroup]: () => '',
