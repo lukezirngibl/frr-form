@@ -28,6 +28,7 @@ export const FieldRowWrapper = createStyled(styled.div`
 // ------------------------------------
 export const FieldRow = <FormData extends {}>({
   data,
+  errorFieldId,
   field,
   fieldIndex,
   formReadOnly,
@@ -39,8 +40,6 @@ export const FieldRow = <FormData extends {}>({
   const theme = useFormTheme()
   const getRowStyle = useCSSStyles(theme, 'row')(style?.row || {})
 
-  const commonFieldItemProps = { data, style, width: (1 / field.length) * 100 }
-
   return field.some((r) => !r.isVisible || r.isVisible(data)) ? (
     <FieldRowWrapper
       key={`row-${fieldIndex}`}
@@ -49,13 +48,15 @@ export const FieldRow = <FormData extends {}>({
     >
       {field.map((fieldItem, fieldItemIndex) => (
         <FieldRowItem
-          {...commonFieldItemProps}
           key={`field-item-${fieldItemIndex}`}
           field={fieldItem}
           fieldIndex={fieldItemIndex}
+          errorFieldId={errorFieldId}
           onChange={onChange}
           showValidation={showValidation}
           formReadOnly={formReadOnly}
+          data={data}
+          style={style}
         />
       ))}
     </FieldRowWrapper>

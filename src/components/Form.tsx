@@ -3,7 +3,7 @@ import {
   ButtonType,
   Props as ButtonProps
 } from 'frr-web/lib/components/Button'
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { FormTheme, useFormTheme } from '../theme/theme'
@@ -16,8 +16,10 @@ import { FieldRepeatGroup } from './FieldRepeatGroup'
 import { FieldRepeatSection } from './FieldRepeatSection'
 import { FieldRow } from './FieldRow'
 import { FieldSection } from './FieldSection'
+import { mapFormFields } from './functions/map.form'
 import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
+import { computeFieldError } from './hooks/useFormFieldError'
 import { DisplayType, FormField, FormFieldType, SingleFormField } from './types'
 
 
@@ -92,50 +94,31 @@ export const Form = <FormData extends {}>({
     setScrolled(false)
   }, [formFields])
 
-  const computeFieldError = (f: SingleFormField<FormData>): string | null => {
-    const isRequired =
-      'required' in f
-        ? typeof f.required === 'function'
-          ? f.required(data)
-          : f.required
-        : false
-
-    let val = f.lens.get(data)
-    val = typeof val === 'string' ? val.trim() : val
-
-    if (isRequired) {
-      if (val === '' || val === null || val === undefined) {
-        return 'fieldRequired' as string
-      }
-    }
-
-    if ('validate' in f && f.validate !== undefined) {
-      const l = f.validate(data)
-      if (l !== null) {
-        return l
-      }
-    }
-
-    if (f.type === FormFieldType.NumberInput) {
-      if ('min' in f && val < f.min) {
-        return 'fieldErrorMin' as string
-      } else if ('max' in f && val > f.max) {
-        return 'fieldErrorMax' as string
-      }
-    }
-
-    return null
+  const isFieldInvalid = (field: SingleFormField<FormData>): boolean => {
+    const value = field.lens.get(data)
+    return computeFieldError({ value, data, field }).error !== null
+  }
+  const getFieldError = (field: SingleFormField<FormData>): { error: string | null, fieldId: string } => {
+    const value = field.lens.get(data)
+    return computeFieldError({ value, data, field })
   }
 
-  const isFieldInvalid = (f: SingleFormField<FormData>): boolean =>
-    computeFieldError(f) !== null
+  const [errorFieldId, setErrorFieldId] = useState(null)
 
   const submit = () => {
+    setErrorFieldId(null)
     if (disableValidation) {
       onSubmit({ dispatch, formState: data })
     } else {
       const visibleFormFields = filterByVisibility(formFields, data)
+      const errors = mapFormFields(visibleFormFields, getFieldError).filter(fieldError => !!fieldError.error)
       const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
+
+      console.log('ERRORS', errors)
+
+      if (errors.length) {
+        setErrorFieldId(errors[0].fieldId)
+      }
 
       if (isNotValid) {
         setShowValidation(true)
@@ -158,12 +141,14 @@ export const Form = <FormData extends {}>({
 
   // console.log('formData: ', data)
 
+  
   const commonFieldProps = {
     data,
-    style,
-    showValidation,
-    onChange: internalOnChange,
+    errorFieldId,
     formReadOnly: readOnly,
+    onChange: internalOnChange,
+    showValidation,
+    style,
   }
 
   const renderField = (field: FormField<FormData>, fieldIndex: number) => {
@@ -172,8 +157,8 @@ export const Form = <FormData extends {}>({
         <FieldRow
           key={`field-form-${fieldIndex}`}
           fieldIndex={0}
-          {...commonFieldProps}
           field={field}
+          {...commonFieldProps}
         />
       )
     }

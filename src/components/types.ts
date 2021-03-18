@@ -449,6 +449,7 @@ export type FormField<FormData> =
 
 export type CommonThreadProps<FormData> = {
   data: FormData
+  errorFieldId?: string
   fieldIndex: number
   formReadOnly: boolean
   onChange: (lens: FormLens<FormData, any>, value: any) => void

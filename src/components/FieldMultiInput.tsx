@@ -7,7 +7,10 @@ import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldRowWrapper } from './FieldRow'
 import { FieldRowItem } from './FieldRowItem'
 import { FieldScrollableWrapper } from './FieldScrollableWrapper'
-import { useFormFieldError, useFormFieldErrors } from './hooks/useFormFieldError'
+import {
+  useFormFieldError,
+  useFormFieldErrors,
+} from './hooks/useFormFieldError'
 import { CommonThreadProps, MultiInputField } from './types'
 
 type FieldRowProps<FormData> = CommonThreadProps<FormData> & {
@@ -19,6 +22,7 @@ const WrapperItem = createStyled('div')
 // ------------------------------------
 export const FieldMultiInput = <FormData extends {}>({
   data,
+  errorFieldId,
   field,
   fieldIndex,
   formReadOnly,
@@ -33,14 +37,14 @@ export const FieldMultiInput = <FormData extends {}>({
   const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
   const getCssRowStyle = useCSSStyles(theme, 'row')(style?.row || {})
 
-  // Error 
+  // Error
   const errorLabel = useFormFieldErrors({ data, field, showValidation })
 
   const commonFieldProps = {
     data,
-    style,
-    showValidation,
     formReadOnly,
+    showValidation,
+    style,
   }
 
   if (formReadOnly) {
@@ -59,7 +63,10 @@ export const FieldMultiInput = <FormData extends {}>({
     )
   }
 
-  return !field.isVisible || field.isVisible(data) || !field.isVisible && field.fields.some((r) => !r.isVisible || r.isVisible(data)) ? (
+  return !field.isVisible ||
+    field.isVisible(data) ||
+    (!field.isVisible &&
+      field.fields.some((r) => !r.isVisible || r.isVisible(data))) ? (
     <FieldRowWrapper
       key={`row-${fieldIndex}`}
       {...getCssRowStyle('wrapper')}
@@ -67,11 +74,20 @@ export const FieldMultiInput = <FormData extends {}>({
     >
       <FieldScrollableWrapper
         key={`field-${fieldIndex}`}
-        showValidation={showValidation}
-        hasError={false} // TODO
+        isScrollToError={
+          field.fields.findIndex(
+            (fieldItem) => fieldItem.lens.id() === errorFieldId,
+          ) !== -1
+        }
         {...getRowStyle('item')}
       >
-        {field.label && <Label {...field.label} error={errorLabel.length > 0} errorLabel={errorLabel} />}
+        {field.label && (
+          <Label
+            {...field.label}
+            error={errorLabel.length > 0}
+            errorLabel={errorLabel}
+          />
+        )}
 
         <WrapperItem
           {...getFieldMultiInputStyle('item')}

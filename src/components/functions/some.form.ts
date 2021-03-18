@@ -4,7 +4,6 @@ import {
   FormFieldGroup,
   SectionFields,
   SingleFormField,
-  MultiInputField,
 } from '../types'
 
 type Fn<T> = (i: SingleFormField<T>) => boolean

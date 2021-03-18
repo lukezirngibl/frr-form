@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode, useEffect, useRef } from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import { useFormTheme } from '../theme/theme'
 import { useInlineStyle } from '../theme/util'
@@ -32,50 +32,42 @@ const FormScrollToWrapper = styled.div<{
  * Render field function
  */
 
-type FieldScrollableWrapperProps<FormData> = {
+type FieldScrollableWrapperProps = {
   children: ReactNode
   width?: number
-  showValidation: boolean
+  isScrollToError: boolean
   style?: CSSProperties
-  hasError: boolean
 }
 
-const x = {
-  person: {
-    name: 'asd',
-    eyeColor: 'blue',
-  },
-}
-
-export const FieldScrollableWrapper = <FormData extends {}>(
-  props: FieldScrollableWrapperProps<FormData>,
-) => {
+export const FieldScrollableWrapper = (props: FieldScrollableWrapperProps) => {
   /* Styles */
   const theme = useFormTheme()
   const getRowStyle = useInlineStyle(theme, 'row')()
 
   const width = !isNaN(props.width) ? props.width : 100
 
-  const scrolled = getScrolled()
-
   const fieldRef = React.createRef<HTMLDivElement>()
-  const onScrollToError = () => {
-    setScrolled(true)
-    setTimeout(() => {
+  // const onScrollToError = () => {
+  //   setScrolled(true)
+  //   setTimeout(() => {
+  //     if (fieldRef.current) {
+  //       setScrolled(false)
+  //       fieldRef.current.scrollIntoView({
+  //         behavior: 'smooth',
+  //       })
+  //     }
+  //   }, 300)
+  // }
+
+  useEffect(() => {
+    if (props.isScrollToError) {
       if (fieldRef.current) {
-        setScrolled(false)
         fieldRef.current.scrollIntoView({
           behavior: 'smooth',
         })
       }
-    }, 300)
-  }
-
-  useEffect(() => {
-    if (props.hasError && !scrolled) {
-      onScrollToError()
     }
-  }, [scrolled, props.hasError])
+  }, [props.isScrollToError])
 
   /* Render form field */
 

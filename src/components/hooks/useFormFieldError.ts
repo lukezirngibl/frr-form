@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { FormFieldType, MultiInputField, SingleFormField } from '../types'
 
-const computeFieldError = <FormData>({
+export const computeFieldError = <FormData>({
   value,
   data,
   field,
@@ -9,7 +9,7 @@ const computeFieldError = <FormData>({
   value: string | string[] | boolean | number | Date | null
   data: FormData
   field: SingleFormField<FormData>
-}): string | null => {
+}): { error: string | null; fieldId: string } => {
   let error = null
   const isRequired =
     'required' in field
@@ -41,7 +41,7 @@ const computeFieldError = <FormData>({
     }
 
     const min = 'min' in field ? field.min : 0
-    const max = 'max' in field ? field.max : 1000000
+    const max = 'max' in field ? field.max : 10000000
     if (value < min) {
       error = 'fieldErrorMin'
     } else if (value > max) {
@@ -57,7 +57,7 @@ const computeFieldError = <FormData>({
     }
   }
 
-  return error
+  return { error, fieldId: field.lens.id() }
 }
 
 export const useFormFieldError = <FormData>({
@@ -71,14 +71,14 @@ export const useFormFieldError = <FormData>({
 }): string | null => {
   let value = field.lens.get(data)
 
-  const [error, setError] = useState(null)
+  const [fieldError, setFieldError] = useState({ error: null, fieldId: null })
   useEffect(() => {
     showValidation
-      ? setError(computeFieldError({ value, field, data }))
-      : setError(null)
+      ? setFieldError(computeFieldError({ value, field, data }))
+      : setFieldError({ error: null, fieldId: null })
   }, [value, showValidation])
 
-  return error as string
+  return fieldError.error
 }
 
 export const useFormFieldErrors = <FormData>({
@@ -95,10 +95,12 @@ export const useFormFieldErrors = <FormData>({
     const errorLabels = new Set(
       showValidation
         ? field.fields
-            .map((field: SingleFormField<FormData>) =>
-              computeFieldError({ data, field, value: field.lens.get(data) }),
+            .map(
+              (field: SingleFormField<FormData>) =>
+                computeFieldError({ data, field, value: field.lens.get(data) })
+                  .error,
             )
-            .filter((label: string) => !!label)
+            .filter((error) => !!error)
         : [],
     )
     setError(Array.from(errorLabels))

@@ -30,6 +30,7 @@ type FieldSection<FormData> = CommonThreadProps<FormData> & {
 
 export const FieldSection = <FormData extends {}>({
   data,
+  errorFieldId,
   field: fieldSection,
   fieldIndex: fieldSectionIndex,
   formReadOnly,
@@ -45,10 +46,11 @@ export const FieldSection = <FormData extends {}>({
 
   const commonFieldProps = {
     data,
-    style,
-    showValidation,
-    onChange,
+    errorFieldId,
     formReadOnly,
+    onChange,
+    showValidation,
+    style,
   }
 
   const renderSectionField = (
@@ -59,9 +61,9 @@ export const FieldSection = <FormData extends {}>({
       return (
         <FieldRow
           key={`field-section-${fieldIndex}`}
+          field={field}
           fieldIndex={fieldIndex}
           {...commonFieldProps}
-          field={field}
         />
       )
     }

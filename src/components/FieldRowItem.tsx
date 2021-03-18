@@ -14,6 +14,7 @@ type Props<FormData> = CommonThreadProps<FormData> & {
 
 export const FieldRowItem = <FormData extends {}>({
   data,
+  errorFieldId,
   field,
   fieldIndex,
   formReadOnly,
@@ -50,8 +51,7 @@ export const FieldRowItem = <FormData extends {}>({
     !isNotScrollable ? (
       <FieldScrollableWrapper
         key={`field-${fieldIndex}`}
-        showValidation={showValidation}
-        hasError={hasError}
+        isScrollToError={field.lens.id() === errorFieldId}
         style={field.itemStyle}
       >
         <Field
