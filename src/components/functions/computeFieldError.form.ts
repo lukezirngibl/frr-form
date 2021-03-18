@@ -3,6 +3,7 @@ import { FormFieldType, SingleFormField } from '../types'
 export const getComputeFieldError = <FormData>(data: FormData) => (
   f: SingleFormField<FormData>,
 ): string | null => {
+  let error = null
   const isRequired =
     'required' in f
       ? typeof f.required === 'function'
@@ -13,33 +14,28 @@ export const getComputeFieldError = <FormData>(data: FormData) => (
   let val = f.lens.get(data)
   val = typeof val === 'string' ? val.trim() : val
 
-  if (isRequired) {
-    if (val === '' || val === null || val === undefined) {
-      if (
-        f.type === FormFieldType.FormattedDatePicker ||
-        f.type === FormFieldType.DatePicker
-      ) {
-        return 'invalidDate'
-      } else {
-        return 'fieldRequired' as string
-      }
+  if (isRequired && (val === '' || val === null || val === undefined)) {
+    if (
+      f.type === FormFieldType.FormattedDatePicker ||
+      f.type === FormFieldType.DatePicker
+    ) {
+      error = 'invalidDate'
+    } else {
+      error = 'fieldRequired' as string
     }
   }
 
-  if ('validate' in f && f.validate !== undefined) {
-    const l = f.validate(data)
-    if (l !== null) {
-      return l
-    }
+  if (!error && !!f.validate) {
+    error = f.validate(data)
   }
 
-  if (f.type === FormFieldType.NumberInput) {
+  if (!error && f.type === FormFieldType.NumberInput) {
     if ('min' in f && val < f.min) {
-      return 'fieldErrorMin' as string
+      error = 'fieldErrorMin' as string
     } else if ('max' in f && val > f.max) {
-      return 'fieldErrorMax' as string
+      error = 'fieldErrorMax' as string
     }
   }
 
-  return null
+  return error
 }
