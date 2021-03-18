@@ -79,7 +79,7 @@ const defaultOptionArrayMapper = (
 
 const defaultOptionMapper = (
   params: MapperParams<string | number> & {
-    options: Array<{ label: string; value: string }>
+    options: Array<{ label?: string; value: string }>
   },
 ): string => {
   return findFirst(
