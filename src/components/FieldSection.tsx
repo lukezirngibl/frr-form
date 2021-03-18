@@ -21,12 +21,8 @@ import {
 
 const WrapperFormSection = createStyled('div')
 const WrapperSectionRight = createStyled('div')
-const WrapperContainers = styled.div`
-  display: flex;
-`
-const WrapperSectionMain = styled.div`
-  flex-grow: 1;
-`
+const ContentWrapper = createStyled('div')
+const Content = createStyled('div')
 
 type FieldSection<FormData> = CommonThreadProps<FormData> & {
   field: FormSection<FormData>
@@ -159,8 +155,8 @@ export const FieldSection = <FormData extends {}>({
           />
         )}
 
-        <WrapperContainers>
-          <WrapperSectionMain>
+        <ContentWrapper {...getSectionStyle('contentWrapper')}>
+          <Content {...getSectionStyle('content')}>
             {fieldSection.title && (
               <P
                 {...getSectionStyle('title', fieldSection.style?.title || {})}
@@ -176,7 +172,7 @@ export const FieldSection = <FormData extends {}>({
             )}
 
             {fieldSection.fields.map(renderSectionField)}
-          </WrapperSectionMain>
+          </Content>
 
           <WrapperSectionRight
             {...getSectionRightStyle('wrapper')}
@@ -191,7 +187,7 @@ export const FieldSection = <FormData extends {}>({
               />
             )}
           </WrapperSectionRight>
-        </WrapperContainers>
+        </ContentWrapper>
       </WrapperFormSection>
     </>
   ) : (

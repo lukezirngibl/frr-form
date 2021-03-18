@@ -16,6 +16,8 @@ export type FormTheme = {
     introduction: CSSProperties
     title: CSSProperties
     wrapper: CSSProperties
+    contentWrapper: CSSProperties
+    content: CSSProperties
   }
   sectionRight: {
     wrapper: CSSProperties
@@ -47,6 +49,8 @@ export const defaultFormTheme: FormTheme = {
     introduction: {},
     title: {},
     wrapper: {},
+    contentWrapper: {},
+    content: {},
   },
   sectionRight: {
     wrapper: {},
@@ -78,7 +82,7 @@ export const defaultFormTheme: FormTheme = {
     valueHighlighted: {},
     image: {},
     label: {},
-  }
+  },
 }
 
 export type FormThemeConfig = { [k in keyof FormTheme]?: Partial<FormTheme[k]> }
