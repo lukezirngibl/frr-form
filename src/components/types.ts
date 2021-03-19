@@ -85,13 +85,13 @@ export type DropdownOption = {
 
 type FormInput<V, P extends { value: V }, L, T> = Omit<
   P,
-  'onChange' | 'value' | 'error' | 'required'
+  'onChange' | 'onBlur' | 'value' | 'error' | 'required'
 > & {
   lens: L
   type: T
   readOnly?: boolean
   readOnlyMapper?: (
-    params: Omit<P, 'onChange'> & { translate: (v: string) => string },
+    params: Omit<P, 'onChange' | 'onBlur'> & { translate: (v: string) => string },
   ) => string
   readOnlyOptions?: {
     isHighlighted?: boolean

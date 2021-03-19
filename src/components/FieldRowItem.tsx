@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { CommonThreadProps, FormFieldType, SingleFormField } from './types'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
@@ -19,30 +19,23 @@ export const FieldRowItem = <FormData extends {}>({
   fieldIndex,
   formReadOnly,
   isNotScrollable,
-  onChange,
+  onChange: onBlur,
   showValidation,
   style,
 }: Props<FormData>) => {
   /* Error handling */
 
-  const errorLabel = useFormFieldError({ data, field, showValidation })
+  const [value, setValue] = useState(field.lens.get(data))
+  const errorLabel = useFormFieldError({ value, data, field, showValidation })
   const hasError = errorLabel !== null
-
-  const commonFieldProps = {
-    data,
-    hasError,
-    errorLabel,
-    style,
-    onChange,
-    showValidation,
-  }
 
   if (formReadOnly || field.readOnly) {
     return (
       <FieldItemReadOnly
-        {...commonFieldProps}
+        data={data}
         field={field as SingleFormField<FormData>}
         fieldIndex={fieldIndex}
+        style={style}
       />
     )
   }
@@ -55,20 +48,26 @@ export const FieldRowItem = <FormData extends {}>({
         style={field.itemStyle}
       >
         <Field
-          {...commonFieldProps}
+          data={data}
+          hasError={hasError}
+          errorLabel={errorLabel}
+          onChange={setValue}
+          onBlur={(value) => onBlur(field.lens, value)}
           hasFocus={field.lens.id() === errorFieldId}
           field={field as SingleFormField<FormData>}
           fieldIndex={fieldIndex}
-          onChange={onChange}
         />
       </FieldScrollableWrapper>
     ) : (
       <Field
-        {...commonFieldProps}
+        data={data}
+        hasError={hasError}
+        errorLabel={errorLabel}
+        onChange={setValue}
+        onBlur={(value) => onBlur(field.lens, value)}
         hasFocus={field.lens.id() === errorFieldId}
         field={field as SingleFormField<FormData>}
         fieldIndex={fieldIndex}
-        onChange={onChange}
       />
     )
   ) : (
