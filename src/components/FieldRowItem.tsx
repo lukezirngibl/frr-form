@@ -56,6 +56,7 @@ export const FieldRowItem = <FormData extends {}>({
       >
         <Field
           {...commonFieldProps}
+          hasFocus={field.lens.id() === errorFieldId}
           field={field as SingleFormField<FormData>}
           fieldIndex={fieldIndex}
           onChange={onChange}
@@ -64,6 +65,7 @@ export const FieldRowItem = <FormData extends {}>({
     ) : (
       <Field
         {...commonFieldProps}
+        hasFocus={field.lens.id() === errorFieldId}
         field={field as SingleFormField<FormData>}
         fieldIndex={fieldIndex}
         onChange={onChange}
