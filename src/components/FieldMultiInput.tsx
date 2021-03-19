@@ -99,6 +99,7 @@ export const FieldMultiInput = <FormData extends {}>({
               key={`field-item-${fieldItemIndex}`}
               field={fieldItem}
               fieldIndex={fieldItemIndex}
+              errorFieldId={errorFieldId}
               onChange={onChange}
               isNotScrollable
             />
