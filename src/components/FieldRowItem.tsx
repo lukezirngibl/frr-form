@@ -19,7 +19,7 @@ export const FieldRowItem = <FormData extends {}>({
   fieldIndex,
   formReadOnly,
   isNotScrollable,
-  onChange: onBlur,
+  onChange,
   showValidation,
   style,
 }: Props<FormData>) => {
@@ -28,6 +28,11 @@ export const FieldRowItem = <FormData extends {}>({
   const [value, setValue] = useState(field.lens.get(data))
   const errorLabel = useFormFieldError({ value, data, field, showValidation })
   const hasError = errorLabel !== null
+
+  const onBlur = value => {
+    setValue(value)
+    onChange(field.lens, value)
+  }
 
   if (formReadOnly || field.readOnly) {
     return (
@@ -52,7 +57,7 @@ export const FieldRowItem = <FormData extends {}>({
           hasError={hasError}
           errorLabel={errorLabel}
           onChange={setValue}
-          onBlur={(value) => onBlur(field.lens, value)}
+          onBlur={onBlur}
           hasFocus={field.lens.id() === errorFieldId}
           field={field as SingleFormField<FormData>}
           fieldIndex={fieldIndex}
@@ -64,7 +69,7 @@ export const FieldRowItem = <FormData extends {}>({
         hasError={hasError}
         errorLabel={errorLabel}
         onChange={setValue}
-        onBlur={(value) => onBlur(field.lens, value)}
+        onBlur={onBlur}
         hasFocus={field.lens.id() === errorFieldId}
         field={field as SingleFormField<FormData>}
         fieldIndex={fieldIndex}
