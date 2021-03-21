@@ -8,6 +8,7 @@ import { Field } from './Field'
 
 type Props<FormData> = CommonThreadProps<FormData> & {
   field: SingleFormField<FormData>
+  onError?: (error: { error: string, fieldId: string }) => void
   isNotScrollable?: boolean
 }
 // ------------------------------------
@@ -20,6 +21,7 @@ export const FieldRowItem = <FormData extends {}>({
   formReadOnly,
   isNotScrollable,
   onChange,
+  onError,
   showValidation,
   style,
 }: Props<FormData>) => {
@@ -29,7 +31,11 @@ export const FieldRowItem = <FormData extends {}>({
   const errorLabel = useFormFieldError({ value, data, field, showValidation })
   const hasError = errorLabel !== null
 
-  const onBlur = value => {
+  useEffect(() => {
+    showValidation && onError?.({ error: errorLabel, fieldId: field.lens.id() })
+  }, [showValidation, errorLabel])
+
+  const onBlur = (value: any) => {
     setValue(value)
     onChange(field.lens, value)
   }

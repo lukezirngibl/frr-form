@@ -1,6 +1,6 @@
 import { Label } from 'frr-web/lib/components/Label'
 import { createStyled } from 'frr-web/lib/theme/util'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { useFormTheme } from '../theme/theme'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
@@ -38,7 +38,21 @@ export const FieldMultiInput = <FormData extends {}>({
   const getCssRowStyle = useCSSStyles(theme, 'row')(style?.row || {})
 
   // Error
-  const errorLabel = useFormFieldErrors({ data, field, showValidation })
+  const [errors, setErrors] = useState([])
+  const onError = useCallback((error: { error: string, fieldId: string }) => {
+    const errorIndex = errors.findIndex(err => err.fieldId === error.fieldId)
+    const newErrors = [...errors]
+    if (errorIndex === -1 && !!error.error) {
+      newErrors.push(error)
+    } else if (errorIndex > -1) {
+      newErrors[errorIndex] = error
+    }
+    setErrors(newErrors)
+  }, [])
+  
+  console.log('MULTI ERRORS', errors)
+
+  const errorLabel = useFormFieldErrors({ errors })
 
   const commonFieldProps = {
     data,
@@ -101,6 +115,7 @@ export const FieldMultiInput = <FormData extends {}>({
               fieldIndex={fieldItemIndex}
               errorFieldId={errorFieldId}
               onChange={onChange}
+              onError={onError}
               isNotScrollable
             />
           ))}

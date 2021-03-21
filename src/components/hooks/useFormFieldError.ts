@@ -32,7 +32,7 @@ export const computeFieldError = <FormData>({
   }
 
   if (!error && !!field.validate) {
-    error = field.validate(data)
+    error = field.validate(value)
   }
 
   if (!error && field.type === FormFieldType.CurrencyInput) {
@@ -66,7 +66,7 @@ export const useFormFieldError = <FormData>({
   field,
   showValidation,
 }: {
-  value: string | string[] | number | Date | boolean | null
+  value: string | string[] | number | Date | boolean | null
   data: FormData
   field: SingleFormField<FormData>
   showValidation: boolean
@@ -82,29 +82,17 @@ export const useFormFieldError = <FormData>({
 }
 
 export const useFormFieldErrors = <FormData>({
-  data,
-  field,
-  showValidation,
+  errors,
 }: {
-  data: FormData
-  field: MultiInputField<FormData>
-  showValidation: boolean
+  errors: Array<{ error: string; fieldId: string }>
 }): Array<string> => {
   const [error, setError] = useState([])
   useEffect(() => {
     const errorLabels = new Set(
-      showValidation
-        ? field.fields
-            .map(
-              (field: SingleFormField<FormData>) =>
-                computeFieldError({ data, field, value: field.lens.get(data) })
-                  .error,
-            )
-            .filter((error) => !!error)
-        : [],
+      errors.map((error) => error.error).filter((error) => !!error),
     )
     setError(Array.from(errorLabels))
-  }, [showValidation, data])
+  }, [errors])
 
   return error
 }

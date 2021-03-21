@@ -1,18 +1,18 @@
+import { createStyled } from 'frr-web/lib/theme/util'
 import React, { ReactNode, useEffect, useRef } from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import { useFormTheme } from '../theme/theme'
-import { useInlineStyle } from '../theme/util'
+import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { setScrolled, getScrolled } from '../util'
 
 /*
  * Styled components
  */
 
-const FormScrollToWrapper = styled.div<{
+const FormScrollToWrapper = createStyled(styled.div<{
   width?: string
   maxwidth?: number
 }>`
-  position: relative;
   max-width: ${({ maxwidth }) => (!!maxwidth ? `${maxwidth}px` : 'none')};
   width: ${({ width }) => width || '100%'};
 
@@ -26,7 +26,7 @@ const FormScrollToWrapper = styled.div<{
       margin-top: 0;
     }
   }
-`
+`)
 
 /*
  * Render field function
@@ -42,7 +42,7 @@ type FieldScrollableWrapperProps = {
 export const FieldScrollableWrapper = (props: FieldScrollableWrapperProps) => {
   /* Styles */
   const theme = useFormTheme()
-  const getRowStyle = useInlineStyle(theme, 'row')()
+  const getRowStyle = useCSSStyles(theme, 'row')()
 
   const width = !isNaN(props.width) ? props.width : 100
 
@@ -60,12 +60,10 @@ export const FieldScrollableWrapper = (props: FieldScrollableWrapperProps) => {
   // }
 
   useEffect(() => {
-    if (props.isScrollToError) {
-      if (fieldRef.current) {
-        fieldRef.current.scrollIntoView({
-          behavior: 'smooth',
-        })
-      }
+    if (props.isScrollToError && fieldRef.current) {
+      fieldRef.current.scrollIntoView({
+        behavior: 'smooth',
+      })
     }
   }, [props.isScrollToError])
 
