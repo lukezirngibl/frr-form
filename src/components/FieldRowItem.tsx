@@ -5,6 +5,8 @@ import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldScrollableWrapper } from './FieldScrollableWrapper'
 import { getComputeFieldError } from './functions/computeFieldError.form'
 import { Field } from './Field'
+import { useCSSStyles, useInlineStyle } from '../theme/util'
+import { useFormTheme } from '../theme/theme'
 
 // ------------------------------------
 export const FieldRowItem = <FormData extends {}>({
@@ -24,6 +26,9 @@ export const FieldRowItem = <FormData extends {}>({
   const computeFieldError = getComputeFieldError(data)
   const errorLabel = showValidation ? computeFieldError(field) : null
   const hasError = errorLabel !== null
+
+  const theme = useFormTheme()
+  const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
 
   const commonFieldProps = {
     data,
@@ -50,7 +55,7 @@ export const FieldRowItem = <FormData extends {}>({
         key={`field-${fieldIndex}`}
         showValidation={showValidation}
         hasError={hasError}
-        style={field.itemStyle}
+        style={getRowStyle('item', field.itemStyle).style}
       >
         <Field
           {...commonFieldProps}

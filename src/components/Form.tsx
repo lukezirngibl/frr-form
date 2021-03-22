@@ -1,7 +1,7 @@
 import {
   Button,
   ButtonType,
-  Props as ButtonProps
+  Props as ButtonProps,
 } from 'frr-web/lib/components/Button'
 import React, { ReactNode, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -19,7 +19,6 @@ import { FieldSection } from './FieldSection'
 import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
 import { DisplayType, FormField, FormFieldType, SingleFormField } from './types'
-
 
 export type FormProps<FormData> = {
   children?: ReactNode
@@ -230,7 +229,7 @@ export const Form = <FormData extends {}>({
             key={`field-${fieldIndex}`}
             formReadOnly={readOnly}
           />
-        ) 
+        )
 
       case FormFieldType.FormSection:
         return (
