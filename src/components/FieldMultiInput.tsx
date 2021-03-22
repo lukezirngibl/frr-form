@@ -8,8 +8,7 @@ import { FieldRowWrapper } from './FieldRow'
 import { FieldRowItem } from './FieldRowItem'
 import { FieldScrollableWrapper } from './FieldScrollableWrapper'
 import {
-  useFormFieldError,
-  useFormFieldErrors,
+  useFormFieldErrors
 } from './hooks/useFormFieldError'
 import { CommonThreadProps, MultiInputField } from './types'
 

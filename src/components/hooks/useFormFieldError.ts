@@ -43,17 +43,17 @@ export const computeFieldError = <FormData>({
     const min = 'min' in field ? field.min : 0
     const max = 'max' in field ? field.max : 10000000
     if (value < min) {
-      error = 'fieldErrorMin'
+      error = 'invalidMinAmount'
     } else if (value > max) {
-      error = 'fieldErrorMax'
+      error = 'invalidMaxAmount'
     }
   }
 
   if (!error && field.type === FormFieldType.NumberInput) {
     if ('min' in field && value < field.min) {
-      error = 'fieldErrorMin'
+      error = 'minError'
     } else if ('max' in field && value > field.max) {
-      error = 'fieldErrorMax'
+      error = 'maxError'
     }
   }
 

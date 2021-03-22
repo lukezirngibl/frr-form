@@ -19,7 +19,6 @@ import { YesNoOptionGroup } from 'frr-web/lib/components/YesNoOptionGroup'
 import { YesNoRadioGroup } from 'frr-web/lib/components/YesNoRadioGroup'
 import React from 'react'
 import { FormFieldType, SingleFormField } from './types'
-import { FormLens } from '../util'
 
 // import { CheckboxGroup } from 'frr-web/lib/components/CheckboxGroup'
 // import { Dropdown } from 'frr-web/lib/components/Dropdown'

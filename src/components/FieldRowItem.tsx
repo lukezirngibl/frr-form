@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-
-import { CommonThreadProps, FormFieldType, SingleFormField } from './types'
+import { Field } from './Field'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldScrollableWrapper } from './FieldScrollableWrapper'
 import { useFormFieldError } from './hooks/useFormFieldError'
-import { Field } from './Field'
+import { CommonThreadProps, SingleFormField } from './types'
+
 
 type Props<FormData> = CommonThreadProps<FormData> & {
   field: SingleFormField<FormData>
@@ -25,9 +25,17 @@ export const FieldRowItem = <FormData extends {}>({
   showValidation,
   style,
 }: Props<FormData>) => {
-  /* Error handling */
-
+  // Value handling
   const [value, setValue] = useState(field.lens.get(data))
+  useEffect(() => {
+    setValue(field.lens.get(data))
+  }, [field.lens.get(data)])
+
+  const onBlur = (value: any) => {
+    onChange(field.lens, value)
+  }
+
+  // Error handling
   const errorLabel = useFormFieldError({ value, data, field, showValidation })
   const hasError = errorLabel !== null
 
@@ -35,11 +43,8 @@ export const FieldRowItem = <FormData extends {}>({
     showValidation && onError?.({ error: errorLabel, fieldId: field.lens.id() })
   }, [showValidation, errorLabel])
 
-  const onBlur = (value: any) => {
-    setValue(value)
-    onChange(field.lens, value)
-  }
-
+  
+  // Render components
   if (formReadOnly || field.readOnly) {
     return (
       <FieldItemReadOnly

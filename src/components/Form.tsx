@@ -3,7 +3,7 @@ import {
   ButtonType,
   Props as ButtonProps
 } from 'frr-web/lib/components/Button'
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { FormTheme, useFormTheme } from '../theme/theme'
@@ -66,10 +66,8 @@ const FormContent = styled.div`
 `
 
 export const Form = <FormData extends {}>({
-  children,
   style,
   data,
-  display,
   formFields,
   onSubmit,
   onInvalidSubmit,
