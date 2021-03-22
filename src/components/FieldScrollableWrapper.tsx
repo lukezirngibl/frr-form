@@ -13,20 +13,18 @@ const FormScrollToWrapper = createStyled(styled.div<{
   width?: string
   maxwidth?: number
 }>`
+  position: relative;
   max-width: ${({ maxwidth }) => (!!maxwidth ? `${maxwidth}px` : 'none')};
   width: ${({ width }) => width || '100%'};
 
   @media (max-width: 768px) {
-    width: 100% !important;
-    margin-top: 12px;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-
+    
     &:first-of-type {
       margin-top: 0;
     }
   }
 `)
+
 
 /*
  * Render field function
@@ -34,9 +32,9 @@ const FormScrollToWrapper = createStyled(styled.div<{
 
 type FieldScrollableWrapperProps = {
   children: ReactNode
-  width?: number
   isScrollToError: boolean
   style?: CSSProperties
+  width?: number
 }
 
 export const FieldScrollableWrapper = (props: FieldScrollableWrapperProps) => {
@@ -61,6 +59,8 @@ export const FieldScrollableWrapper = (props: FieldScrollableWrapperProps) => {
 
   useEffect(() => {
     if (props.isScrollToError && fieldRef.current) {
+      // const element = window.getComputedStyle(fieldRef.current)
+      // console.log('ELEMENT', element)
       fieldRef.current.scrollIntoView({
         behavior: 'smooth',
       })
@@ -71,9 +71,9 @@ export const FieldScrollableWrapper = (props: FieldScrollableWrapperProps) => {
 
   return (
     <FormScrollToWrapper
+      className="form-field"
       ref={fieldRef}
       width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
-      className="form-field"
       {...getRowStyle('item', props.style || {})}
     >
       {props.children}

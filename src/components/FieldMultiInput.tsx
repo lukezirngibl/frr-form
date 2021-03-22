@@ -50,8 +50,6 @@ export const FieldMultiInput = <FormData extends {}>({
     setErrors(newErrors)
   }, [])
   
-  console.log('MULTI ERRORS', errors)
-
   const errorLabel = useFormFieldErrors({ errors })
 
   const commonFieldProps = {
