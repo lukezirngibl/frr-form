@@ -8,7 +8,7 @@ import { Field } from './Field'
 
 type Props<FormData> = CommonThreadProps<FormData> & {
   field: SingleFormField<FormData>
-  onError?: (error: { error: string, fieldId: string }) => void
+  onError?: (error: { error: string; fieldId: string }) => void
   isNotScrollable?: boolean
 }
 // ------------------------------------
@@ -51,13 +51,9 @@ export const FieldRowItem = <FormData extends {}>({
     )
   }
 
-  return !field.isVisible || field.isVisible(data) ? (
-    !isNotScrollable ? (
-      <FieldScrollableWrapper
-        key={`field-${fieldIndex}`}
-        isScrollToError={field.lens.id() === errorFieldId}
-        style={field.itemStyle}
-      >
+  return (
+    ((!field.isVisible || field.isVisible(data)) &&
+      ((isNotScrollable && (
         <Field
           data={data}
           hasError={hasError}
@@ -68,20 +64,23 @@ export const FieldRowItem = <FormData extends {}>({
           field={field as SingleFormField<FormData>}
           fieldIndex={fieldIndex}
         />
-      </FieldScrollableWrapper>
-    ) : (
-      <Field
-        data={data}
-        hasError={hasError}
-        errorLabel={errorLabel}
-        onChange={setValue}
-        onBlur={onBlur}
-        hasFocus={field.lens.id() === errorFieldId}
-        field={field as SingleFormField<FormData>}
-        fieldIndex={fieldIndex}
-      />
-    )
-  ) : (
-    <></>
+      )) || (
+        <FieldScrollableWrapper
+          key={`field-${fieldIndex}`}
+          isScrollToError={field.lens.id() === errorFieldId}
+          style={field.itemStyle}
+        >
+          <Field
+            data={data}
+            hasError={hasError}
+            errorLabel={errorLabel}
+            onChange={setValue}
+            onBlur={onBlur}
+            hasFocus={field.lens.id() === errorFieldId}
+            field={field as SingleFormField<FormData>}
+            fieldIndex={fieldIndex}
+          />
+        </FieldScrollableWrapper>
+      ))) || <></>
   )
 }

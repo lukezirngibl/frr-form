@@ -14,11 +14,9 @@ const FormScrollToWrapper = createStyled(styled.div<{
   maxwidth?: number
 }>`
   position: relative;
-  max-width: ${({ maxwidth }) => (!!maxwidth ? `${maxwidth}px` : 'none')};
-  width: ${({ width }) => width || '100%'};
+  width: 100%;
 
-  @media (max-width: 768px) {
-    
+  @media (max-width: 768px) {  
     &:first-of-type {
       margin-top: 0;
     }
@@ -34,7 +32,6 @@ type FieldScrollableWrapperProps = {
   children: ReactNode
   isScrollToError: boolean
   style?: CSSProperties
-  width?: number
 }
 
 export const FieldScrollableWrapper = (props: FieldScrollableWrapperProps) => {
@@ -42,25 +39,10 @@ export const FieldScrollableWrapper = (props: FieldScrollableWrapperProps) => {
   const theme = useFormTheme()
   const getRowStyle = useCSSStyles(theme, 'row')()
 
-  const width = !isNaN(props.width) ? props.width : 100
-
   const fieldRef = React.createRef<HTMLDivElement>()
-  // const onScrollToError = () => {
-  //   setScrolled(true)
-  //   setTimeout(() => {
-  //     if (fieldRef.current) {
-  //       setScrolled(false)
-  //       fieldRef.current.scrollIntoView({
-  //         behavior: 'smooth',
-  //       })
-  //     }
-  //   }, 300)
-  // }
-
+  
   useEffect(() => {
     if (props.isScrollToError && fieldRef.current) {
-      // const element = window.getComputedStyle(fieldRef.current)
-      // console.log('ELEMENT', element)
       fieldRef.current.scrollIntoView({
         behavior: 'smooth',
       })
@@ -73,7 +55,6 @@ export const FieldScrollableWrapper = (props: FieldScrollableWrapperProps) => {
     <FormScrollToWrapper
       className="form-field"
       ref={fieldRef}
-      width={`calc(${width}% - ${width === 100 ? 0 : 4}px)`}
       {...getRowStyle('item', props.style || {})}
     >
       {props.children}
