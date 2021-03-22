@@ -4,7 +4,8 @@ import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldScrollableWrapper } from './FieldScrollableWrapper'
 import { useFormFieldError } from './hooks/useFormFieldError'
 import { CommonThreadProps, SingleFormField } from './types'
-
+import { useCSSStyles, useInlineStyle } from '../theme/util'
+import { useFormTheme } from '../theme/theme'
 
 type Props<FormData> = CommonThreadProps<FormData> & {
   field: SingleFormField<FormData>
@@ -25,6 +26,9 @@ export const FieldRowItem = <FormData extends {}>({
   showValidation,
   style,
 }: Props<FormData>) => {
+  const theme = useFormTheme()
+  const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
+
   // Value handling
   const [value, setValue] = useState(field.lens.get(data))
   useEffect(() => {
@@ -43,7 +47,6 @@ export const FieldRowItem = <FormData extends {}>({
     showValidation && onError?.({ error: errorLabel, fieldId: field.lens.id() })
   }, [showValidation, errorLabel])
 
-  
   // Render components
   if (formReadOnly || field.readOnly) {
     return (
@@ -73,7 +76,7 @@ export const FieldRowItem = <FormData extends {}>({
         <FieldScrollableWrapper
           key={`field-${fieldIndex}`}
           isScrollToError={field.lens.id() === errorFieldId}
-          style={field.itemStyle}
+          style={getRowStyle('item', field.itemStyle).style}
         >
           <Field
             data={data}
