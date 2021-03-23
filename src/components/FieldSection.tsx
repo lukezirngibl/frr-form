@@ -146,7 +146,7 @@ export const FieldSection = <FormData extends {}>({
         readOnly={formReadOnly}
         {...getSectionStyle('wrapper', fieldSection.style?.wrapper || {})}
       >
-        {fieldSection.introduction && (
+        {!formReadOnly && fieldSection.introduction && (
           <P
             {...getSectionStyle(
               'introduction',
@@ -154,6 +154,17 @@ export const FieldSection = <FormData extends {}>({
             )}
             readOnly={formReadOnly}
             label={fieldSection.introduction}
+          />
+        )}
+
+        {formReadOnly && fieldSection.introductionReadOnly && (
+          <P
+            {...getSectionStyle(
+              'introduction',
+              fieldSection.style?.introduction || {},
+            )}
+            readOnly={formReadOnly}
+            label={fieldSection.introductionReadOnly}
           />
         )}
 
