@@ -430,6 +430,7 @@ export type FormSection<FormData> = {
   fieldComponent?: ReactNode
   fields: SectionFields<FormData>
   introduction?: string
+  introductionReadOnly?: string
   isVisible?: (formData: FormData) => boolean
   onEdit?: (params: { dispatch: any }) => void
   style?: Partial<FormTheme['section']>
