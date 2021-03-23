@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Field } from './Field'
 import { FieldItemReadOnly } from './FieldItemReadOnly'
 import { FieldScrollableWrapper } from './FieldScrollableWrapper'
@@ -6,6 +6,7 @@ import { useFormFieldError } from './hooks/useFormFieldError'
 import { CommonThreadProps, SingleFormField } from './types'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { useFormTheme } from '../theme/theme'
+import { Form } from './Form'
 
 type Props<FormData> = CommonThreadProps<FormData> & {
   field: SingleFormField<FormData>
@@ -21,7 +22,7 @@ export const FieldRowItem = <FormData extends {}>({
   fieldIndex,
   formReadOnly,
   isNotScrollable,
-  onChange,
+  onChange: onValueChange,
   onError,
   showValidation,
   style,
@@ -29,19 +30,13 @@ export const FieldRowItem = <FormData extends {}>({
   const theme = useFormTheme()
   const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
 
-  // Value handling
-  const [value, setValue] = useState(field.lens.get(data))
-  useEffect(() => {
-    setValue(field.lens.get(data))
-  }, [field.lens.get(data)])
-
-  const onBlur = (value: any) => {
-    onChange(field.lens, value)
-  }
-
   // Error handling
-  const errorLabel = useFormFieldError({ value, data, field, showValidation })
+  const errorLabel = useFormFieldError({ data, field, showValidation })
   const hasError = errorLabel !== null
+
+  const onChange = useCallback((value: any) => {
+    onValueChange(field.lens, value)
+  }, [])
 
   useEffect(() => {
     showValidation && onError?.({ error: errorLabel, fieldId: field.lens.id() })
@@ -66,8 +61,7 @@ export const FieldRowItem = <FormData extends {}>({
           data={data}
           hasError={hasError}
           errorLabel={errorLabel}
-          onChange={setValue}
-          onBlur={onBlur}
+          onChange={onChange}
           hasFocus={field.lens.id() === errorFieldId}
           field={field as SingleFormField<FormData>}
           fieldIndex={fieldIndex}
@@ -82,8 +76,7 @@ export const FieldRowItem = <FormData extends {}>({
             data={data}
             hasError={hasError}
             errorLabel={errorLabel}
-            onChange={setValue}
-            onBlur={onBlur}
+            onChange={onChange}
             hasFocus={field.lens.id() === errorFieldId}
             field={field as SingleFormField<FormData>}
             fieldIndex={fieldIndex}

@@ -61,17 +61,16 @@ export const computeFieldError = <FormData>({
 }
 
 export const useFormFieldError = <FormData>({
-  value,
   data,
   field,
   showValidation,
 }: {
-  value: string | string[] | number | Date | boolean | null
   data: FormData
   field: SingleFormField<FormData>
   showValidation: boolean
 }): string | null => {
   const [fieldError, setFieldError] = useState({ error: null, fieldId: null })
+  const value = field.lens.get(data)
   useEffect(() => {
     showValidation
       ? setFieldError(computeFieldError({ value, field, data }))
@@ -81,7 +80,7 @@ export const useFormFieldError = <FormData>({
   return fieldError.error
 }
 
-export const useFormFieldErrors = <FormData>({
+export const useFormFieldErrors = ({
   errors,
 }: {
   errors: Array<{ error: string; fieldId: string }>
