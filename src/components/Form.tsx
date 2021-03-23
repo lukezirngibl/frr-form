@@ -84,44 +84,50 @@ export const Form = <FormData extends {}>({
   const theme = useFormTheme()
   const getFormStyle = useInlineStyle(theme, 'form')(style?.form || {})
 
-  const [showValidation, setShowValidation] = React.useState(false)
+  const [formValidationState, setFormValidationState] = React.useState({
+    showValidation: false,
+    errors: [],
+    errorFieldId: null,
+  })
 
   useEffect(() => {
-    setShowValidation(false)
-    setScrolled(false)
+    setFormValidationState({
+      showValidation: false,
+      errors: formValidationState.errors,
+      errorFieldId: formValidationState.errorFieldId,
+    })
   }, [formFields])
 
-  const isFieldInvalid = (field: SingleFormField<FormData>): boolean => {
-    const value = field.lens.get(data)
-    return computeFieldError({ value, data, field }).error !== null
-  }
-  const getFieldError = (field: SingleFormField<FormData>): { error: string | null, fieldId: string } => {
+  const getFieldError = (
+    field: SingleFormField<FormData>,
+  ): { error: string | null; fieldId: string } => {
     const value = field.lens.get(data)
     return computeFieldError({ value, data, field })
   }
 
-  const [errorFieldId, setErrorFieldId] = useState(null)
-
   const submit = () => {
-    setErrorFieldId(null)
+    setFormValidationState({
+      showValidation: false,
+      errors: [],
+      errorFieldId: null,
+    })
     if (disableValidation) {
       onSubmit({ dispatch, formState: data })
     } else {
       const visibleFormFields = filterByVisibility(formFields, data)
-      const errors = mapFormFields(visibleFormFields, getFieldError).filter(fieldError => !!fieldError.error)
-      const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
-
-      console.log('ERRORS', errors)
+      const errors = mapFormFields(visibleFormFields, getFieldError).filter(
+        (fieldError) => !!fieldError.error,
+      )
 
       if (errors.length) {
-        setErrorFieldId(errors[0].fieldId)
-      }
+        console.log('ERRORS', errors)
 
-      if (isNotValid) {
-        setShowValidation(true)
-        if (onInvalidSubmit) {
-          onInvalidSubmit()
-        }
+        setFormValidationState({
+          showValidation: true,
+          errors,
+          errorFieldId: errors[0].fieldId,
+        })
+        onInvalidSubmit?.()
       } else if (typeof onSubmit === 'function') {
         onSubmit({ dispatch, formState: data })
       }
@@ -138,13 +144,12 @@ export const Form = <FormData extends {}>({
 
   // console.log('formData: ', data)
 
-  
   const commonFieldProps = {
     data,
-    errorFieldId,
+    errorFieldId: formValidationState.errorFieldId,
     formReadOnly: readOnly,
     onChange: internalOnChange,
-    showValidation,
+    showValidation: formValidationState.showValidation,
     style,
   }
 

@@ -1,9 +1,8 @@
 import { createStyled } from 'frr-web/lib/theme/util'
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import { useFormTheme } from '../theme/theme'
-import { useCSSStyles, useInlineStyle } from '../theme/util'
-import { setScrolled, getScrolled } from '../util'
+import { useCSSStyles } from '../theme/util'
 
 /*
  * Styled components

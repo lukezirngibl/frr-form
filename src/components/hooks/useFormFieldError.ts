@@ -71,6 +71,7 @@ export const useFormFieldError = <FormData>({
 }): string | null => {
   const [fieldError, setFieldError] = useState({ error: null, fieldId: null })
   const value = field.lens.get(data)
+
   useEffect(() => {
     showValidation
       ? setFieldError(computeFieldError({ value, field, data }))
