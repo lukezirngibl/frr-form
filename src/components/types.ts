@@ -456,3 +456,8 @@ export type CommonThreadProps<FormData> = {
   showValidation: boolean
   style: Partial<FormTheme> | undefined
 }
+
+export type FieldError = {
+  error: string | null
+  fieldId: string
+}

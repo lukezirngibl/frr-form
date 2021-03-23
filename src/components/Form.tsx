@@ -20,7 +20,13 @@ import { mapFormFields } from './functions/map.form'
 import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
 import { computeFieldError } from './hooks/useFormFieldError'
-import { DisplayType, FormField, FormFieldType, SingleFormField } from './types'
+import {
+  DisplayType,
+  FieldError,
+  FormField,
+  FormFieldType,
+  SingleFormField,
+} from './types'
 
 export type FormProps<FormData> = {
   children?: ReactNode
@@ -31,7 +37,10 @@ export type FormProps<FormData> = {
   display?: DisplayType
   formFields: Array<FormField<FormData>>
   onSubmit?: (params: { dispatch: any; formState: FormData }) => void
-  onInvalidSubmit?: () => void
+  onInvalidSubmit?: (params: {
+    errors: Array<FieldError>
+    formState: FormData
+  }) => void
   onChangeWithLens?: (lens: FormLens<FormData, any>, value: any) => void
   onChange: (formState: FormData) => void
   buttons?: Array<
@@ -91,11 +100,9 @@ export const Form = <FormData extends {}>({
     setScrolled(false)
   }, [formFields])
 
-  const isFieldInvalid = (field: SingleFormField<FormData>): boolean => {
-    const value = field.lens.get(data)
-    return computeFieldError({ value, data, field }).error !== null
-  }
-  const getFieldError = (field: SingleFormField<FormData>): { error: string | null, fieldId: string } => {
+  const getFieldError = (
+    field: SingleFormField<FormData>,
+  ): { error: string | null; fieldId: string } => {
     const value = field.lens.get(data)
     return computeFieldError({ value, data, field })
   }
@@ -108,22 +115,17 @@ export const Form = <FormData extends {}>({
       onSubmit({ dispatch, formState: data })
     } else {
       const visibleFormFields = filterByVisibility(formFields, data)
-      const errors = mapFormFields(visibleFormFields, getFieldError).filter(fieldError => !!fieldError.error)
-      const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
-
-      console.log('ERRORS', errors)
-
-      if (errors.length) {
+      const errors = mapFormFields(visibleFormFields, getFieldError).filter(
+        (fieldError) => !!fieldError.error,
+      )
+      
+      if (errors.length > 0) {
+        console.log('ERRORS', errors)
         setErrorFieldId(errors[0].fieldId)
-      }
-
-      if (isNotValid) {
         setShowValidation(true)
-        if (onInvalidSubmit) {
-          onInvalidSubmit()
-        }
-      } else if (typeof onSubmit === 'function') {
-        onSubmit({ dispatch, formState: data })
+        onInvalidSubmit?.({ errors, formState: data })
+      } else {
+        onSubmit?.({ dispatch, formState: data })
       }
     }
   }
@@ -138,7 +140,6 @@ export const Form = <FormData extends {}>({
 
   // console.log('formData: ', data)
 
-  
   const commonFieldProps = {
     data,
     errorFieldId,
