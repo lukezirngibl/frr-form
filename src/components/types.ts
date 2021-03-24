@@ -85,13 +85,15 @@ export type DropdownOption = {
 
 type FormInput<V, P extends { value: V }, L, T> = Omit<
   P,
-  'onChange' | 'onBlur' | 'value' | 'error' | 'required'
+  'onChange' | 'onBlur' | 'value' | 'error' | 'required'
 > & {
   lens: L
   type: T
   readOnly?: boolean
   readOnlyMapper?: (
-    params: Omit<P, 'onChange' | 'onBlur'> & { translate: (v: string) => string },
+    params: Omit<P, 'onChange' | 'onBlur'> & {
+      translate: (v: string) => string
+    },
   ) => string
   readOnlyOptions?: {
     isHighlighted?: boolean
@@ -334,13 +336,13 @@ export const fieldMap = {
 } as const
 
 export type SingleFormField<FormData> = (
-  // | CheckboxGroupField<FormData>
+  | // | CheckboxGroupField<FormData>
   // | CountryDropdownField<FormData>
   // | DropdownField<FormData>
   // | DropdownNumberField<FormData>
   // | InputWithDropdownField<FormData>
 
-  | CodeInputField<FormData>
+  CodeInputField<FormData>
   | CountrySelectField<FormData>
   | CurrencyInputField<FormData>
   | DatePickerField<FormData>
@@ -417,12 +419,13 @@ export type SectionField<FormData> =
 export type SectionFields<FormData> = Array<SectionField<FormData>>
 
 export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
+  fields: Array<SingleFieldOrRow<FormData>>
+  isVisible?: (formData: FormData) => boolean
+  length: FormLens<FormData, number> | FormLens<FormData, number | null>
   lens: FormLens<FormData, Array<T>>
+  onEdit?: (params: { dispatch: any }) => void
   title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatSection
-  fields: Array<SingleFieldOrRow<FormData>>
-  length: FormLens<FormData, number> | FormLens<FormData, number | null>
-  isVisible?: (formData: FormData) => boolean
 }
 
 export type FormSection<FormData> = {
