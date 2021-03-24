@@ -159,28 +159,23 @@ export const processRepeatSection = <FormData extends {}>(
       : `${index + 1}`
     return {
       type: FormFieldType.FormSection,
-      fields: [
-        {
-          type: FormFieldType.FormFieldGroup,
-          title,
-          fields: fieldRepeatSection.fields.map((repeatSectionField) => {
-            if (Array.isArray(repeatSectionField)) {
-              return <></>
-            } else if (repeatSectionField.type === FormFieldType.MultiInput) {
-              return repeatSectionField
-            } else {
-              return {
-                ...repeatSectionField,
-                lens: createFakeFormLens(
-                  fieldRepeatSection.lens,
-                  index,
-                  repeatSectionField.lens,
-                ),
-              }
-            }
-          }),
-        },
-      ],
+      title,
+      fields: fieldRepeatSection.fields.map((repeatSectionField) => {
+        if (Array.isArray(repeatSectionField)) {
+          return <></>
+        } else if (repeatSectionField.type === FormFieldType.MultiInput) {
+          return repeatSectionField
+        } else {
+          return {
+            ...repeatSectionField,
+            lens: createFakeFormLens(
+              fieldRepeatSection.lens,
+              index,
+              repeatSectionField.lens,
+            ),
+          }
+        }
+      }),
     }
   }) as Array<FormSection<FormData>>
 }
