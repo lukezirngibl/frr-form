@@ -193,7 +193,7 @@ const FieldItemReadOnlyValue = <FormData extends {}>(
   ) : (
     <P
       {...props.getFieldStyle(readOnlyStyle)}
-      label={readOnlyMapper({
+      data={readOnlyMapper({
         ...props.field,
         value: props.field.lens.get(props.data),
         translate,
