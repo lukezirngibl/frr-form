@@ -95,7 +95,9 @@ export const Form = <FormData extends {}>({
     const value = field.lens.get(data)
     return computeFieldError({ value, data, field }).error !== null
   }
-  const getFieldError = (field: SingleFormField<FormData>): { error: string | null, fieldId: string } => {
+  const getFieldError = (
+    field: SingleFormField<FormData>,
+  ): { error: string | null; fieldId: string } => {
     const value = field.lens.get(data)
     return computeFieldError({ value, data, field })
   }
@@ -108,7 +110,9 @@ export const Form = <FormData extends {}>({
       onSubmit({ dispatch, formState: data })
     } else {
       const visibleFormFields = filterByVisibility(formFields, data)
-      const errors = mapFormFields(visibleFormFields, getFieldError).filter(fieldError => !!fieldError.error)
+      const errors = mapFormFields(visibleFormFields, getFieldError).filter(
+        (fieldError) => !!fieldError.error,
+      )
       const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
 
       console.log('ERRORS', errors)
@@ -138,7 +142,6 @@ export const Form = <FormData extends {}>({
 
   // console.log('formData: ', data)
 
-  
   const commonFieldProps = {
     data,
     errorFieldId,
@@ -265,7 +268,7 @@ export const Form = <FormData extends {}>({
                       k + 1
                     }`
               }
-              disabled={b.isDisabled ? b.isDisabled(data) : false}
+              disabled={b.isDisabled ? b.isDisabled(data) : !!b.disabled}
               onClick={() => b.onClick({ submit, dispatch })}
             />
           ))}
