@@ -15,6 +15,7 @@
     "babel:build": "yarn clean && yarn link-frr && babel ./src --out-dir lib --extensions '.ts','.tsx','.js','.jsx'",
     "babel:watch": "yarn babel:build --watch",
     "build:local": "yarn link-frr && tsc && yarn clean",
+    "build-types": "install-peers -f && tsc",
     "patch": "yarn run build-types && git add -A && git commit -m 'patch' && npm version patch",
     "prepare": "install-peers",
     "sync-frr-web": "rm -rf ./node_modules/frr-web/lib  && cp -r ../frr-web/lib ./node_modules/frr-web/lib"

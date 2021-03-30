@@ -17,7 +17,6 @@ import { FieldRepeatSection } from './FieldRepeatSection'
 import { FieldRow } from './FieldRow'
 import { FieldSection } from './FieldSection'
 import { mapFormFields } from './functions/map.form'
-import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
 import { computeFieldError } from './hooks/useFormFieldError'
 import {
@@ -118,7 +117,7 @@ export const Form = <FormData extends {}>({
       const errors = mapFormFields(visibleFormFields, getFieldError).filter(
         (fieldError) => !!fieldError.error,
       )
-      
+
       if (errors.length > 0) {
         console.log('ERRORS', errors)
         setErrorFieldId(errors[0].fieldId)
