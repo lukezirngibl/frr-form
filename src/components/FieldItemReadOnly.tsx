@@ -42,6 +42,10 @@ type MapperParams<T> = {
 const defaultStringNumberMapper = ({
   value,
 }: MapperParams<string | number | null>): string => (value ? `${value}` : '')
+const defaultTranslateStringMapper = ({
+  value,
+  translate
+}: MapperParams<string | number | null>): string => (value ? translate(`${value}`) : '')
 
 const defaultDateStringMapper = ({
   value,
@@ -53,8 +57,8 @@ const defaultDateStringMapper = ({
     : ''
 }
 
-const defaultBooleanMapper = ({ value }: MapperParams<boolean>): string =>
-  value ? 'yes' : 'no'
+const defaultBooleanMapper = ({ value, translate }: MapperParams<boolean>): string =>
+  translate(value ? 'yes' : 'no')
 
 const defaultCurrencyMapper = ({ value }: MapperParams<number>): string =>
   formatter.long.format(value || 0)
@@ -85,8 +89,9 @@ const defaultOptionMapper = (
   return findFirst(
     params.options,
     (option) => option.value === params.value,
-  ).fold('', (option) => option.label)
+  ).fold('', (option) => params.translate(option.label))
 }
+
 
 const defaultReadOnlyMappers: {
   [K in FormFieldType]: (
@@ -104,7 +109,7 @@ const defaultReadOnlyMappers: {
   // [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
 
   [FormFieldType.CodeInput]: defaultStringNumberMapper,
-  [FormFieldType.CountrySelect]: defaultStringNumberMapper,
+  [FormFieldType.CountrySelect]: defaultTranslateStringMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
   [FormFieldType.DatePicker]: (v) =>
     !!v
@@ -193,12 +198,14 @@ const FieldItemReadOnlyValue = <FormData extends {}>(
   ) : (
     <P
       {...props.getFieldStyle(readOnlyStyle)}
-      data={readOnlyMapper({
-        ...props.field,
-        value: props.field.lens.get(props.data),
-        translate,
-        language,
-      } as any)}
+      data={{
+        value: readOnlyMapper({
+          ...props.field,
+          value: props.field.lens.get(props.data),
+          translate,
+          language,
+        } as any),
+      }}
     />
   )
 }
