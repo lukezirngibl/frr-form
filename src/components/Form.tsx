@@ -138,8 +138,6 @@ export const Form = <FormData extends {}>({
     }
   }
 
-  // console.log('formData: ', data)
-
   const commonFieldProps = {
     data,
     errorFieldId,
@@ -266,7 +264,7 @@ export const Form = <FormData extends {}>({
                       k + 1
                     }`
               }
-              disabled={b.isDisabled ? b.isDisabled(data) : false}
+              disabled={b.isDisabled ? b.isDisabled(data) : !!b.disabled}
               onClick={() => b.onClick({ submit, dispatch })}
             />
           ))}
