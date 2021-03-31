@@ -20,6 +20,7 @@ import {
 } from 'frr-web/lib/theme/language'
 import { useFormTheme } from '../theme/theme'
 import { format, isMatch, isValid } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 /*
  * Value mapper
@@ -173,8 +174,9 @@ type FieldItemReadOnlyValueProps<FormData> = {
 const FieldItemReadOnlyValue = <FormData extends {}>(
   props: FieldItemReadOnlyValueProps<FormData>,
 ) => {
-  const language = useLanguage()
-  const translate = useTranslate(language)
+  // const language = useLanguage()
+  // const translate = useTranslate(language)
+  const { t: translate, i18n } = useTranslation()
 
   const readOnlyStyle: Array<'value' | 'valueHighlighted'> = ['value']
 
@@ -197,7 +199,7 @@ const FieldItemReadOnlyValue = <FormData extends {}>(
         ...props.field,
         value: props.field.lens.get(props.data),
         translate,
-        language,
+        language: i18n.language as Language,
       } as any)}
     />
   )

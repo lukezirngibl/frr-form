@@ -33,6 +33,7 @@
     "frr-web": "2.0.26",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
+    "react-i18next": "^11.8.12",
     "react-redux": "^7.0.0",
     "styled-components": "^5.0.0"
   },
