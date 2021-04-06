@@ -27,19 +27,27 @@ import {
   SingleFormField,
 } from './types'
 
+type OnInvalidSubmitType<FormData> = (params: {
+  errors: Array<FieldError>
+  formState: FormData
+}) => void
+
+export type FormAnalytics<FormData> = {
+  onSubmit?: () => void
+  onInvalidSubmit?: OnInvalidSubmitType<FormData>
+}
+
 export type FormProps<FormData> = {
   children?: ReactNode
   style?: Partial<FormTheme>
+  analytics?: FormAnalytics<FormData>
   data: FormData
   disableValidation?: boolean
   dataTestId?: string
   display?: DisplayType
   formFields: Array<FormField<FormData>>
   onSubmit?: (params: { dispatch: any; formState: FormData }) => void
-  onInvalidSubmit?: (params: {
-    errors: Array<FieldError>
-    formState: FormData
-  }) => void
+  onInvalidSubmit?: OnInvalidSubmitType<FormData>
   onChangeWithLens?: (lens: FormLens<FormData, any>, value: any) => void
   onChange: (formState: FormData) => void
   buttons?: Array<
@@ -87,6 +95,7 @@ export const Form = <FormData extends {}>({
   readOnly,
   dataTestId,
   isVisible,
+  analytics,
 }: FormProps<FormData>) => {
   const dispatch = useDispatch()
   const theme = useFormTheme()
@@ -123,8 +132,10 @@ export const Form = <FormData extends {}>({
         setErrorFieldId(errors[0].fieldId)
         setShowValidation(true)
         onInvalidSubmit?.({ errors, formState: data })
+        analytics?.onInvalidSubmit?.({ errors, formState: data })
       } else {
         onSubmit?.({ dispatch, formState: data })
+        analytics?.onSubmit?.()
       }
     }
   }
