@@ -187,19 +187,19 @@ export const FieldSection = <FormData extends {}>({
             {fieldSection.fields.map(renderSectionField)}
           </Content>
 
-          <WrapperSectionRight
-            {...getSectionRightStyle('wrapper')}
-            readOnly={formReadOnly}
-          >
-            {!!fieldSection.onEdit && (
+          {!!fieldSection.onEdit && (
+            <WrapperSectionRight
+              {...getSectionRightStyle('wrapper')}
+              readOnly={formReadOnly}
+            >
               <Link
                 icon={{ type: 'edit', style: getSectionRightStyle('editIcon') }}
                 label="edit"
                 onClick={() => fieldSection.onEdit({ dispatch })}
                 style={getSectionRightStyle('editLink')}
               />
-            )}
-          </WrapperSectionRight>
+            </WrapperSectionRight>
+          )}
         </ContentWrapper>
       </WrapperFormSection>
     </>
