@@ -32,7 +32,7 @@ export const FieldMultiInput = <FormData extends {}>({
   // Form styles
   const theme = useFormTheme()
 
-  const getFieldMultiInputStyle = useInlineStyle(theme, 'fieldMultiInput')({})
+  const getFieldMultiInputStyle = useInlineStyle(theme, 'fieldMultiInput')({ item: field.itemStyle })
   const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
   const getCssRowStyle = useCSSStyles(theme, 'row')(style?.row || {})
 
