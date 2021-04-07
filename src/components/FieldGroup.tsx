@@ -108,7 +108,6 @@ export const FieldGroup = <FormData extends {}>({
         />
       )}
       {fieldGroup.fields.map(renderGroupField)}
-      {fieldGroup.renderChildren?.()}
     </GroupWrapper>
   ) : (
     <></>
