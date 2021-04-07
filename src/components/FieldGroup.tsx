@@ -1,8 +1,8 @@
 import { P } from 'frr-web/lib/html'
 import { createStyled } from 'frr-web/lib/theme/util'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { useFormTheme } from '../theme/theme'
-import { useCSSStyles, useInlineStyle } from '../theme/util'
+import { useCSSStyles } from '../theme/util'
 import { FieldMultiInput } from './FieldMultiInput'
 import { FieldRow } from './FieldRow'
 import {
@@ -30,7 +30,6 @@ export const FieldGroup = <FormData extends {}>({
 }: FieldGroup<FormData>) => {
   // Form styles
   const theme = useFormTheme()
-  const getInlineStyle = useInlineStyle(theme, 'group')(style?.group || {})
   const getCSSStyle = useCSSStyles(theme, 'group')(style?.group || {})
 
   const commonFieldProps = {
@@ -109,6 +108,7 @@ export const FieldGroup = <FormData extends {}>({
         />
       )}
       {fieldGroup.fields.map(renderGroupField)}
+      {fieldGroup.renderChildren?.()}
     </GroupWrapper>
   ) : (
     <></>
