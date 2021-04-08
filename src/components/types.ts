@@ -295,6 +295,7 @@ type CommonFieldProps<FormData> = {
   maxwidth?: number
   itemStyle?: CSSProperties
   required?: boolean | ((formData: FormData) => boolean)
+  renderChildren?: () => ReactNode
 }
 
 // @ts-ignore
@@ -390,12 +391,12 @@ export type GroupField<FormData> =
   | FormFieldRow<FormData>
 
 export type FormFieldGroup<FormData> = {
-  title?: string
   description?: string
-  style?: Partial<FormTheme['group']>
-  type: FormFieldType.FormFieldGroup
   fields: Array<GroupField<FormData>>
   isVisible?: (formData: FormData) => boolean
+  style?: Partial<FormTheme['group']>
+  title?: string
+  type: FormFieldType.FormFieldGroup
 }
 
 export type FormFieldRepeatGroup<FormData, T extends {} = {}> = {

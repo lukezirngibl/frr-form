@@ -3,11 +3,12 @@ import {
   ButtonType,
   Props as ButtonProps,
 } from 'frr-web/lib/components/Button'
+import { createStyled } from 'frr-web/lib/theme/util'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { FormTheme, useFormTheme } from '../theme/theme'
-import { useInlineStyle } from '../theme/util'
+import { useCSSStyles } from '../theme/util'
 import { FormLens, setScrolled } from '../util'
 import { FieldDescription } from './FieldDescription'
 import { FieldGroup } from './FieldGroup'
@@ -62,23 +63,23 @@ export type FormProps<FormData> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-const ButtonContainer = styled.div`
+const ButtonContainer = createStyled(styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`)
 
-const FormWrapper = styled.div`
+const FormWrapper = createStyled(styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-`
+`)
 
-const FormContent = styled.div`
+const FormContent = createStyled(styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-`
+`)
 
 export const Form = <FormData extends {}>({
   style,
@@ -99,7 +100,7 @@ export const Form = <FormData extends {}>({
 }: FormProps<FormData>) => {
   const dispatch = useDispatch()
   const theme = useFormTheme()
-  const getFormStyle = useInlineStyle(theme, 'form')(style?.form || {})
+  const getFormStyle = useCSSStyles(theme, 'form')(style?.form || {})
 
   const [showValidation, setShowValidation] = React.useState(false)
 

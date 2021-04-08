@@ -6,7 +6,12 @@ import { useFormFieldError } from './hooks/useFormFieldError'
 import { CommonThreadProps, SingleFormField } from './types'
 import { useCSSStyles, useInlineStyle } from '../theme/util'
 import { useFormTheme } from '../theme/theme'
+import styled from 'styled-components'
 
+const FieldContainer = styled.div`
+  position: relative;
+  width: 100%;
+`
 type Props<FormData> = CommonThreadProps<FormData> & {
   field: SingleFormField<FormData>
   onError?: (error: { error: string; fieldId: string }) => void
@@ -73,22 +78,25 @@ export const FieldRowItem = <FormData extends {}>({
           fieldIndex={fieldIndex}
         />
       )) || (
-        <FieldScrollableWrapper
-          key={`field-${fieldIndex}`}
-          isScrollToError={field.lens.id() === errorFieldId}
-          style={getRowStyle('item', field.itemStyle).style}
-        >
-          <Field
-            data={data}
-            hasError={hasError}
-            errorLabel={errorLabel}
-            onChange={setValue}
-            onBlur={onBlur}
-            hasFocus={field.lens.id() === errorFieldId}
-            field={field as SingleFormField<FormData>}
-            fieldIndex={fieldIndex}
-          />
-        </FieldScrollableWrapper>
+        <FieldContainer>
+          <FieldScrollableWrapper
+            key={`field-${fieldIndex}`}
+            isScrollToError={field.lens.id() === errorFieldId}
+            style={getRowStyle('item', field.itemStyle).style}
+          >
+            <Field
+              data={data}
+              hasError={hasError}
+              errorLabel={errorLabel}
+              onChange={setValue}
+              onBlur={onBlur}
+              hasFocus={field.lens.id() === errorFieldId}
+              field={field as SingleFormField<FormData>}
+              fieldIndex={fieldIndex}
+            />
+          </FieldScrollableWrapper>
+          {field.renderChildren?.()}
+        </FieldContainer>
       ))) || <></>
   )
 }
