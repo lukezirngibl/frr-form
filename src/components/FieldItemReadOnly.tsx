@@ -1,26 +1,21 @@
+import { format, isValid } from 'date-fns'
 import { findFirst } from 'fp-ts/lib/Array'
 import { P } from 'frr-web/lib/html'
+import { Language, mapLanguageToLocale } from 'frr-web/lib/theme/language'
+import { MediaQuery } from 'frr-web/lib/theme/theme'
 import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+import { useFormTheme } from '../theme/theme'
 import { useCSSStyles } from '../theme/util'
 import {
-  fieldMap,
   CommonThreadProps,
+  fieldMap,
   FormFieldType,
   MultiInputField,
   SingleFormField,
 } from './types'
-import { MediaQuery } from 'frr-web/lib/theme/theme'
-import {
-  Language,
-  useLanguage,
-  useTranslate,
-  mapLanguageToLocale,
-} from 'frr-web/lib/theme/language'
-import { useFormTheme } from '../theme/theme'
-import { format, isMatch, isValid } from 'date-fns'
-import { useTranslation } from 'react-i18next'
 
 /*
  * Value mapper
@@ -45,8 +40,9 @@ const defaultStringNumberMapper = ({
 }: MapperParams<string | number | null>): string => (value ? `${value}` : '')
 const defaultTranslateStringMapper = ({
   value,
-  translate
-}: MapperParams<string | number | null>): string => (value ? translate(`${value}`) : '')
+  translate,
+}: MapperParams<string | number | null>): string =>
+  value ? translate(`${value}`) : ''
 
 const defaultDateStringMapper = ({
   value,
@@ -58,8 +54,10 @@ const defaultDateStringMapper = ({
     : ''
 }
 
-const defaultBooleanMapper = ({ value, translate }: MapperParams<boolean>): string =>
-  translate(value ? 'yes' : 'no')
+const defaultBooleanMapper = ({
+  value,
+  translate,
+}: MapperParams<boolean>): string => translate(value ? 'yes' : 'no')
 
 const defaultCurrencyMapper = ({ value }: MapperParams<number>): string =>
   formatter.long.format(value || 0)
@@ -92,7 +90,6 @@ const defaultOptionMapper = (
     (option) => option.value === params.value,
   ).fold('', (option) => params.translate(option.label))
 }
-
 
 const defaultReadOnlyMappers: {
   [K in FormFieldType]: (
@@ -179,8 +176,6 @@ type FieldItemReadOnlyValueProps<FormData> = {
 const FieldItemReadOnlyValue = <FormData extends {}>(
   props: FieldItemReadOnlyValueProps<FormData>,
 ) => {
-  // const language = useLanguage()
-  // const translate = useTranslate(language)
   const { t: translate, i18n } = useTranslation()
 
   const readOnlyStyle: Array<'value' | 'valueHighlighted'> = ['value']
