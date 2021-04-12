@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FormFieldType, MultiInputField, SingleFormField } from '../types'
+import { FieldError, FormFieldType, SingleFormField } from '../types'
 
 export const computeFieldError = <FormData>({
   value,
@@ -9,7 +9,7 @@ export const computeFieldError = <FormData>({
   value: string | string[] | boolean | number | Date | null
   data: FormData
   field: SingleFormField<FormData>
-}): { error: string | null; fieldId: string } => {
+}): FieldError => {
   let error = null
   const isRequired =
     'required' in field
@@ -81,16 +81,14 @@ export const useFormFieldError = <FormData>({
   return fieldError.error
 }
 
-export const useFormFieldErrors = <FormData>({
+export const useFormFieldErrors = ({
   errors,
 }: {
-  errors: Array<{ error: string; fieldId: string }>
+  errors: Array<FieldError>
 }): Array<string> => {
   const [error, setError] = useState([])
   useEffect(() => {
-    const errorLabels = new Set(
-      errors.map((error) => error.error).filter((error) => !!error),
-    )
+    const errorLabels = new Set(errors.map((error) => error.error))
     setError(Array.from(errorLabels))
   }, [errors])
 

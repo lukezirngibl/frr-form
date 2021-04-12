@@ -3,11 +3,12 @@ import {
   ButtonType,
   Props as ButtonProps,
 } from 'frr-web/lib/components/Button'
+import { createStyled } from 'frr-web/lib/theme/util'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { FormTheme, useFormTheme } from '../theme/theme'
-import { useInlineStyle } from '../theme/util'
+import { useCSSStyles } from '../theme/util'
 import { FormLens, setScrolled } from '../util'
 import { FieldDescription } from './FieldDescription'
 import { FieldGroup } from './FieldGroup'
@@ -17,21 +18,37 @@ import { FieldRepeatSection } from './FieldRepeatSection'
 import { FieldRow } from './FieldRow'
 import { FieldSection } from './FieldSection'
 import { mapFormFields } from './functions/map.form'
-import { someFormFields } from './functions/some.form'
 import { filterByVisibility } from './functions/visible.form'
 import { computeFieldError } from './hooks/useFormFieldError'
-import { DisplayType, FormField, FormFieldType, SingleFormField } from './types'
+import {
+  DisplayType,
+  FieldError,
+  FormField,
+  FormFieldType,
+  SingleFormField,
+} from './types'
+
+type OnInvalidSubmitType<FormData> = (params: {
+  errors: Array<FieldError>
+  formState: FormData
+}) => void
+
+export type FormAnalytics<FormData> = {
+  onSubmit?: () => void
+  onInvalidSubmit?: OnInvalidSubmitType<FormData>
+}
 
 export type FormProps<FormData> = {
   children?: ReactNode
   style?: Partial<FormTheme>
+  analytics?: FormAnalytics<FormData>
   data: FormData
   disableValidation?: boolean
   dataTestId?: string
   display?: DisplayType
   formFields: Array<FormField<FormData>>
   onSubmit?: (params: { dispatch: any; formState: FormData }) => void
-  onInvalidSubmit?: () => void
+  onInvalidSubmit?: OnInvalidSubmitType<FormData>
   onChangeWithLens?: (lens: FormLens<FormData, any>, value: any) => void
   onChange: (formState: FormData) => void
   buttons?: Array<
@@ -46,23 +63,23 @@ export type FormProps<FormData> = {
   isVisible?: (formData: FormData) => boolean
 }
 
-const ButtonContainer = styled.div`
+const ButtonContainer = createStyled(styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`)
 
-const FormWrapper = styled.div`
+const FormWrapper = createStyled(styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-`
+`)
 
-const FormContent = styled.div`
+const FormContent = createStyled(styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-`
+`)
 
 export const Form = <FormData extends {}>({
   style,
@@ -79,10 +96,11 @@ export const Form = <FormData extends {}>({
   readOnly,
   dataTestId,
   isVisible,
+  analytics,
 }: FormProps<FormData>) => {
   const dispatch = useDispatch()
   const theme = useFormTheme()
-  const getFormStyle = useInlineStyle(theme, 'form')(style?.form || {})
+  const getFormStyle = useCSSStyles(theme, 'form')(style?.form || {})
 
   const [showValidation, setShowValidation] = React.useState(false)
 
@@ -91,10 +109,6 @@ export const Form = <FormData extends {}>({
     setScrolled(false)
   }, [formFields])
 
-  const isFieldInvalid = (field: SingleFormField<FormData>): boolean => {
-    const value = field.lens.get(data)
-    return computeFieldError({ value, data, field }).error !== null
-  }
   const getFieldError = (
     field: SingleFormField<FormData>,
   ): { error: string | null; fieldId: string } => {
@@ -113,21 +127,16 @@ export const Form = <FormData extends {}>({
       const errors = mapFormFields(visibleFormFields, getFieldError).filter(
         (fieldError) => !!fieldError.error,
       )
-      const isNotValid = someFormFields(visibleFormFields, isFieldInvalid)
 
-      console.log('ERRORS', errors)
-
-      if (errors.length) {
+      if (errors.length > 0) {
+        console.log('ERRORS', errors)
         setErrorFieldId(errors[0].fieldId)
-      }
-
-      if (isNotValid) {
         setShowValidation(true)
-        if (onInvalidSubmit) {
-          onInvalidSubmit()
-        }
-      } else if (typeof onSubmit === 'function') {
-        onSubmit({ dispatch, formState: data })
+        onInvalidSubmit?.({ errors, formState: data })
+        analytics?.onInvalidSubmit?.({ errors, formState: data })
+      } else {
+        onSubmit?.({ dispatch, formState: data })
+        analytics?.onSubmit?.()
       }
     }
   }
@@ -139,8 +148,6 @@ export const Form = <FormData extends {}>({
       onChange(lens.set(value)(data))
     }
   }
-
-  // console.log('formData: ', data)
 
   const commonFieldProps = {
     data,
