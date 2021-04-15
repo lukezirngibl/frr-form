@@ -92,7 +92,7 @@ type FormInput<V, P extends { value: V }, L, T> = Omit<
   readOnly?: boolean
   readOnlyMapper?: (
     params: Omit<P, 'onChange' | 'onBlur'> & {
-      translate: (v: string) => string
+      translate: (v: string, params?: any) => string
     },
   ) => string
   readOnlyOptions?: {

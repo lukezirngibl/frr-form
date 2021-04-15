@@ -31,7 +31,7 @@ var formatter = {
 
 type MapperParams<T> = {
   value: T
-  translate: (str: string) => string
+  translate: (str: string, params?: any) => string
   language?: Language
 }
 
@@ -95,7 +95,7 @@ const defaultReadOnlyMappers: {
   [K in FormFieldType]: (
     params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
       value: typeof fieldMap[K]['_value']
-      translate: (str: string) => string
+      translate: (str: string, params?: any) => string
       language?: Language
     },
   ) => string
