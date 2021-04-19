@@ -35,17 +35,21 @@ var formatter = {
 
 type MapperParams<T> = {
   value: T
+  prefix?: string,
   translate: (str: string) => string
   language?: Language
 }
 
 const defaultStringNumberMapper = ({
   value,
-}: MapperParams<string | number | null>): string => (value ? `${value}` : '')
+  prefix,
+}: MapperParams<string | number | null>): string => `${prefix > '' ? `${prefix} ` : ''} ${value ? `${value}` : ''}`
+
 const defaultTranslateStringMapper = ({
   value,
-  translate
-}: MapperParams<string | number | null>): string => (value ? translate(`${value}`) : '')
+  translate,
+}: MapperParams<string | number | null>): string =>
+  value ? translate(`${value}`) : ''
 
 const defaultDateStringMapper = ({
   value,
@@ -57,8 +61,10 @@ const defaultDateStringMapper = ({
     : ''
 }
 
-const defaultBooleanMapper = ({ value, translate }: MapperParams<boolean>): string =>
-  translate(value ? 'yes' : 'no')
+const defaultBooleanMapper = ({
+  value,
+  translate,
+}: MapperParams<boolean>): string => translate(value ? 'yes' : 'no')
 
 const defaultCurrencyMapper = ({ value }: MapperParams<number>): string =>
   formatter.long.format(value || 0)
@@ -91,7 +97,6 @@ const defaultOptionMapper = (
     (option) => option.value === params.value,
   ).fold('', (option) => params.translate(option.label))
 }
-
 
 const defaultReadOnlyMappers: {
   [K in FormFieldType]: (
