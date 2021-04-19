@@ -3,6 +3,7 @@ import { processRepeatSection } from '../util'
 import { FieldSection } from './FieldSection'
 import { CommonThreadProps, FormFieldRepeatSection } from './types'
 import { useLanguage, useTranslate } from 'frr-web/lib/theme/language'
+import { useTranslation } from 'react-i18next'
 
 type FieldRepeatSection<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldRepeatSection<FormData>
@@ -18,8 +19,9 @@ export const FieldRepeatSection = <FormData extends {}>({
   style,
 }: FieldRepeatSection<FormData>) => {
   // Translation
-  const language = useLanguage()
-  const translate = useTranslate(language)
+  // const language = useLanguage()
+  // const translate = useTranslate(language)
+  const { t: translate } = useTranslation()
 
   if (fieldRepeatSection.isVisible && !fieldRepeatSection.isVisible(data)) {
     return <></>

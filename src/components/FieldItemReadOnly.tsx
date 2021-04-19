@@ -1,25 +1,21 @@
+import { format, isValid } from 'date-fns'
 import { findFirst } from 'fp-ts/lib/Array'
 import { P } from 'frr-web/lib/html'
+import { Language, mapLanguageToLocale } from 'frr-web/lib/theme/language'
+import { MediaQuery } from 'frr-web/lib/theme/theme'
 import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+import { useFormTheme } from '../theme/theme'
 import { useCSSStyles } from '../theme/util'
 import {
-  fieldMap,
   CommonThreadProps,
+  fieldMap,
   FormFieldType,
   MultiInputField,
   SingleFormField,
 } from './types'
-import { MediaQuery } from 'frr-web/lib/theme/theme'
-import {
-  Language,
-  useLanguage,
-  useTranslate,
-  mapLanguageToLocale,
-} from 'frr-web/lib/theme/language'
-import { useFormTheme } from '../theme/theme'
-import { format, isMatch, isValid } from 'date-fns'
 
 /*
  * Value mapper
@@ -35,8 +31,8 @@ var formatter = {
 
 type MapperParams<T> = {
   value: T
-  prefix?: string,
-  translate: (str: string) => string
+  prefix?: string
+  translate: (str: string, params?: any) => string
   language?: Language
 }
 
@@ -102,7 +98,7 @@ const defaultReadOnlyMappers: {
   [K in FormFieldType]: (
     params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
       value: typeof fieldMap[K]['_value']
-      translate: (str: string) => string
+      translate: (str: string, params?: any) => string
       language?: Language
     },
   ) => string
@@ -183,8 +179,7 @@ type FieldItemReadOnlyValueProps<FormData> = {
 const FieldItemReadOnlyValue = <FormData extends {}>(
   props: FieldItemReadOnlyValueProps<FormData>,
 ) => {
-  const language = useLanguage()
-  const translate = useTranslate(language)
+  const { t: translate, i18n } = useTranslation()
 
   const readOnlyStyle: Array<'value' | 'valueHighlighted'> = ['value']
 
@@ -203,14 +198,13 @@ const FieldItemReadOnlyValue = <FormData extends {}>(
   ) : (
     <P
       {...props.getFieldStyle(readOnlyStyle)}
-      data={{
-        value: readOnlyMapper({
-          ...props.field,
-          value: props.field.lens.get(props.data),
-          translate,
-          language,
-        } as any),
-      }}
+      label={readOnlyMapper({
+        ...props.field,
+        value: props.field.lens.get(props.data),
+        translate,
+        language: i18n.language as Language,
+      } as any)}
+      isLabelTranslated
     />
   )
 }

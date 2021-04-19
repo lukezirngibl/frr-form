@@ -25,9 +25,9 @@ export const computeFieldError = <FormData>({
       field.type === FormFieldType.FormattedDatePicker ||
       field.type === FormFieldType.DatePicker
     ) {
-      error = 'invalidDate'
+      error = 'formFields.error.invalidDate'
     } else {
-      error = 'fieldRequired'
+      error = 'formFields.error.fieldRequired'
     }
   }
 
@@ -37,23 +37,23 @@ export const computeFieldError = <FormData>({
 
   if (!error && field.type === FormFieldType.CurrencyInput) {
     if (!!value && isNaN(value as any)) {
-      error = 'invalidAmount'
+      error = 'formFields.error.invalidAmount'
     }
 
     const min = 'min' in field ? field.min : 0
     const max = 'max' in field ? field.max : 10000000
     if (value < min) {
-      error = 'invalidMinAmount'
+      error = 'formFields.error.invalidMinAmount'
     } else if (value > max) {
-      error = 'invalidMaxAmount'
+      error = 'formFields.error.invalidMaxAmount'
     }
   }
 
   if (!error && field.type === FormFieldType.NumberInput) {
     if ('min' in field && value < field.min) {
-      error = 'minError'
+      error = 'formFields.error.minError'
     } else if ('max' in field && value > field.max) {
-      error = 'maxError'
+      error = 'formFields.error.maxError'
     }
   }
 
