@@ -31,13 +31,16 @@ var formatter = {
 
 type MapperParams<T> = {
   value: T
+  prefix?: string
   translate: (str: string, params?: any) => string
   language?: Language
 }
 
 const defaultStringNumberMapper = ({
   value,
-}: MapperParams<string | number | null>): string => (value ? `${value}` : '')
+  prefix,
+}: MapperParams<string | number | null>): string => `${prefix > '' ? `${prefix} ` : ''} ${value ? `${value}` : ''}`
+
 const defaultTranslateStringMapper = ({
   value,
   translate,
