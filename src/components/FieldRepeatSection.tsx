@@ -18,9 +18,6 @@ export const FieldRepeatSection = <FormData extends {}>({
   showValidation,
   style,
 }: FieldRepeatSection<FormData>) => {
-  // Translation
-  // const language = useLanguage()
-  // const translate = useTranslate(language)
   const { t: translate } = useTranslation()
 
   if (fieldRepeatSection.isVisible && !fieldRepeatSection.isVisible(data)) {
