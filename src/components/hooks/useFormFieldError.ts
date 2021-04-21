@@ -35,8 +35,9 @@ export const computeFieldError = <FormData>({
     error = field.validate(value)
   }
 
-  if (!error && field.type === FormFieldType.CurrencyInput) {
-    if (!!value && isNaN(value as any)) {
+  if (!error && field.type === FormFieldType.CurrencyInput && !!value) {
+    const cleanedValue = Number((`${value}`).replace(',', '.'))
+    if (isNaN(cleanedValue)) {
       error = 'formFields.error.invalidAmount'
     } else {
       const min = 'min' in field ? field.min : 0
