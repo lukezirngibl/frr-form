@@ -160,6 +160,7 @@ export const processRepeatSection = <FormData extends {}>(
     return {
       type: FormFieldType.FormSection,
       title,
+      editLabel: fieldRepeatSection.editLabel,
       onEdit: fieldRepeatSection.onEdit,
       fields: fieldRepeatSection.fields.map((repeatSectionField) => {
         if (Array.isArray(repeatSectionField)) {

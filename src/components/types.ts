@@ -424,6 +424,7 @@ export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
   isVisible?: (formData: FormData) => boolean
   length: FormLens<FormData, number> | FormLens<FormData, number | null>
   lens: FormLens<FormData, Array<T>>
+  editLabel?: string
   onEdit?: (params: { dispatch: any }) => void
   title?: (params: { index: number; translate: any }) => string
   type: FormFieldType.FormFieldRepeatSection
@@ -436,6 +437,7 @@ export type FormSection<FormData> = {
   introduction?: string
   introductionReadOnly?: string
   isVisible?: (formData: FormData) => boolean
+  editLabel?: string
   onEdit?: (params: { dispatch: any }) => void
   style?: Partial<FormTheme['section']>
   title?: string
