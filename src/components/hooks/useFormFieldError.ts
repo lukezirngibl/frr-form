@@ -38,14 +38,14 @@ export const computeFieldError = <FormData>({
   if (!error && field.type === FormFieldType.CurrencyInput) {
     if (!!value && isNaN(value as any)) {
       error = 'formFields.error.invalidAmount'
-    }
-
-    const min = 'min' in field ? field.min : 0
-    const max = 'max' in field ? field.max : 10000000
-    if (value < min) {
-      error = 'formFields.error.invalidMinAmount'
-    } else if (value > max) {
-      error = 'formFields.error.invalidMaxAmount'
+    } else {
+      const min = 'min' in field ? field.min : 0
+      const max = 'max' in field ? field.max : 10000000
+      if (value < min) {
+        error = 'formFields.error.invalidMinAmount'
+      } else if (value > max) {
+        error = 'formFields.error.invalidMaxAmount'
+      }
     }
   }
 
