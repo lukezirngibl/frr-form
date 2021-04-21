@@ -41,11 +41,11 @@ const defaultStringNumberMapper = ({
   prefix,
 }: MapperParams<string | number | null>): string => `${prefix > '' ? `${prefix} ` : ''} ${value ? `${value}` : ''}`
 
-const defaultTranslateStringMapper = ({
+const defaultCountryMapper = ({
   value,
   translate,
 }: MapperParams<string | number | null>): string =>
-  value ? translate(`${value}`) : ''
+  value ? translate(`country.${value}`) : ''
 
 const defaultDateStringMapper = ({
   value,
@@ -110,7 +110,7 @@ const defaultReadOnlyMappers: {
   // [FormFieldType.InputWithDropdown]: defaultStrNumMapper,
 
   [FormFieldType.CodeInput]: defaultStringNumberMapper,
-  [FormFieldType.CountrySelect]: defaultTranslateStringMapper,
+  [FormFieldType.CountrySelect]: defaultCountryMapper,
   [FormFieldType.CurrencyInput]: defaultCurrencyMapper,
   [FormFieldType.DatePicker]: (v) =>
     !!v
