@@ -53,7 +53,7 @@ const defaultDateStringMapper = ({
 }: MapperParams<string | null>): string => {
   const locale = mapLanguageToLocale[language]
   return value && isValid(new Date(value))
-    ? format(new Date(value), 'P', { locale })
+    ? format(new Date(value), 'dd.MM.yyyy', { locale })
     : ''
 }
 
