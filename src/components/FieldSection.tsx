@@ -1,5 +1,6 @@
 import { Link } from 'frr-web/lib/components/Link'
 import { P } from 'frr-web/lib/html'
+import { MediaQuery } from 'frr-web/lib/theme/theme'
 import { createStyled } from 'frr-web/lib/theme/util'
 import React from 'react'
 import { useDispatch } from 'react-redux'
@@ -19,10 +20,14 @@ import {
   SectionField,
 } from './types'
 
-const WrapperFormSection = createStyled('div')
-const WrapperSectionRight = createStyled('div')
-const ContentWrapper = createStyled('div')
-const Content = createStyled('div')
+const Container = createStyled('div')
+const TitleSpaceMobile = styled.div`
+  display: none;
+  @media ${MediaQuery.Mobile} {
+    display: block;
+    margin-bottom: 32px;
+  }
+`
 
 type FieldSection<FormData> = CommonThreadProps<FormData> & {
   field: FormSection<FormData>
@@ -137,7 +142,7 @@ export const FieldSection = <FormData extends {}>({
   // Render
   return !fieldSection.isVisible || fieldSection.isVisible(data) ? (
     <>
-      <WrapperFormSection
+      <Container
         key={
           typeof fieldSectionIndex === 'string'
             ? fieldSectionIndex
@@ -168,8 +173,8 @@ export const FieldSection = <FormData extends {}>({
           />
         )}
 
-        <ContentWrapper {...getSectionStyle('contentWrapper')}>
-          <Content {...getSectionStyle('content')}>
+        <Container {...getSectionStyle('contentWrapper')}>
+          <Container {...getSectionStyle('content')}>
             {fieldSection.title && (
               <P
                 {...getSectionStyle('title', fieldSection.style?.title || {})}
@@ -177,6 +182,8 @@ export const FieldSection = <FormData extends {}>({
                 label={fieldSection.title}
               />
             )}
+            {formReadOnly && !fieldSection.title && <TitleSpaceMobile />}
+
             {!formReadOnly && fieldSection.description && (
               <P
                 {...getSectionStyle('description')}
@@ -185,23 +192,23 @@ export const FieldSection = <FormData extends {}>({
             )}
 
             {fieldSection.fields.map(renderSectionField)}
-          </Content>
+          </Container>
 
           {!!fieldSection.onEdit && (
-            <WrapperSectionRight
+            <Container
               {...getSectionRightStyle('wrapper')}
               readOnly={formReadOnly}
             >
               <Link
                 icon={{ type: 'edit', style: getSectionRightStyle('editIcon') }}
-                label="edit"
+                label={fieldSection.editLabel}
                 onClick={() => fieldSection.onEdit({ dispatch })}
                 style={getSectionRightStyle('editLink')}
               />
-            </WrapperSectionRight>
+            </Container>
           )}
-        </ContentWrapper>
-      </WrapperFormSection>
+        </Container>
+      </Container>
     </>
   ) : (
     <></>
