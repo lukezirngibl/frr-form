@@ -124,12 +124,14 @@ export const Form = <FormData extends {}>({
       onSubmit({ dispatch, formState: data })
     } else {
       const visibleFormFields = filterByVisibility(formFields, data)
-      const errors = mapFormFields(visibleFormFields, getFieldError).filter(
-        (fieldError) => !!fieldError.error,
-      )
+
+      const errors = mapFormFields(
+        visibleFormFields,
+        getFieldError,
+        data,
+      ).filter((fieldError) => !!fieldError.error)
 
       if (errors.length > 0) {
-        console.log('ERRORS', errors)
         setErrorFieldId(errors[0].fieldId)
         setShowValidation(true)
         onInvalidSubmit?.({ errors, formState: data })

@@ -36,7 +36,7 @@ export const computeFieldError = <FormData>({
   }
 
   if (!error && field.type === FormFieldType.CurrencyInput && !!value) {
-    const cleanedValue = Number((`${value}`).replace(',', '.'))
+    const cleanedValue = Number(`${value}`.replace(',', '.'))
     if (isNaN(cleanedValue)) {
       error = 'formFields.error.invalidAmount'
     } else {

@@ -19,18 +19,20 @@ type Props<FormData> = CommonThreadProps<FormData> & {
 }
 // ------------------------------------
 
-export const FieldRowItem = <FormData extends {}>({
-  data,
-  errorFieldId,
-  field,
-  fieldIndex,
-  formReadOnly,
-  isNotScrollable,
-  onChange,
-  onError,
-  showValidation,
-  style,
-}: Props<FormData>) => {
+export const FieldRowItem = <FormData extends {}>(props: Props<FormData>) => {
+  const {
+    data,
+    errorFieldId,
+    field,
+    fieldIndex,
+    formReadOnly,
+    isNotScrollable,
+    onChange,
+    onError,
+    showValidation,
+    style,
+  } = props
+
   const theme = useFormTheme()
   const getRowStyle = useInlineStyle(theme, 'row')(style?.row || {})
 

@@ -96,17 +96,6 @@ export const FieldSection = <FormData extends {}>({
         )
       }
 
-      case FormFieldType.FormFieldRepeatSection: {
-        return (
-          <FieldRepeatSection
-            key={`field-repeat-section-${fieldIndex}`}
-            field={field}
-            fieldIndex={fieldIndex}
-            {...commonFieldProps}
-          />
-        )
-      }
-
       case FormFieldType.MultiInput:
         return (
           <FieldMultiInput

@@ -8,15 +8,16 @@ type FieldRepeatGroup<FormData> = CommonThreadProps<FormData> & {
 }
 
 // ------------------------------------
-export const FieldRepeatGroup = <FormData extends {}>({
-  data,
-  field: fieldRepeatGroup,
-  fieldIndex: fieldRepeatGroupIndex,
-  formReadOnly,
-  onChange,
-  showValidation,
-  style,
-}: FieldRepeatGroup<FormData>) => {
+export const FieldRepeatGroup = <FormData extends {}>(
+  props: FieldRepeatGroup<FormData>,
+) => {
+  const {
+    data,
+    field: fieldRepeatGroup,
+    fieldIndex: fieldRepeatGroupIndex,
+    onChange,
+    ...otherProps
+  } = props
   if (fieldRepeatGroup.isVisible && !fieldRepeatGroup.isVisible(data)) {
     return <></>
   }
@@ -27,14 +28,12 @@ export const FieldRepeatGroup = <FormData extends {}>({
     <div key={`repeat-group-${fieldRepeatGroupIndex}`}>
       {groups.map((fieldGroup, fieldGroupIndex) => (
         <FieldGroup
-          data={data}
-          field={fieldGroup}
-          fieldIndex={fieldGroupIndex}
-          formReadOnly={formReadOnly}
           key={`repeat-group-${fieldRepeatGroupIndex}-${fieldGroupIndex}`}
           onChange={onChange}
-          showValidation={showValidation}
-          style={style}
+          data={data}
+          fieldIndex={fieldGroupIndex}
+          field={fieldGroup}
+          {...otherProps}
         />
       ))}
     </div>

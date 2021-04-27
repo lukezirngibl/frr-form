@@ -19,25 +19,26 @@ type FieldGroup<FormData> = CommonThreadProps<FormData> & {
 }
 
 // ------------------------------------
-export const FieldGroup = <FormData extends {}>({
-  data,
-  field: fieldGroup,
-  fieldIndex: fieldGroupIndex,
-  formReadOnly,
-  onChange,
-  showValidation,
-  style,
-}: FieldGroup<FormData>) => {
+export const FieldGroup = <FormData extends {}>(
+  props: FieldGroup<FormData>,
+) => {
+  const {
+    data,
+    field: fieldGroup,
+    fieldIndex: fieldGroupIndex,
+    onChange,
+    style,
+    ...otherProps
+  } = props
   // Form styles
   const theme = useFormTheme()
   const getCSSStyle = useCSSStyles(theme, 'group')(style?.group || {})
 
   const commonFieldProps = {
     data,
-    style,
-    showValidation,
     onChange,
-    formReadOnly,
+    style,
+    ...otherProps,
   }
 
   const renderGroupField = (
@@ -49,8 +50,8 @@ export const FieldGroup = <FormData extends {}>({
         <FieldRow
           key={`field-section-${fieldIndex}`}
           fieldIndex={fieldIndex}
-          {...commonFieldProps}
           field={field}
+          {...commonFieldProps}
         />
       )
     }

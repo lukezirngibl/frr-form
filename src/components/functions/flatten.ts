@@ -5,7 +5,6 @@ import {
   FormSection,
   SectionFields,
   SingleFormField,
-  MultiInputField,
 } from '../types'
 import { processRepeatGroup, processRepeatSection } from '../../util'
 
@@ -46,15 +45,6 @@ const processFormSectionFields = <T>(
       acc = [...acc, ...f.fields]
     } else if (f.type === FormFieldType.TextInputDescription) {
       acc = acc
-    } else if (f.type === FormFieldType.FormFieldRepeatSection) {
-      const sections = processRepeatSection(f, data, (v) => v)
-      acc = [
-        ...acc,
-        ...sections.reduce(
-          (acc, s) => [...acc, ...processFormSection(s, data)],
-          [],
-        ),
-      ]
     } else {
       acc = [...acc, f]
     }

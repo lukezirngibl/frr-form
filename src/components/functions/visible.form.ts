@@ -9,6 +9,7 @@ import {
   SingleFormField,
   GroupField,
 } from '../types'
+import { processRepeatGroup, processRepeatSection } from '../../util'
 
 type Fn<T> = (i: { isVisible?: (d: T) => boolean }) => boolean
 
@@ -39,6 +40,7 @@ const processGroupFields = <T>(
 const processFormSectionFields = <T>(
   fields: SectionFields<T>,
   fn: Fn<T>,
+  data: T,
 ): SectionFields<T> =>
   fields.reduce((acc: Array<SectionField<T>>, f) => {
     if (Array.isArray(f)) {
@@ -47,11 +49,10 @@ const processFormSectionFields = <T>(
       return [...acc, ...processFormFieldRow(f.fields, fn)]
     } else if (f.type === FormFieldType.FormFieldGroup) {
       return [...acc, ...processGroupFields(f.fields, fn)]
-    } else if (
-      f.type === FormFieldType.FormFieldRepeatGroup ||
-      f.type === FormFieldType.FormFieldRepeatSection ||
-      f.type === FormFieldType.TextInputDescription
-    ) {
+    } else if (f.type === FormFieldType.FormFieldRepeatGroup) {
+      const groups = processRepeatGroup(f, data)
+      return [...acc, ...processFormSectionFields(groups, fn, data)]
+    } else if (f.type === FormFieldType.TextInputDescription) {
       return acc
     } else {
       return [...acc, ...(fn(f) ? [f] : [])]
@@ -61,12 +62,13 @@ const processFormSectionFields = <T>(
 const processFormSection = <T>(
   s: FormSection<T>,
   fn: Fn<T>,
+  data: T,
 ): Array<FormSection<T>> =>
   fn(s)
     ? [
         {
           ...s,
-          fields: processFormSectionFields(s.fields, fn),
+          fields: processFormSectionFields(s.fields, fn, data),
         },
       ]
     : []
@@ -84,14 +86,16 @@ export const filterByVisibility = <T>(
     } else if (f.type === FormFieldType.FormFieldGroup) {
       return [...groups, ...processGroupFields(f.fields, fn)]
     } else if (f.type === FormFieldType.FormSection) {
-      return [...groups, ...processFormSection(f, fn)]
+      return [...groups, ...processFormSection(f, fn, data)]
     } else if (f.type === FormFieldType.MultiInput) {
       return [...groups, ...processFormFieldRow(f.fields, fn)]
-    } else if (
-      f.type === FormFieldType.FormFieldRepeatGroup ||
-      f.type === FormFieldType.FormFieldRepeatSection ||
-      f.type === FormFieldType.TextInputDescription
-    ) {
+    } else if (f.type === FormFieldType.FormFieldRepeatGroup) {
+      const groups = processRepeatGroup(f, data)
+      return processFormSectionFields(groups, fn, data)
+    } else if (f.type === FormFieldType.FormFieldRepeatSection) {
+      const sections = processRepeatSection(f, data, () => '')
+      return [...groups, ...filterByVisibility(sections, data)]
+    } else if (f.type === FormFieldType.TextInputDescription) {
       return groups
     } else {
       return [...groups, ...(fn(f) ? [f] : [])]

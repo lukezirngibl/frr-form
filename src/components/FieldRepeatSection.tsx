@@ -8,15 +8,16 @@ type FieldRepeatSection<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldRepeatSection<FormData>
 }
 // ------------------------------------
-export const FieldRepeatSection = <FormData extends {}>({
-  data,
-  field: fieldRepeatSection,
-  fieldIndex: fieldRepeatSectionIndex,
-  formReadOnly,
-  onChange,
-  showValidation,
-  style,
-}: FieldRepeatSection<FormData>) => {
+export const FieldRepeatSection = <FormData extends {}>(
+  props: FieldRepeatSection<FormData>,
+) => {
+  const {
+    data,
+    field: fieldRepeatSection,
+    fieldIndex: fieldRepeatSectionIndex,
+    onChange,
+    ...otherProps
+  } = props
   const { t: translate } = useTranslation()
 
   if (fieldRepeatSection.isVisible && !fieldRepeatSection.isVisible(data)) {
@@ -32,11 +33,9 @@ export const FieldRepeatSection = <FormData extends {}>({
           data={data}
           field={section}
           fieldIndex={sectionIndex}
-          formReadOnly={formReadOnly}
           key={`repeat-section-${fieldRepeatSectionIndex}-${sectionIndex}`}
           onChange={onChange}
-          showValidation={showValidation}
-          style={style}
+          {...otherProps}
         />
       ))}
     </div>

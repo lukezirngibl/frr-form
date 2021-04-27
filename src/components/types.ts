@@ -415,7 +415,6 @@ export type SectionField<FormData> =
   | FormFieldRow<FormData>
   | FormFieldGroup<FormData>
   | FormFieldRepeatGroup<FormData>
-  | FormFieldRepeatSection<FormData>
 
 export type SectionFields<FormData> = Array<SectionField<FormData>>
 

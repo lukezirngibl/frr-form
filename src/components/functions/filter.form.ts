@@ -64,7 +64,6 @@ const processFormSectionFields = <T>(
       return [...acc, processMultiInput(f, fn)]
     } else if (
       f.type === FormFieldType.FormFieldRepeatGroup ||
-      f.type === FormFieldType.FormFieldRepeatSection ||
       f.type === FormFieldType.TextInputDescription
     ) {
       return acc
