@@ -25,6 +25,7 @@ export const FieldMultiInput = <FormData extends {}>({
   field,
   fieldIndex,
   formReadOnly,
+  localeNamespace,
   onChange,
   showValidation,
   style,
@@ -54,6 +55,7 @@ export const FieldMultiInput = <FormData extends {}>({
   const commonFieldProps = {
     data,
     formReadOnly,
+    localeNamespace,
     showValidation,
     style,
   }
@@ -94,9 +96,10 @@ export const FieldMultiInput = <FormData extends {}>({
       >
         {field.label && (
           <Label
-            {...field.label}
+            localeNamespace={localeNamespace}
             error={errorLabel.length > 0}
             errorLabel={errorLabel}
+            {...field.label}
           />
         )}
 

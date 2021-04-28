@@ -6,7 +6,6 @@ import { CommonThreadProps, FormFieldRepeatSection } from './types'
 
 type FieldRepeatSection<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldRepeatSection<FormData>
-  localeNamespace?: string
 }
 // ------------------------------------
 export const FieldRepeatSection = <FormData extends {}>(
@@ -36,6 +35,7 @@ export const FieldRepeatSection = <FormData extends {}>(
           field={section}
           fieldIndex={sectionIndex}
           key={`repeat-section-${fieldRepeatSectionIndex}-${sectionIndex}`}
+          localeNamespace={localeNamespace}
           onChange={onChange}
           {...otherProps}
         />

@@ -32,6 +32,7 @@ export const FieldRow = <FormData extends {}>({
   field,
   fieldIndex,
   formReadOnly,
+  localeNamespace,
   onChange,
   showValidation,
   style,
@@ -48,14 +49,15 @@ export const FieldRow = <FormData extends {}>({
     >
       {field.map((fieldItem, fieldItemIndex) => (
         <FieldRowItem
-          key={`field-item-${fieldItemIndex}`}
+          data={data}
+          errorFieldId={errorFieldId}
           field={fieldItem}
           fieldIndex={fieldItemIndex}
-          errorFieldId={errorFieldId}
+          formReadOnly={formReadOnly}
+          key={`field-item-${fieldItemIndex}`}
+          localeNamespace={localeNamespace}
           onChange={onChange}
           showValidation={showValidation}
-          formReadOnly={formReadOnly}
-          data={data}
           style={style}
         />
       ))}

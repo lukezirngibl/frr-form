@@ -27,6 +27,7 @@ export const FieldRowItem = <FormData extends {}>(props: Props<FormData>) => {
     fieldIndex,
     formReadOnly,
     isNotScrollable,
+    localeNamespace,
     onChange,
     onError,
     showValidation,
@@ -61,6 +62,7 @@ export const FieldRowItem = <FormData extends {}>(props: Props<FormData>) => {
         data={data}
         field={field as SingleFormField<FormData>}
         fieldIndex={fieldIndex}
+        localeNamespace={localeNamespace}
         style={style}
       />
     )
@@ -71,13 +73,14 @@ export const FieldRowItem = <FormData extends {}>(props: Props<FormData>) => {
       ((isNotScrollable && (
         <Field
           data={data}
-          hasError={hasError}
           errorLabel={errorLabel}
-          onChange={setValue}
-          onBlur={onBlur}
-          hasFocus={field.lens.id() === errorFieldId}
           field={field as SingleFormField<FormData>}
           fieldIndex={fieldIndex}
+          hasError={hasError}
+          hasFocus={field.lens.id() === errorFieldId}
+          localeNamespace={localeNamespace}
+          onBlur={onBlur}
+          onChange={setValue}
         />
       )) || (
         <FieldContainer>
@@ -88,13 +91,14 @@ export const FieldRowItem = <FormData extends {}>(props: Props<FormData>) => {
           >
             <Field
               data={data}
-              hasError={hasError}
               errorLabel={errorLabel}
-              onChange={setValue}
-              onBlur={onBlur}
-              hasFocus={field.lens.id() === errorFieldId}
               field={field as SingleFormField<FormData>}
               fieldIndex={fieldIndex}
+              hasError={hasError}
+              hasFocus={field.lens.id() === errorFieldId}
+              localeNamespace={localeNamespace}
+              onBlur={onBlur}
+              onChange={setValue}
             />
           </FieldScrollableWrapper>
           {field.renderChildren?.()}

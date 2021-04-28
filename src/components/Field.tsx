@@ -37,6 +37,7 @@ type FieldItemProps<FormData> = {
   fieldIndex: number
   hasError: boolean
   hasFocus?: boolean
+  localeNamespace?: string
   onChange: (value: any) => void
   onBlur: (value: any) => void
 }
@@ -48,6 +49,7 @@ export const Field = <FormData extends {}>({
   fieldIndex,
   hasError,
   hasFocus,
+  localeNamespace,
   onChange,
   onBlur,
 }: FieldItemProps<FormData>) => {
@@ -55,7 +57,7 @@ export const Field = <FormData extends {}>({
 
   let { label } = field
   if (label) {
-    label = { error: errorLabel !== null, errorLabel, ...label }
+    label = { error: errorLabel !== null, errorLabel, localeNamespace, ...label }
   }
 
   if (field.type === FormFieldType.TextArea) {

@@ -458,6 +458,7 @@ export type CommonThreadProps<FormData> = {
   errorFieldId?: string
   fieldIndex: number
   formReadOnly: boolean
+  localeNamespace?: string
   onChange: (lens: FormLens<FormData, any>, value: any) => void
   showValidation: boolean
   style: Partial<FormTheme> | undefined

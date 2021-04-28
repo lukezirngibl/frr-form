@@ -10,6 +10,7 @@ type FieldDescriptionProps<FormData> = {
   field: TextInputDescriptionField<FormData>
   fieldIndex: number
   formReadOnly?: boolean
+  localeNamespace?: string
 }
 
 export const FieldRowWrapper = createStyled(styled.div`
@@ -32,6 +33,7 @@ export const FieldDescription = <FormData extends {}>({
   field,
   fieldIndex,
   formReadOnly,
+  localeNamespace,
 }: FieldDescriptionProps<FormData>) => {
   // Form styles
   const theme = useFormTheme()
@@ -39,7 +41,7 @@ export const FieldDescription = <FormData extends {}>({
 
   return formReadOnly ? null : (
     <FieldRowWrapper key={`row-${fieldIndex}`} {...getRowStyle('wrapper')}>
-      <TextInputDescription description={field.description} list={field.list}/>
+      <TextInputDescription description={field.description} list={field.list} localeNamespace={localeNamespace} />
     </FieldRowWrapper>
   )
 }

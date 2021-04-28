@@ -39,6 +39,7 @@ export const FieldSection = <FormData extends {}>({
   field: fieldSection,
   fieldIndex: fieldSectionIndex,
   formReadOnly,
+  localeNamespace,
   onChange,
   showValidation,
   style,
@@ -53,6 +54,7 @@ export const FieldSection = <FormData extends {}>({
     data,
     errorFieldId,
     formReadOnly,
+    localeNamespace,
     onChange,
     showValidation,
     style,
@@ -148,6 +150,7 @@ export const FieldSection = <FormData extends {}>({
             )}
             readOnly={formReadOnly}
             label={fieldSection.introduction}
+            localeNamespace={localeNamespace}
           />
         )}
 
@@ -159,6 +162,7 @@ export const FieldSection = <FormData extends {}>({
             )}
             readOnly={formReadOnly}
             label={fieldSection.introductionReadOnly}
+            localeNamespace={localeNamespace}
           />
         )}
 
@@ -169,6 +173,7 @@ export const FieldSection = <FormData extends {}>({
                 {...getSectionStyle('title', fieldSection.style?.title || {})}
                 readOnly={formReadOnly}
                 label={fieldSection.title}
+                localeNamespace={localeNamespace}
               />
             )}
             {formReadOnly && !fieldSection.title && <TitleSpaceMobile />}
@@ -177,6 +182,7 @@ export const FieldSection = <FormData extends {}>({
               <P
                 {...getSectionStyle('description')}
                 label={fieldSection.description}
+                localeNamespace={localeNamespace}
               />
             )}
 
@@ -191,6 +197,7 @@ export const FieldSection = <FormData extends {}>({
               <Link
                 icon={{ type: 'edit', style: getSectionRightStyle('editIcon') }}
                 label={fieldSection.editLabel}
+                localeNamespace={localeNamespace}
                 onClick={() => fieldSection.onEdit({ dispatch })}
                 style={getSectionRightStyle('editLink')}
               />
