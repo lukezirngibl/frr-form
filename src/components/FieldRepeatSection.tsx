@@ -6,6 +6,7 @@ import { CommonThreadProps, FormFieldRepeatSection } from './types'
 
 type FieldRepeatSection<FormData> = CommonThreadProps<FormData> & {
   field: FormFieldRepeatSection<FormData>
+  localeNamespace?: string
 }
 // ------------------------------------
 export const FieldRepeatSection = <FormData extends {}>(
@@ -15,10 +16,11 @@ export const FieldRepeatSection = <FormData extends {}>(
     data,
     field: fieldRepeatSection,
     fieldIndex: fieldRepeatSectionIndex,
+    localeNamespace,
     onChange,
     ...otherProps
   } = props
-  const { t: translate } = useTranslation()
+  const { t: translate } = useTranslation(localeNamespace)
 
   if (fieldRepeatSection.isVisible && !fieldRepeatSection.isVisible(data)) {
     return <></>

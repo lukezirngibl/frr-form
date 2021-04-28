@@ -171,15 +171,16 @@ const Image = createStyled('img')
  */
 
 type FieldItemReadOnlyValueProps<FormData> = {
-  field: SingleFormField<FormData>
   data: FormData
+  field: SingleFormField<FormData>
   getFieldStyle: any //
+  localeNamespace?: string
 }
 
 const FieldItemReadOnlyValue = <FormData extends {}>(
   props: FieldItemReadOnlyValueProps<FormData>,
 ) => {
-  const { t: translate, i18n } = useTranslation()
+  const { t: translate, i18n } = useTranslation(props.localeNamespace)
 
   const readOnlyStyle: Array<'value' | 'valueHighlighted'> = ['value']
 
