@@ -20,6 +20,7 @@ import { Props as TextNumberInputProps } from 'frr-web/lib/components/TextNumber
 import { Props as ToggleProps } from 'frr-web/lib/components/Toggle'
 import { Props as YesNoOptionGroupProps } from 'frr-web/lib/components/YesNoOptionGroup'
 import { Props as YesNoRadioGroupProps } from 'frr-web/lib/components/YesNoRadioGroup'
+import { LocaleNamespace, Translate } from 'frr-web/lib/translation'
 import { ReactNode } from 'react'
 import { CSSProperties } from 'styled-components'
 import { FormTheme } from '../theme/theme'
@@ -92,7 +93,7 @@ type FormInput<V, P extends { value: V }, L, T> = Omit<
   readOnly?: boolean
   readOnlyMapper?: (
     params: Omit<P, 'onChange' | 'onBlur'> & {
-      translate: (v: string, params?: any) => string
+      translate: Translate
     },
   ) => string
   readOnlyOptions?: {
@@ -425,7 +426,7 @@ export type FormFieldRepeatSection<FormData, T extends {} = {}> = {
   lens: FormLens<FormData, Array<T>>
   editLabel?: string
   onEdit?: (params: { dispatch: any }) => void
-  title?: (params: { index: number; translate: any }) => string
+  title?: (params: { index: number; translate: Translate }) => string
   type: FormFieldType.FormFieldRepeatSection
 }
 
@@ -458,7 +459,7 @@ export type CommonThreadProps<FormData> = {
   errorFieldId?: string
   fieldIndex: number
   formReadOnly: boolean
-  localeNamespace?: string
+  localeNamespace?: LocaleNamespace
   onChange: (lens: FormLens<FormData, any>, value: any) => void
   showValidation: boolean
   style: Partial<FormTheme> | undefined

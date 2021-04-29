@@ -4,6 +4,7 @@ import { P } from 'frr-web/lib/html'
 import { Language, mapLanguageToLocale } from 'frr-web/lib/theme/language'
 import { MediaQuery } from 'frr-web/lib/theme/theme'
 import { createStyled } from 'frr-web/lib/theme/util'
+import { LocaleNamespace, Translate } from 'frr-web/lib/translation'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -14,7 +15,7 @@ import {
   fieldMap,
   FormFieldType,
   MultiInputField,
-  SingleFormField,
+  SingleFormField
 } from './types'
 
 /*
@@ -32,7 +33,7 @@ var formatter = {
 type MapperParams<T> = {
   value: T
   prefix?: string
-  translate: (str: string, params?: any) => string
+  translate: Translate
   language?: Language
 }
 
@@ -44,8 +45,8 @@ const defaultStringNumberMapper = ({
 const defaultCountryMapper = ({
   value,
   translate,
-}: MapperParams<string | number | null>): string =>
-  value ? translate(`country.${value}`) : ''
+}: MapperParams<string | null>): string =>
+  value > '' ? translate(`country.${value.toLowerCase()}`) : ''
 
 const defaultDateStringMapper = ({
   value,
@@ -98,7 +99,7 @@ const defaultReadOnlyMappers: {
   [K in FormFieldType]: (
     params: Omit<typeof fieldMap[K], 'lens' | '_value' | 'type'> & {
       value: typeof fieldMap[K]['_value']
-      translate: (str: string, params?: any) => string
+      translate: Translate
       language?: Language
     },
   ) => string
@@ -174,7 +175,7 @@ type FieldItemReadOnlyValueProps<FormData> = {
   data: FormData
   field: SingleFormField<FormData>
   getFieldStyle: any //
-  localeNamespace?: string
+  localeNamespace?: LocaleNamespace
 }
 
 const FieldItemReadOnlyValue = <FormData extends {}>(
@@ -241,8 +242,9 @@ export const FieldItemReadOnly = <FormData extends {}>(
         {props.field.label && (
           <P
             {...getFieldStyle('label')}
-            label={props.field.label.label}
             data={props.field.label.labelData}
+            label={props.field.label.label}
+            localeNamespace={props.localeNamespace}
           />
         )}
         <FieldItemValueWrapper {...getFieldStyle('item')}>
@@ -250,19 +252,21 @@ export const FieldItemReadOnly = <FormData extends {}>(
             props.field.fields.map((fieldItem, fieldItemIndex) => {
               return (
                 <FieldItemReadOnlyValue<FormData>
-                  field={fieldItem}
                   data={props.data}
-                  key={`field-item-value-${fieldItemIndex}`}
+                  field={fieldItem}
                   getFieldStyle={getFieldStyle}
+                  key={`field-item-value-${fieldItemIndex}`}
+                  localeNamespace={props.localeNamespace}
                 />
               )
             })
           ) : (
             <FieldItemReadOnlyValue<FormData>
-              field={props.field}
               data={props.data}
-              key={`field-item-value-${props.fieldIndex}`}
+              field={props.field}
               getFieldStyle={getFieldStyle}
+              key={`field-item-value-${props.fieldIndex}`}
+              localeNamespace={props.localeNamespace}
             />
           )}
         </FieldItemValueWrapper>

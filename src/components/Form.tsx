@@ -1,9 +1,10 @@
 import {
   Button,
   ButtonType,
-  Props as ButtonProps,
+  Props as ButtonProps
 } from 'frr-web/lib/components/Button'
 import { createStyled } from 'frr-web/lib/theme/util'
+import { LocaleNamespace } from 'frr-web/lib/translation'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -25,8 +26,9 @@ import {
   FieldError,
   FormField,
   FormFieldType,
-  SingleFormField,
+  SingleFormField
 } from './types'
+
 
 type OnInvalidSubmitType<FormData> = (params: {
   errors: Array<FieldError>
@@ -53,7 +55,7 @@ export type FormProps<FormData> = {
   display?: DisplayType
   formFields: Array<FormField<FormData>>
   isVisible?: (formData: FormData) => boolean
-  localeNamespace?: string
+  localeNamespace?: LocaleNamespace
   onChange: (formState: FormData) => void
   onChangeWithLens?: (lens: FormLens<FormData, any>, value: any) => void
   onInvalidSubmit?: OnInvalidSubmitType<FormData>
@@ -280,7 +282,9 @@ export const Form = <FormData extends {}>({
                       button.type || ButtonType.Secondary
                     ).toLowerCase()}:${k + 1}`
               }
-              disabled={button.disabled}
+              disabled={
+                button.isDisabled ? button.isDisabled(data) : !!button.disabled
+              }
               onClick={() => button.onClick({ submit, dispatch })}
             />
           ))}

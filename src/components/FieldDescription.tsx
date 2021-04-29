@@ -1,5 +1,6 @@
 import { TextInputDescription } from 'frr-web/lib/components/TextInputDescription'
 import { createStyled } from 'frr-web/lib/theme/util'
+import { LocaleNamespace } from 'frr-web/lib/translation'
 import React from 'react'
 import styled from 'styled-components'
 import { useFormTheme } from '../theme/theme'
@@ -10,7 +11,7 @@ type FieldDescriptionProps<FormData> = {
   field: TextInputDescriptionField<FormData>
   fieldIndex: number
   formReadOnly?: boolean
-  localeNamespace?: string
+  localeNamespace?: LocaleNamespace
 }
 
 export const FieldRowWrapper = createStyled(styled.div`

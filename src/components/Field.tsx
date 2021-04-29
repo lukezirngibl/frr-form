@@ -17,6 +17,7 @@ import { TextNumberInput } from 'frr-web/lib/components/TextNumberInput'
 import { Toggle } from 'frr-web/lib/components/Toggle'
 import { YesNoOptionGroup } from 'frr-web/lib/components/YesNoOptionGroup'
 import { YesNoRadioGroup } from 'frr-web/lib/components/YesNoRadioGroup'
+import { LocaleNamespace } from 'frr-web/lib/translation'
 import React from 'react'
 import { FormFieldType, SingleFormField } from './types'
 
@@ -37,7 +38,7 @@ type FieldItemProps<FormData> = {
   fieldIndex: number
   hasError: boolean
   hasFocus?: boolean
-  localeNamespace?: string
+  localeNamespace?: LocaleNamespace
   onChange: (value: any) => void
   onBlur: (value: any) => void
 }
@@ -57,7 +58,12 @@ export const Field = <FormData extends {}>({
 
   let { label } = field
   if (label) {
-    label = { error: errorLabel !== null, errorLabel, localeNamespace, ...label }
+    label = {
+      error: errorLabel !== null,
+      errorLabel,
+      localeNamespace,
+      ...label,
+    }
   }
 
   if (field.type === FormFieldType.TextArea) {
@@ -92,6 +98,7 @@ export const Field = <FormData extends {}>({
         hasFocus={hasFocus}
         error={hasError}
         label={label}
+        localeNamespace={localeNamespace}
         dataTestId={dataTestId}
       />
     )
@@ -127,6 +134,7 @@ export const Field = <FormData extends {}>({
         onChange={onChange}
         onBlur={onBlur}
         label={label}
+        localeNamespace={localeNamespace}
         dataTestId={dataTestId}
       />
     )
@@ -145,6 +153,7 @@ export const Field = <FormData extends {}>({
         onChange={onChange}
         onBlur={onBlur}
         label={label}
+        localeNamespace={localeNamespace}
         dataTestId={dataTestId}
       />
     )
@@ -162,6 +171,7 @@ export const Field = <FormData extends {}>({
         onChange={onBlur}
         error={hasError}
         label={label}
+        localeNamespace={localeNamespace}
         dataTestId={dataTestId}
       />
     )
@@ -326,6 +336,7 @@ export const Field = <FormData extends {}>({
         onChange={onBlur}
         // error={hasError}
         label={label}
+        localeNamespace={localeNamespace}
       />
     )
   }
@@ -341,6 +352,7 @@ export const Field = <FormData extends {}>({
         value={lens.get(data)}
         onChange={onBlur}
         label={label}
+        localeNamespace={localeNamespace}
         error={hasError}
         dataTestId={dataTestId}
       />
@@ -358,6 +370,7 @@ export const Field = <FormData extends {}>({
         value={lens.get(data)}
         onChange={onBlur}
         label={label}
+        localeNamespace={localeNamespace}
         error={hasError}
         dataTestId={dataTestId}
       />
@@ -376,6 +389,7 @@ export const Field = <FormData extends {}>({
         onChange={onBlur}
         error={hasError}
         label={label}
+        localeNamespace={localeNamespace}
       />
     )
   }
@@ -392,6 +406,7 @@ export const Field = <FormData extends {}>({
         onChange={onBlur}
         error={hasError}
         label={label}
+        localeNamespace={localeNamespace}
         dataTestId={dataTestId}
       />
     )
