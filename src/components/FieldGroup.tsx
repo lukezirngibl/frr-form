@@ -26,6 +26,7 @@ export const FieldGroup = <FormData extends {}>(
     data,
     field: fieldGroup,
     fieldIndex: fieldGroupIndex,
+    localeNamespace,
     onChange,
     style,
     ...otherProps
@@ -36,6 +37,7 @@ export const FieldGroup = <FormData extends {}>(
 
   const commonFieldProps = {
     data,
+    localeNamespace,
     onChange,
     style,
     ...otherProps,
@@ -97,6 +99,7 @@ export const FieldGroup = <FormData extends {}>(
             fieldGroup.style ? fieldGroup.style.title || {} : {},
           )}
           label={fieldGroup.title}
+          localeNamespace={localeNamespace}
         />
       )}
       {fieldGroup.description && (
@@ -106,6 +109,7 @@ export const FieldGroup = <FormData extends {}>(
             fieldGroup.style ? fieldGroup.style.description || {} : {},
           )}
           label={fieldGroup.description}
+          localeNamespace={localeNamespace}
         />
       )}
       {fieldGroup.fields.map(renderGroupField)}

@@ -15,10 +15,11 @@ export const FieldRepeatSection = <FormData extends {}>(
     data,
     field: fieldRepeatSection,
     fieldIndex: fieldRepeatSectionIndex,
+    localeNamespace,
     onChange,
     ...otherProps
   } = props
-  const { t: translate } = useTranslation()
+  const { t: translate } = useTranslation(localeNamespace)
 
   if (fieldRepeatSection.isVisible && !fieldRepeatSection.isVisible(data)) {
     return <></>
@@ -34,6 +35,7 @@ export const FieldRepeatSection = <FormData extends {}>(
           field={section}
           fieldIndex={sectionIndex}
           key={`repeat-section-${fieldRepeatSectionIndex}-${sectionIndex}`}
+          localeNamespace={localeNamespace}
           onChange={onChange}
           {...otherProps}
         />

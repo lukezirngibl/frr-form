@@ -10,6 +10,7 @@ import {
   FormFieldRepeatSection,
   FormSection,
 } from './components/types'
+import { Translate } from 'frr-web/lib/translation'
 
 let scrolled = false
 
@@ -145,7 +146,7 @@ export const processRepeatGroup = <FormData extends {}>(
 export const processRepeatSection = <FormData extends {}>(
   fieldRepeatSection: FormFieldRepeatSection<FormData>,
   data: FormData,
-  translate: any,
+  translate: Translate,
 ) => {
   const length = fieldRepeatSection.length.get(data)
   return Array.from({

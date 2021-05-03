@@ -1,9 +1,10 @@
 import {
   Button,
   ButtonType,
-  Props as ButtonProps,
+  Props as ButtonProps
 } from 'frr-web/lib/components/Button'
 import { createStyled } from 'frr-web/lib/theme/util'
+import { LocaleNamespace } from 'frr-web/lib/translation'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -25,8 +26,9 @@ import {
   FieldError,
   FormField,
   FormFieldType,
-  SingleFormField,
+  SingleFormField
 } from './types'
+
 
 type OnInvalidSubmitType<FormData> = (params: {
   errors: Array<FieldError>
@@ -39,28 +41,29 @@ export type FormAnalytics<FormData> = {
 }
 
 export type FormProps<FormData> = {
-  children?: ReactNode
-  style?: Partial<FormTheme>
   analytics?: FormAnalytics<FormData>
-  data: FormData
-  disableValidation?: boolean
-  dataTestId?: string
-  display?: DisplayType
-  formFields: Array<FormField<FormData>>
-  onSubmit?: (params: { dispatch: any; formState: FormData }) => void
-  onInvalidSubmit?: OnInvalidSubmitType<FormData>
-  onChangeWithLens?: (lens: FormLens<FormData, any>, value: any) => void
-  onChange: (formState: FormData) => void
   buttons?: Array<
     Omit<ButtonProps, 'onClick'> & {
       onClick: (params: { submit: () => void; dispatch: any }) => void
       isDisabled?: (d: FormData) => boolean
     }
   >
-  renderTopChildren?: (f: FormData) => ReactNode
-  renderBottomChildren?: (f: FormData) => ReactNode
-  readOnly?: boolean
+  children?: ReactNode
+  data: FormData
+  dataTestId?: string
+  disableValidation?: boolean
+  display?: DisplayType
+  formFields: Array<FormField<FormData>>
   isVisible?: (formData: FormData) => boolean
+  localeNamespace?: LocaleNamespace
+  onChange: (formState: FormData) => void
+  onChangeWithLens?: (lens: FormLens<FormData, any>, value: any) => void
+  onInvalidSubmit?: OnInvalidSubmitType<FormData>
+  onSubmit?: (params: { dispatch: any; formState: FormData }) => void
+  readOnly?: boolean
+  renderBottomChildren?: (f: FormData) => ReactNode
+  renderTopChildren?: (f: FormData) => ReactNode
+  style?: Partial<FormTheme>
 }
 
 const ButtonContainer = createStyled(styled.div`
@@ -82,21 +85,22 @@ const FormContent = createStyled(styled.div`
 `)
 
 export const Form = <FormData extends {}>({
-  style,
-  data,
-  formFields,
-  onSubmit,
-  onInvalidSubmit,
-  onChange,
-  buttons,
-  disableValidation,
-  renderTopChildren,
-  renderBottomChildren,
-  onChangeWithLens,
-  readOnly,
-  dataTestId,
-  isVisible,
   analytics,
+  buttons,
+  data,
+  dataTestId,
+  disableValidation,
+  formFields,
+  isVisible,
+  localeNamespace,
+  onChange,
+  onChangeWithLens,
+  onInvalidSubmit,
+  onSubmit,
+  readOnly,
+  renderBottomChildren,
+  renderTopChildren,
+  style,
 }: FormProps<FormData>) => {
   const dispatch = useDispatch()
   const theme = useFormTheme()
@@ -155,6 +159,7 @@ export const Form = <FormData extends {}>({
     data,
     errorFieldId,
     formReadOnly: readOnly,
+    localeNamespace,
     onChange: internalOnChange,
     showValidation,
     style,
@@ -266,19 +271,21 @@ export const Form = <FormData extends {}>({
 
       {buttons && (
         <ButtonContainer {...getFormStyle('buttonContainer')}>
-          {buttons.map((b, k) => (
+          {buttons.map((button, k) => (
             <Button
-              {...b}
+              {...button}
               key={k}
               dataTestId={
-                b.type === ButtonType.Primary
+                button.type === ButtonType.Primary
                   ? 'form:primary'
-                  : `form:${(b.type || ButtonType.Secondary).toLowerCase()}:${
-                      k + 1
-                    }`
+                  : `form:${(
+                      button.type || ButtonType.Secondary
+                    ).toLowerCase()}:${k + 1}`
               }
-              disabled={b.isDisabled ? b.isDisabled(data) : !!b.disabled}
-              onClick={() => b.onClick({ submit, dispatch })}
+              disabled={
+                button.isDisabled ? button.isDisabled(data) : !!button.disabled
+              }
+              onClick={() => button.onClick({ submit, dispatch })}
             />
           ))}
         </ButtonContainer>
